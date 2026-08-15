@@ -254,7 +254,7 @@ export function EventImageUploader({
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, 33vw"
-                unoptimized={img.url.startsWith('blob:')}
+                unoptimized
               />
 
               {/* Primary badge */}

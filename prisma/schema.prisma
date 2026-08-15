@@ -375,6 +375,13 @@ model Event {
   seatingType SeatingType @default(GENERAL_ADMISSION)
   status      EventStatus @default(DRAFT)
 
+  /// true = all ticket types are free (price = 0)
+  isFree      Boolean     @default(false)
+  /// true = event is online-only; false = physical venue
+  isVirtual   Boolean     @default(false)
+  /// Stream/meeting URL — only set when isVirtual = true
+  virtualLink String?
+
   startsAt    DateTime
   endsAt      DateTime?
   /// When tickets go on sale

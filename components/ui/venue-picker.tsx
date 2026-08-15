@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Loader } from '@googlemaps/js-api-loader'
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader'
 import { MapPin, X, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -35,8 +35,9 @@ interface VenuePickerProps {
 }
 
 // Extract a specific address component type from the Places result
+// Places API (New) uses longText/shortText instead of long_name/short_name
 function extractComponent(components: google.maps.places.AddressComponent[], type: string): string {
-  return components.find((c) => c.types.includes(type))?.long_name ?? ''
+  return components.find((c) => c.types.includes(type))?.longText ?? ''
 }
 
 export function VenuePicker({ defaultValue, onSelect, className }: VenuePickerProps) {
@@ -56,14 +57,9 @@ export function VenuePicker({ defaultValue, onSelect, className }: VenuePickerPr
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     if (!apiKey) return
 
-    const loader = new Loader({
-      apiKey,
-      version: 'weekly',
-      libraries: ['places'],
-    })
+    setOptions({ key: apiKey })
 
-    loader
-      .load()
+    importLibrary('places')
       .then(() => {
         setApiReady(true)
         sessionToken.current = new google.maps.places.AutocompleteSessionToken()

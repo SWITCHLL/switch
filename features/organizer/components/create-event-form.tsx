@@ -9,7 +9,6 @@ import { DateTimePicker } from '@/components/ui/date-time-picker'
 import { VenuePicker, type VenuePlace } from '@/components/ui/venue-picker'
 import { EventImageUploader } from '@/components/ui/event-image-uploader'
 import { createEvent } from '../actions'
-
 interface CreateEventFormProps {
   categories: { id: string; name: string }[]
 }
@@ -20,6 +19,8 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [venue, setVenue] = useState<VenuePlace | null>(null)
   const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [isFree, setIsFree] = useState(false)
+  const [isVirtual, setIsVirtual] = useState(false)
 
   // ── Controlled date/time state ────────────────────────────────────────────
   const [startsAt, setStartsAt] = useState('')
@@ -43,6 +44,9 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
     // Inject uploaded image URLs (repeated field)
     formData.delete('imageUrls')
     imageUrls.forEach((url) => formData.append('imageUrls', url))
+    formData.set('isFree', String(isFree))
+    formData.set('isVirtual', String(isVirtual))
+    if (!isVirtual) formData.delete('virtualLink')
 
     startTransition(async () => {
       const result = await createEvent(formData)
@@ -109,17 +113,47 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
         </Field>
       </div>
 
+      {/* Free / Virtual toggles */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <ToggleField
+          label="Free Event"
+          hint="All tickets are free"
+          checked={isFree}
+          onChange={setIsFree}
+        />
+        <ToggleField
+          label="Virtual / Online"
+          hint="Attendees join remotely"
+          checked={isVirtual}
+          onChange={setIsVirtual}
+        />
+      </div>
+
+      {/* Virtual link */}
+      {isVirtual && (
+        <Field label="Stream / Meeting URL">
+          <input
+            name="virtualLink"
+            type="url"
+            placeholder="https://meet.example.com/…"
+            className={inputCls}
+          />
+        </Field>
+      )}
+
       {/* Venue — Google Places Autocomplete */}
-      <Field
-        label="Venue"
-        hint={
-          venue
-            ? `${venue.city}${venue.state ? `, ${venue.state}` : ''}, ${venue.country}`
-            : 'Search for a venue verified on Google Maps'
-        }
-      >
-        <VenuePicker onSelect={setVenue} />
-      </Field>
+      {!isVirtual && (
+        <Field
+          label="Venue"
+          hint={
+            venue
+              ? `${venue.city}${venue.state ? `, ${venue.state}` : ''}, ${venue.country}`
+              : 'Search for a venue verified on Google Maps'
+          }
+        >
+          <VenuePicker onSelect={setVenue} />
+        </Field>
+      )}
 
       {/* Event dates */}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -226,5 +260,48 @@ function Field({
       {children}
       {hint && <p className="text-muted-foreground text-[11.5px]">{hint}</p>}
     </div>
+  )
+}
+
+function ToggleField({
+  label,
+  hint,
+  checked,
+  onChange,
+}: {
+  label: string
+  hint: string
+  checked: boolean
+  onChange: (v: boolean) => void
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        'flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors',
+        checked ? 'border-brand-500/40 bg-brand-500/5' : 'border-border hover:border-brand-500/30'
+      )}
+    >
+      <div>
+        <p className="text-[13px] font-medium">{label}</p>
+        <p className="text-muted-foreground text-[11.5px]">{hint}</p>
+      </div>
+      <div
+        className={cn(
+          'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+          checked ? 'bg-brand-500' : 'bg-muted-foreground/30'
+        )}
+      >
+        <span
+          className={cn(
+            'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform',
+            checked ? 'translate-x-4' : 'translate-x-0.5'
+          )}
+        />
+      </div>
+    </button>
   )
 }

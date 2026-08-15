@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { db } from '@/lib/db'
 import { getSession } from '@/lib/session'
-import { EventStatus, SeatingType } from '@/app/generated/prisma/client'
+import { EventStatus, SeatingType, TicketTypeStatus } from '@/app/generated/prisma/client'
 
 // ─── Schemas ─────────────────────────────────────────────────────────────────
 
@@ -21,6 +21,9 @@ const createEventSchema = z.object({
   salesEnd: z.string().datetime().optional(),
   capacity: z.coerce.number().int().positive().optional(),
   imageUrl: z.string().url().optional(),
+  isFree: z.coerce.boolean().optional(),
+  isVirtual: z.coerce.boolean().optional(),
+  virtualLink: z.string().url().optional().or(z.literal('')),
 })
 
 const venueInputSchema = z.object({
@@ -45,6 +48,18 @@ const createTicketTypeSchema = z.object({
   quantity: z.coerce.number().int().positive().optional(),
   salesStart: z.string().datetime().optional(),
   salesEnd: z.string().datetime().optional(),
+})
+
+const updateTicketTypeSchema = z.object({
+  ticketTypeId: z.string().min(1),
+  name: z.string().min(1).max(80).optional(),
+  description: z.string().max(500).optional(),
+  price: z.coerce.number().int().min(0).optional(),
+  currency: z.string().optional(),
+  quantity: z.coerce.number().int().positive().optional().nullable(),
+  salesStart: z.string().datetime().optional().nullable(),
+  salesEnd: z.string().datetime().optional().nullable(),
+  status: z.nativeEnum(TicketTypeStatus).optional(),
 })
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -388,5 +403,82 @@ export async function saveEventImages(eventId: string, imageUrls: string[]): Pro
   })
 
   revalidatePath(`/dashboard/events/${eventId}`)
+  return { success: true, data: undefined }
+}
+
+// ─── Cancel event ─────────────────────────────────────────────────────────────
+
+export async function cancelEvent(eventId: string): Promise<ActionResult> {
+  const session = await getSession()
+  if (!session) return { success: false, error: 'Not authenticated' }
+
+  const organizer = await db.organizer.findUnique({
+    where: { userId: session.userId },
+    select: { id: true },
+  })
+  if (!organizer) return { success: false, error: 'Not an organizer' }
+
+  const event = await db.event.findUnique({
+    where: { id: eventId, organizerId: organizer.id },
+    select: { id: true, status: true, slug: true },
+  })
+  if (!event) return { success: false, error: 'Event not found' }
+  if (event.status === EventStatus.CANCELLED) {
+    return { success: false, error: 'Event is already cancelled' }
+  }
+
+  await db.event.update({
+    where: { id: eventId },
+    data: { status: EventStatus.CANCELLED },
+  })
+
+  revalidatePath('/dashboard/events')
+  revalidatePath(`/dashboard/events/${eventId}`)
+  revalidatePath(`/events/${event.slug}`)
+  return { success: true, data: undefined }
+}
+
+// ─── Update ticket type ───────────────────────────────────────────────────────
+
+export async function updateTicketType(formData: FormData): Promise<ActionResult> {
+  const session = await getSession()
+  if (!session) return { success: false, error: 'Not authenticated' }
+
+  const raw = Object.fromEntries(formData)
+
+  // Normalise nullable fields: empty string → null
+  if (raw.quantity === '') raw.quantity = null as unknown as string
+  if (raw.salesStart === '') raw.salesStart = null as unknown as string
+  if (raw.salesEnd === '') raw.salesEnd = null as unknown as string
+
+  const parsed = updateTicketTypeSchema.safeParse(raw)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  }
+
+  const { ticketTypeId, ...updates } = parsed.data
+
+  const tt = await db.ticketType.findUnique({
+    where: { id: ticketTypeId },
+    select: { eventId: true, event: { select: { organizerId: true } } },
+  })
+  const organizer = await db.organizer.findUnique({
+    where: { userId: session.userId },
+    select: { id: true },
+  })
+  if (!tt || !organizer || tt.event.organizerId !== organizer.id) {
+    return { success: false, error: 'Not found' }
+  }
+
+  await db.ticketType.update({
+    where: { id: ticketTypeId },
+    data: {
+      ...updates,
+      salesStart: updates.salesStart ? new Date(updates.salesStart) : updates.salesStart,
+      salesEnd: updates.salesEnd ? new Date(updates.salesEnd) : updates.salesEnd,
+    },
+  })
+
+  revalidatePath(`/dashboard/events/${tt.eventId}`)
   return { success: true, data: undefined }
 }

@@ -46,6 +46,9 @@ export type EventMinAggregateOutputType = {
   imageUrl: string | null
   seatingType: $Enums.SeatingType | null
   status: $Enums.EventStatus | null
+  isFree: boolean | null
+  isVirtual: boolean | null
+  virtualLink: string | null
   startsAt: Date | null
   endsAt: Date | null
   salesStart: Date | null
@@ -67,6 +70,9 @@ export type EventMaxAggregateOutputType = {
   imageUrl: string | null
   seatingType: $Enums.SeatingType | null
   status: $Enums.EventStatus | null
+  isFree: boolean | null
+  isVirtual: boolean | null
+  virtualLink: string | null
   startsAt: Date | null
   endsAt: Date | null
   salesStart: Date | null
@@ -88,6 +94,9 @@ export type EventCountAggregateOutputType = {
   imageUrl: number
   seatingType: number
   status: number
+  isFree: number
+  isVirtual: number
+  virtualLink: number
   startsAt: number
   endsAt: number
   salesStart: number
@@ -119,6 +128,9 @@ export type EventMinAggregateInputType = {
   imageUrl?: true
   seatingType?: true
   status?: true
+  isFree?: true
+  isVirtual?: true
+  virtualLink?: true
   startsAt?: true
   endsAt?: true
   salesStart?: true
@@ -140,6 +152,9 @@ export type EventMaxAggregateInputType = {
   imageUrl?: true
   seatingType?: true
   status?: true
+  isFree?: true
+  isVirtual?: true
+  virtualLink?: true
   startsAt?: true
   endsAt?: true
   salesStart?: true
@@ -161,6 +176,9 @@ export type EventCountAggregateInputType = {
   imageUrl?: true
   seatingType?: true
   status?: true
+  isFree?: true
+  isVirtual?: true
+  virtualLink?: true
   startsAt?: true
   endsAt?: true
   salesStart?: true
@@ -269,6 +287,9 @@ export type EventGroupByOutputType = {
   imageUrl: string | null
   seatingType: $Enums.SeatingType
   status: $Enums.EventStatus
+  isFree: boolean
+  isVirtual: boolean
+  virtualLink: string | null
   startsAt: Date
   endsAt: Date | null
   salesStart: Date | null
@@ -313,6 +334,9 @@ export type EventWhereInput = {
   imageUrl?: Prisma.StringNullableFilter<"Event"> | string | null
   seatingType?: Prisma.EnumSeatingTypeFilter<"Event"> | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
+  isFree?: Prisma.BoolFilter<"Event"> | boolean
+  isVirtual?: Prisma.BoolFilter<"Event"> | boolean
+  virtualLink?: Prisma.StringNullableFilter<"Event"> | string | null
   startsAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   endsAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   salesStart?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
@@ -343,6 +367,9 @@ export type EventOrderByWithRelationInput = {
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   seatingType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFree?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
+  virtualLink?: Prisma.SortOrderInput | Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   salesStart?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -376,6 +403,9 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   imageUrl?: Prisma.StringNullableFilter<"Event"> | string | null
   seatingType?: Prisma.EnumSeatingTypeFilter<"Event"> | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
+  isFree?: Prisma.BoolFilter<"Event"> | boolean
+  isVirtual?: Prisma.BoolFilter<"Event"> | boolean
+  virtualLink?: Prisma.StringNullableFilter<"Event"> | string | null
   startsAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   endsAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   salesStart?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
@@ -406,6 +436,9 @@ export type EventOrderByWithAggregationInput = {
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   seatingType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFree?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
+  virtualLink?: Prisma.SortOrderInput | Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   salesStart?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -435,6 +468,9 @@ export type EventScalarWhereWithAggregatesInput = {
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   seatingType?: Prisma.EnumSeatingTypeWithAggregatesFilter<"Event"> | $Enums.SeatingType
   status?: Prisma.EnumEventStatusWithAggregatesFilter<"Event"> | $Enums.EventStatus
+  isFree?: Prisma.BoolWithAggregatesFilter<"Event"> | boolean
+  isVirtual?: Prisma.BoolWithAggregatesFilter<"Event"> | boolean
+  virtualLink?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   startsAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   salesStart?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
@@ -452,6 +488,9 @@ export type EventCreateInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -482,6 +521,9 @@ export type EventUncheckedCreateInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -504,6 +546,9 @@ export type EventUpdateInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -534,6 +579,9 @@ export type EventUncheckedUpdateInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -560,6 +608,9 @@ export type EventCreateManyInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -577,6 +628,9 @@ export type EventUpdateManyMutationInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -598,6 +652,9 @@ export type EventUncheckedUpdateManyInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -629,6 +686,9 @@ export type EventCountOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   seatingType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFree?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
+  virtualLink?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   salesStart?: Prisma.SortOrder
@@ -654,6 +714,9 @@ export type EventMaxOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   seatingType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFree?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
+  virtualLink?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   salesStart?: Prisma.SortOrder
@@ -675,6 +738,9 @@ export type EventMinOrderByAggregateInput = {
   imageUrl?: Prisma.SortOrder
   seatingType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isFree?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
+  virtualLink?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
   endsAt?: Prisma.SortOrder
   salesStart?: Prisma.SortOrder
@@ -869,6 +935,10 @@ export type EnumEventStatusFieldUpdateOperationsInput = {
   set?: $Enums.EventStatus
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type EventCreateNestedOneWithoutImagesInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutImagesInput, Prisma.EventUncheckedCreateWithoutImagesInput>
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutImagesInput
@@ -947,6 +1017,9 @@ export type EventCreateWithoutOrganizerInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -975,6 +1048,9 @@ export type EventUncheckedCreateWithoutOrganizerInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1030,6 +1106,9 @@ export type EventScalarWhereInput = {
   imageUrl?: Prisma.StringNullableFilter<"Event"> | string | null
   seatingType?: Prisma.EnumSeatingTypeFilter<"Event"> | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
+  isFree?: Prisma.BoolFilter<"Event"> | boolean
+  isVirtual?: Prisma.BoolFilter<"Event"> | boolean
+  virtualLink?: Prisma.StringNullableFilter<"Event"> | string | null
   startsAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   endsAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   salesStart?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
@@ -1047,6 +1126,9 @@ export type EventCreateWithoutCategoryInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1075,6 +1157,9 @@ export type EventUncheckedCreateWithoutCategoryInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1123,6 +1208,9 @@ export type EventCreateWithoutVenueInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1151,6 +1239,9 @@ export type EventUncheckedCreateWithoutVenueInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1199,6 +1290,9 @@ export type EventCreateWithoutSeatMapInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1227,6 +1321,9 @@ export type EventUncheckedCreateWithoutSeatMapInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1275,6 +1372,9 @@ export type EventCreateWithoutImagesInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1304,6 +1404,9 @@ export type EventUncheckedCreateWithoutImagesInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1341,6 +1444,9 @@ export type EventUpdateWithoutImagesInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1370,6 +1476,9 @@ export type EventUncheckedUpdateWithoutImagesInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1391,6 +1500,9 @@ export type EventCreateWithoutTicketTypesInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1420,6 +1532,9 @@ export type EventUncheckedCreateWithoutTicketTypesInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1457,6 +1572,9 @@ export type EventUpdateWithoutTicketTypesInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1486,6 +1604,9 @@ export type EventUncheckedUpdateWithoutTicketTypesInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1507,6 +1628,9 @@ export type EventCreateWithoutEventSeatsInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1536,6 +1660,9 @@ export type EventUncheckedCreateWithoutEventSeatsInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1573,6 +1700,9 @@ export type EventUpdateWithoutEventSeatsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1602,6 +1732,9 @@ export type EventUncheckedUpdateWithoutEventSeatsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1623,6 +1756,9 @@ export type EventCreateWithoutReservationsInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1652,6 +1788,9 @@ export type EventUncheckedCreateWithoutReservationsInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1689,6 +1828,9 @@ export type EventUpdateWithoutReservationsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1718,6 +1860,9 @@ export type EventUncheckedUpdateWithoutReservationsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1739,6 +1884,9 @@ export type EventCreateWithoutTicketsInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1768,6 +1916,9 @@ export type EventUncheckedCreateWithoutTicketsInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1805,6 +1956,9 @@ export type EventUpdateWithoutTicketsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1834,6 +1988,9 @@ export type EventUncheckedUpdateWithoutTicketsInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1858,6 +2015,9 @@ export type EventCreateManyOrganizerInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1875,6 +2035,9 @@ export type EventUpdateWithoutOrganizerInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1903,6 +2066,9 @@ export type EventUncheckedUpdateWithoutOrganizerInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1928,6 +2094,9 @@ export type EventUncheckedUpdateManyWithoutOrganizerInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1948,6 +2117,9 @@ export type EventCreateManyCategoryInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -1965,6 +2137,9 @@ export type EventUpdateWithoutCategoryInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1993,6 +2168,9 @@ export type EventUncheckedUpdateWithoutCategoryInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2018,6 +2196,9 @@ export type EventUncheckedUpdateManyWithoutCategoryInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2038,6 +2219,9 @@ export type EventCreateManyVenueInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -2055,6 +2239,9 @@ export type EventUpdateWithoutVenueInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2083,6 +2270,9 @@ export type EventUncheckedUpdateWithoutVenueInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2108,6 +2298,9 @@ export type EventUncheckedUpdateManyWithoutVenueInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2128,6 +2321,9 @@ export type EventCreateManySeatMapInput = {
   imageUrl?: string | null
   seatingType?: $Enums.SeatingType
   status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
   startsAt: Date | string
   endsAt?: Date | string | null
   salesStart?: Date | string | null
@@ -2145,6 +2341,9 @@ export type EventUpdateWithoutSeatMapInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2173,6 +2372,9 @@ export type EventUncheckedUpdateWithoutSeatMapInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2198,6 +2400,9 @@ export type EventUncheckedUpdateManyWithoutSeatMapInput = {
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2286,6 +2491,9 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   imageUrl?: boolean
   seatingType?: boolean
   status?: boolean
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: boolean
   startsAt?: boolean
   endsAt?: boolean
   salesStart?: boolean
@@ -2317,6 +2525,9 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   imageUrl?: boolean
   seatingType?: boolean
   status?: boolean
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: boolean
   startsAt?: boolean
   endsAt?: boolean
   salesStart?: boolean
@@ -2342,6 +2553,9 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   imageUrl?: boolean
   seatingType?: boolean
   status?: boolean
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: boolean
   startsAt?: boolean
   endsAt?: boolean
   salesStart?: boolean
@@ -2367,6 +2581,9 @@ export type EventSelectScalar = {
   imageUrl?: boolean
   seatingType?: boolean
   status?: boolean
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: boolean
   startsAt?: boolean
   endsAt?: boolean
   salesStart?: boolean
@@ -2376,7 +2593,7 @@ export type EventSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizerId" | "venueId" | "seatMapId" | "categoryId" | "title" | "slug" | "description" | "imageUrl" | "seatingType" | "status" | "startsAt" | "endsAt" | "salesStart" | "salesEnd" | "capacity" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizerId" | "venueId" | "seatMapId" | "categoryId" | "title" | "slug" | "description" | "imageUrl" | "seatingType" | "status" | "isFree" | "isVirtual" | "virtualLink" | "startsAt" | "endsAt" | "salesStart" | "salesEnd" | "capacity" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organizer?: boolean | Prisma.OrganizerDefaultArgs<ExtArgs>
   venue?: boolean | Prisma.Event$venueArgs<ExtArgs>
@@ -2430,6 +2647,18 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     imageUrl: string | null
     seatingType: $Enums.SeatingType
     status: $Enums.EventStatus
+    /**
+     * true = all ticket types are free (price = 0)
+     */
+    isFree: boolean
+    /**
+     * true = event is online-only; false = physical venue
+     */
+    isVirtual: boolean
+    /**
+     * Stream/meeting URL — only set when isVirtual = true
+     */
+    virtualLink: string | null
     startsAt: Date
     endsAt: Date | null
     /**
@@ -2889,6 +3118,9 @@ export interface EventFieldRefs {
   readonly imageUrl: Prisma.FieldRef<"Event", 'String'>
   readonly seatingType: Prisma.FieldRef<"Event", 'SeatingType'>
   readonly status: Prisma.FieldRef<"Event", 'EventStatus'>
+  readonly isFree: Prisma.FieldRef<"Event", 'Boolean'>
+  readonly isVirtual: Prisma.FieldRef<"Event", 'Boolean'>
+  readonly virtualLink: Prisma.FieldRef<"Event", 'String'>
   readonly startsAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly endsAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly salesStart: Prisma.FieldRef<"Event", 'DateTime'>

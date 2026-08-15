@@ -1999,6 +1999,9 @@ export const EventScalarFieldEnum = {
   imageUrl: 'imageUrl',
   seatingType: 'seatingType',
   status: 'status',
+  isFree: 'isFree',
+  isVirtual: 'isVirtual',
+  virtualLink: 'virtualLink',
   startsAt: 'startsAt',
   endsAt: 'endsAt',
   salesStart: 'salesStart',
@@ -2282,6 +2285,13 @@ export type EnumEventStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'EventStatus[]'
  */
 export type ListEnumEventStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
