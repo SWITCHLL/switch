@@ -92,6 +92,28 @@ enum TicketStatus {
   EXPIRED
 }
 
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PayoutStatus {
+  PENDING
+  APPROVED
+  PROCESSING
+  COMPLETED
+  REJECTED
+}
+
+enum RefundStatus {
+  OPEN
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
 // ─── User & Auth ──────────────────────────────────────────────────────────────
 
 model User {
@@ -110,6 +132,9 @@ model User {
   reservations  Reservation[]
   tickets       Ticket[]
   organizerApplication OrganizerApplication?
+  payments      Payment[]
+  reviews       EventReview[]
+  refundRequests RefundRequest[]
 
   @@map("users")
 }
@@ -165,11 +190,19 @@ model Organizer {
   logoUrl     String?
   websiteUrl  String?
   status      OrganizerStatus @default(PENDING)
+  /// Custom platform fee % for partner organizers. Null = use env default.
+  feePercent        Float?
+  /// Paystack bank details for payouts
+  bankCode          String?
+  bankAccountNumber String?
+  bankAccountName   String?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   events Event[]
+  payoutRequests PayoutRequest[]
+  payments       Payment[]
 
   @@map("organizers")
 }
@@ -404,7 +437,10 @@ model Event {
   reservations Reservation[]
   tickets     Ticket[]
   images      EventImage[]
-
+  payments    Payment[]
+  payoutRequests PayoutRequest[]
+  reviews     EventReview[]
+  refundRequests RefundRequest[]
   @@index([status, startsAt])
   @@index([organizerId])
   @@index([categoryId])
@@ -534,8 +570,150 @@ model Ticket {
   /// Ticket owns the FK — EventSeat.ticket is the virtual back-relation
   eventSeat  EventSeat? @relation(fields: [eventSeatId], references: [id])
   ticketType TicketType @relation(fields: [ticketTypeId], references: [id])
+  payment    Payment?
+  review     EventReview?
 
   @@index([eventId])
   @@index([userId])
   @@map("tickets")
+}
+
+// ─── Payment ──────────────────────────────────────────────────────────────────
+
+model Payment {
+  id              String        @id @default(cuid())
+  ticketId        String        @unique
+  organizerId     String
+  userId          String
+  eventId         String
+
+  /// Amount user paid in minor units (kobo)
+  amount          Int
+  currency        String        @default("NGN")
+  /// Platform fee % snapshotted at purchase time
+  platformFeePercent Float
+  /// Platform fee amount in minor units
+  platformFeeAmount  Int
+  /// Net amount organizer will receive (amount - fee)
+  netAmount          Int
+
+  status          PaymentStatus @default(PENDING)
+  /// Paystack payment reference
+  paystackReference String?     @unique
+  /// Paystack transaction id
+  paystackTransactionId String?
+
+  /// FK to the payout request this payment is included in (set when payout is approved)
+  payoutRequestId String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  ticket          Ticket        @relation(fields: [ticketId], references: [id])
+  organizer       Organizer     @relation(fields: [organizerId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+  event           Event         @relation(fields: [eventId], references: [id])
+  payoutRequest   PayoutRequest? @relation("PaymentToPayoutRequest", fields: [payoutRequestId], references: [id])
+  refundRequest   RefundRequest?
+
+  @@index([organizerId])
+  @@index([eventId])
+  @@index([userId])
+  @@map("payments")
+}
+
+// ─── Payout Request ───────────────────────────────────────────────────────────
+
+model PayoutRequest {
+  id              String       @id @default(cuid())
+  organizerId     String
+  eventId         String
+  /// Total gross collected for this event (sum of payment.amount)
+  grossAmount     Int
+  /// Total platform fees deducted
+  totalFees       Int
+  /// Net amount to be paid out
+  netAmount       Int
+  currency        String       @default("NGN")
+
+  status          PayoutStatus @default(PENDING)
+  /// Admin who approved/rejected
+  reviewedBy      String?
+  reviewNote      String?      @db.Text
+  reviewedAt      DateTime?
+
+  /// Paystack Transfer code (set when transfer is initiated)
+  paystackTransferCode String?
+  /// Paystack recipient code for the organizer's bank
+  paystackRecipientCode String?
+  completedAt     DateTime?
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  organizer       Organizer    @relation(fields: [organizerId], references: [id])
+  event           Event        @relation(fields: [eventId], references: [id])
+  payments        Payment[]    @relation("PaymentToPayoutRequest")
+
+  @@unique([organizerId, eventId])
+  @@index([organizerId])
+  @@index([status])
+  @@map("payout_requests")
+}
+
+// ─── Event Review ─────────────────────────────────────────────────────────────
+
+model EventReview {
+  id          String   @id @default(cuid())
+  eventId     String
+  userId      String
+  ticketId    String   @unique
+  /// 1–5 stars
+  rating      Int
+  body        String?  @db.Text
+  /// Organizer public reply
+  reply       String?  @db.Text
+  replyAt     DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event       Event    @relation(fields: [eventId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+
+  @@index([eventId])
+  @@index([userId])
+  @@map("event_reviews")
+}
+
+// ─── Refund Request ───────────────────────────────────────────────────────────
+
+model RefundRequest {
+  id          String       @id @default(cuid())
+  paymentId   String       @unique
+  userId      String
+  eventId     String
+  /// User's reason for the complaint/refund
+  reason      String       @db.Text
+
+  status      RefundStatus @default(OPEN)
+  /// Admin decision note
+  reviewNote  String?      @db.Text
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  /// Paystack refund id (set when refund is processed)
+  paystackRefundId String?
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  payment     Payment      @relation(fields: [paymentId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+  event       Event        @relation(fields: [eventId], references: [id])
+
+  @@index([userId])
+  @@index([eventId])
+  @@index([status])
+  @@map("refund_requests")
 }

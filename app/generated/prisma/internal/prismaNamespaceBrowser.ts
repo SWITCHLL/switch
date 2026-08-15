@@ -68,7 +68,11 @@ export const ModelName = {
   TicketType: 'TicketType',
   EventSeat: 'EventSeat',
   Reservation: 'Reservation',
-  Ticket: 'Ticket'
+  Ticket: 'Ticket',
+  Payment: 'Payment',
+  PayoutRequest: 'PayoutRequest',
+  EventReview: 'EventReview',
+  RefundRequest: 'RefundRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -147,6 +151,10 @@ export const OrganizerScalarFieldEnum = {
   logoUrl: 'logoUrl',
   websiteUrl: 'websiteUrl',
   status: 'status',
+  feePercent: 'feePercent',
+  bankCode: 'bankCode',
+  bankAccountNumber: 'bankAccountNumber',
+  bankAccountName: 'bankAccountName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -370,6 +378,84 @@ export const TicketScalarFieldEnum = {
 } as const
 
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  organizerId: 'organizerId',
+  userId: 'userId',
+  eventId: 'eventId',
+  amount: 'amount',
+  currency: 'currency',
+  platformFeePercent: 'platformFeePercent',
+  platformFeeAmount: 'platformFeeAmount',
+  netAmount: 'netAmount',
+  status: 'status',
+  paystackReference: 'paystackReference',
+  paystackTransactionId: 'paystackTransactionId',
+  payoutRequestId: 'payoutRequestId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PayoutRequestScalarFieldEnum = {
+  id: 'id',
+  organizerId: 'organizerId',
+  eventId: 'eventId',
+  grossAmount: 'grossAmount',
+  totalFees: 'totalFees',
+  netAmount: 'netAmount',
+  currency: 'currency',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  paystackTransferCode: 'paystackTransferCode',
+  paystackRecipientCode: 'paystackRecipientCode',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayoutRequestScalarFieldEnum = (typeof PayoutRequestScalarFieldEnum)[keyof typeof PayoutRequestScalarFieldEnum]
+
+
+export const EventReviewScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  userId: 'userId',
+  ticketId: 'ticketId',
+  rating: 'rating',
+  body: 'body',
+  reply: 'reply',
+  replyAt: 'replyAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventReviewScalarFieldEnum = (typeof EventReviewScalarFieldEnum)[keyof typeof EventReviewScalarFieldEnum]
+
+
+export const RefundRequestScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  userId: 'userId',
+  eventId: 'eventId',
+  reason: 'reason',
+  status: 'status',
+  reviewNote: 'reviewNote',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  paystackRefundId: 'paystackRefundId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RefundRequestScalarFieldEnum = (typeof RefundRequestScalarFieldEnum)[keyof typeof RefundRequestScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -32,6 +32,12 @@ const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   SUPABASE_EVENTS_BUCKET: z.string().default('event-images'),
 
+  // Paystack
+  PAYSTACK_SECRET_KEY: z.string().startsWith('sk_').optional(),
+  PAYSTACK_WEBHOOK_SECRET: z.string().min(1).optional(),
+  /// Default platform fee percentage, e.g. "4" for 4%
+  PLATFORM_FEE_PERCENT: z.coerce.number().min(0).max(100).default(4),
+
   // App
   NEXT_PUBLIC_APP_URL: z.string().url('NEXT_PUBLIC_APP_URL must be a valid URL').optional(),
 })
@@ -44,6 +50,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
+  NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: z.string().startsWith('pk_').optional(),
 })
 
 // ─── Validation ──────────────────────────────────────────────────────────────

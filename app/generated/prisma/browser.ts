@@ -107,3 +107,23 @@ export type Reservation = Prisma.ReservationModel
  * 
  */
 export type Ticket = Prisma.TicketModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model PayoutRequest
+ * 
+ */
+export type PayoutRequest = Prisma.PayoutRequestModel
+/**
+ * Model EventReview
+ * 
+ */
+export type EventReview = Prisma.EventReviewModel
+/**
+ * Model RefundRequest
+ * 
+ */
+export type RefundRequest = Prisma.RefundRequestModel

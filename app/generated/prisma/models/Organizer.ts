@@ -20,8 +20,18 @@ export type OrganizerModel = runtime.Types.Result.DefaultSelection<Prisma.$Organ
 
 export type AggregateOrganizer = {
   _count: OrganizerCountAggregateOutputType | null
+  _avg: OrganizerAvgAggregateOutputType | null
+  _sum: OrganizerSumAggregateOutputType | null
   _min: OrganizerMinAggregateOutputType | null
   _max: OrganizerMaxAggregateOutputType | null
+}
+
+export type OrganizerAvgAggregateOutputType = {
+  feePercent: number | null
+}
+
+export type OrganizerSumAggregateOutputType = {
+  feePercent: number | null
 }
 
 export type OrganizerMinAggregateOutputType = {
@@ -33,6 +43,10 @@ export type OrganizerMinAggregateOutputType = {
   logoUrl: string | null
   websiteUrl: string | null
   status: $Enums.OrganizerStatus | null
+  feePercent: number | null
+  bankCode: string | null
+  bankAccountNumber: string | null
+  bankAccountName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +60,10 @@ export type OrganizerMaxAggregateOutputType = {
   logoUrl: string | null
   websiteUrl: string | null
   status: $Enums.OrganizerStatus | null
+  feePercent: number | null
+  bankCode: string | null
+  bankAccountNumber: string | null
+  bankAccountName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,11 +77,23 @@ export type OrganizerCountAggregateOutputType = {
   logoUrl: number
   websiteUrl: number
   status: number
+  feePercent: number
+  bankCode: number
+  bankAccountNumber: number
+  bankAccountName: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type OrganizerAvgAggregateInputType = {
+  feePercent?: true
+}
+
+export type OrganizerSumAggregateInputType = {
+  feePercent?: true
+}
 
 export type OrganizerMinAggregateInputType = {
   id?: true
@@ -74,6 +104,10 @@ export type OrganizerMinAggregateInputType = {
   logoUrl?: true
   websiteUrl?: true
   status?: true
+  feePercent?: true
+  bankCode?: true
+  bankAccountNumber?: true
+  bankAccountName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +121,10 @@ export type OrganizerMaxAggregateInputType = {
   logoUrl?: true
   websiteUrl?: true
   status?: true
+  feePercent?: true
+  bankCode?: true
+  bankAccountNumber?: true
+  bankAccountName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +138,10 @@ export type OrganizerCountAggregateInputType = {
   logoUrl?: true
   websiteUrl?: true
   status?: true
+  feePercent?: true
+  bankCode?: true
+  bankAccountNumber?: true
+  bankAccountName?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -143,6 +185,18 @@ export type OrganizerAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: OrganizerAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: OrganizerSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: OrganizerMinAggregateInputType
@@ -173,6 +227,8 @@ export type OrganizerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   _count?: OrganizerCountAggregateInputType | true
+  _avg?: OrganizerAvgAggregateInputType
+  _sum?: OrganizerSumAggregateInputType
   _min?: OrganizerMinAggregateInputType
   _max?: OrganizerMaxAggregateInputType
 }
@@ -186,9 +242,15 @@ export type OrganizerGroupByOutputType = {
   logoUrl: string | null
   websiteUrl: string | null
   status: $Enums.OrganizerStatus
+  feePercent: number | null
+  bankCode: string | null
+  bankAccountNumber: string | null
+  bankAccountName: string | null
   createdAt: Date
   updatedAt: Date
   _count: OrganizerCountAggregateOutputType | null
+  _avg: OrganizerAvgAggregateOutputType | null
+  _sum: OrganizerSumAggregateOutputType | null
   _min: OrganizerMinAggregateOutputType | null
   _max: OrganizerMaxAggregateOutputType | null
 }
@@ -220,10 +282,16 @@ export type OrganizerWhereInput = {
   logoUrl?: Prisma.StringNullableFilter<"Organizer"> | string | null
   websiteUrl?: Prisma.StringNullableFilter<"Organizer"> | string | null
   status?: Prisma.EnumOrganizerStatusFilter<"Organizer"> | $Enums.OrganizerStatus
+  feePercent?: Prisma.FloatNullableFilter<"Organizer"> | number | null
+  bankCode?: Prisma.StringNullableFilter<"Organizer"> | string | null
+  bankAccountNumber?: Prisma.StringNullableFilter<"Organizer"> | string | null
+  bankAccountName?: Prisma.StringNullableFilter<"Organizer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Organizer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organizer"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   events?: Prisma.EventListRelationFilter
+  payoutRequests?: Prisma.PayoutRequestListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }
 
 export type OrganizerOrderByWithRelationInput = {
@@ -235,10 +303,16 @@ export type OrganizerOrderByWithRelationInput = {
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   websiteUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  feePercent?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankAccountName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   events?: Prisma.EventOrderByRelationAggregateInput
+  payoutRequests?: Prisma.PayoutRequestOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type OrganizerWhereUniqueInput = Prisma.AtLeast<{
@@ -253,10 +327,16 @@ export type OrganizerWhereUniqueInput = Prisma.AtLeast<{
   logoUrl?: Prisma.StringNullableFilter<"Organizer"> | string | null
   websiteUrl?: Prisma.StringNullableFilter<"Organizer"> | string | null
   status?: Prisma.EnumOrganizerStatusFilter<"Organizer"> | $Enums.OrganizerStatus
+  feePercent?: Prisma.FloatNullableFilter<"Organizer"> | number | null
+  bankCode?: Prisma.StringNullableFilter<"Organizer"> | string | null
+  bankAccountNumber?: Prisma.StringNullableFilter<"Organizer"> | string | null
+  bankAccountName?: Prisma.StringNullableFilter<"Organizer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Organizer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organizer"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   events?: Prisma.EventListRelationFilter
+  payoutRequests?: Prisma.PayoutRequestListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }, "id" | "userId" | "slug">
 
 export type OrganizerOrderByWithAggregationInput = {
@@ -268,11 +348,17 @@ export type OrganizerOrderByWithAggregationInput = {
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   websiteUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  feePercent?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankAccountName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrganizerCountOrderByAggregateInput
+  _avg?: Prisma.OrganizerAvgOrderByAggregateInput
   _max?: Prisma.OrganizerMaxOrderByAggregateInput
   _min?: Prisma.OrganizerMinOrderByAggregateInput
+  _sum?: Prisma.OrganizerSumOrderByAggregateInput
 }
 
 export type OrganizerScalarWhereWithAggregatesInput = {
@@ -287,6 +373,10 @@ export type OrganizerScalarWhereWithAggregatesInput = {
   logoUrl?: Prisma.StringNullableWithAggregatesFilter<"Organizer"> | string | null
   websiteUrl?: Prisma.StringNullableWithAggregatesFilter<"Organizer"> | string | null
   status?: Prisma.EnumOrganizerStatusWithAggregatesFilter<"Organizer"> | $Enums.OrganizerStatus
+  feePercent?: Prisma.FloatNullableWithAggregatesFilter<"Organizer"> | number | null
+  bankCode?: Prisma.StringNullableWithAggregatesFilter<"Organizer"> | string | null
+  bankAccountNumber?: Prisma.StringNullableWithAggregatesFilter<"Organizer"> | string | null
+  bankAccountName?: Prisma.StringNullableWithAggregatesFilter<"Organizer"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Organizer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Organizer"> | Date | string
 }
@@ -299,10 +389,16 @@ export type OrganizerCreateInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrganizerInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateInput = {
@@ -314,9 +410,15 @@ export type OrganizerUncheckedCreateInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUpdateInput = {
@@ -327,10 +429,16 @@ export type OrganizerUpdateInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateInput = {
@@ -342,9 +450,15 @@ export type OrganizerUncheckedUpdateInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerCreateManyInput = {
@@ -356,6 +470,10 @@ export type OrganizerCreateManyInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -368,6 +486,10 @@ export type OrganizerUpdateManyMutationInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,6 +503,10 @@ export type OrganizerUncheckedUpdateManyInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,8 +525,16 @@ export type OrganizerCountOrderByAggregateInput = {
   logoUrl?: Prisma.SortOrder
   websiteUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  feePercent?: Prisma.SortOrder
+  bankCode?: Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrder
+  bankAccountName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrganizerAvgOrderByAggregateInput = {
+  feePercent?: Prisma.SortOrder
 }
 
 export type OrganizerMaxOrderByAggregateInput = {
@@ -412,6 +546,10 @@ export type OrganizerMaxOrderByAggregateInput = {
   logoUrl?: Prisma.SortOrder
   websiteUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  feePercent?: Prisma.SortOrder
+  bankCode?: Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrder
+  bankAccountName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -425,8 +563,16 @@ export type OrganizerMinOrderByAggregateInput = {
   logoUrl?: Prisma.SortOrder
   websiteUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  feePercent?: Prisma.SortOrder
+  bankCode?: Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrder
+  bankAccountName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrganizerSumOrderByAggregateInput = {
+  feePercent?: Prisma.SortOrder
 }
 
 export type OrganizerScalarRelationFilter = {
@@ -470,6 +616,14 @@ export type EnumOrganizerStatusFieldUpdateOperationsInput = {
   set?: $Enums.OrganizerStatus
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type OrganizerCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.OrganizerCreateWithoutEventsInput, Prisma.OrganizerUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutEventsInput
@@ -484,6 +638,34 @@ export type OrganizerUpdateOneRequiredWithoutEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizerUpdateToOneWithWhereWithoutEventsInput, Prisma.OrganizerUpdateWithoutEventsInput>, Prisma.OrganizerUncheckedUpdateWithoutEventsInput>
 }
 
+export type OrganizerCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.OrganizerCreateWithoutPaymentsInput, Prisma.OrganizerUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.OrganizerWhereUniqueInput
+}
+
+export type OrganizerUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizerCreateWithoutPaymentsInput, Prisma.OrganizerUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.OrganizerUpsertWithoutPaymentsInput
+  connect?: Prisma.OrganizerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizerUpdateToOneWithWhereWithoutPaymentsInput, Prisma.OrganizerUpdateWithoutPaymentsInput>, Prisma.OrganizerUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type OrganizerCreateNestedOneWithoutPayoutRequestsInput = {
+  create?: Prisma.XOR<Prisma.OrganizerCreateWithoutPayoutRequestsInput, Prisma.OrganizerUncheckedCreateWithoutPayoutRequestsInput>
+  connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutPayoutRequestsInput
+  connect?: Prisma.OrganizerWhereUniqueInput
+}
+
+export type OrganizerUpdateOneRequiredWithoutPayoutRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizerCreateWithoutPayoutRequestsInput, Prisma.OrganizerUncheckedCreateWithoutPayoutRequestsInput>
+  connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutPayoutRequestsInput
+  upsert?: Prisma.OrganizerUpsertWithoutPayoutRequestsInput
+  connect?: Prisma.OrganizerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizerUpdateToOneWithWhereWithoutPayoutRequestsInput, Prisma.OrganizerUpdateWithoutPayoutRequestsInput>, Prisma.OrganizerUncheckedUpdateWithoutPayoutRequestsInput>
+}
+
 export type OrganizerCreateWithoutUserInput = {
   id?: string
   name: string
@@ -492,9 +674,15 @@ export type OrganizerCreateWithoutUserInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateWithoutUserInput = {
@@ -505,9 +693,15 @@ export type OrganizerUncheckedCreateWithoutUserInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerCreateOrConnectWithoutUserInput = {
@@ -534,9 +728,15 @@ export type OrganizerUpdateWithoutUserInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateWithoutUserInput = {
@@ -547,9 +747,15 @@ export type OrganizerUncheckedUpdateWithoutUserInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerCreateWithoutEventsInput = {
@@ -560,9 +766,15 @@ export type OrganizerCreateWithoutEventsInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateWithoutEventsInput = {
@@ -574,8 +786,14 @@ export type OrganizerUncheckedCreateWithoutEventsInput = {
   logoUrl?: string | null
   websiteUrl?: string | null
   status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerCreateOrConnectWithoutEventsInput = {
@@ -602,9 +820,15 @@ export type OrganizerUpdateWithoutEventsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateWithoutEventsInput = {
@@ -616,8 +840,198 @@ export type OrganizerUncheckedUpdateWithoutEventsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
+}
+
+export type OrganizerCreateWithoutPaymentsInput = {
+  id?: string
+  name: string
+  slug: string
+  bio?: string | null
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutOrganizerInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
+}
+
+export type OrganizerUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  userId: string
+  name: string
+  slug: string
+  bio?: string | null
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
+}
+
+export type OrganizerCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.OrganizerWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizerCreateWithoutPaymentsInput, Prisma.OrganizerUncheckedCreateWithoutPaymentsInput>
+}
+
+export type OrganizerUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.OrganizerUpdateWithoutPaymentsInput, Prisma.OrganizerUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.OrganizerCreateWithoutPaymentsInput, Prisma.OrganizerUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.OrganizerWhereInput
+}
+
+export type OrganizerUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.OrganizerWhereInput
+  data: Prisma.XOR<Prisma.OrganizerUpdateWithoutPaymentsInput, Prisma.OrganizerUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type OrganizerUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
+}
+
+export type OrganizerUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
+}
+
+export type OrganizerCreateWithoutPayoutRequestsInput = {
+  id?: string
+  name: string
+  slug: string
+  bio?: string | null
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutOrganizerInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
+}
+
+export type OrganizerUncheckedCreateWithoutPayoutRequestsInput = {
+  id?: string
+  userId: string
+  name: string
+  slug: string
+  bio?: string | null
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
+}
+
+export type OrganizerCreateOrConnectWithoutPayoutRequestsInput = {
+  where: Prisma.OrganizerWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizerCreateWithoutPayoutRequestsInput, Prisma.OrganizerUncheckedCreateWithoutPayoutRequestsInput>
+}
+
+export type OrganizerUpsertWithoutPayoutRequestsInput = {
+  update: Prisma.XOR<Prisma.OrganizerUpdateWithoutPayoutRequestsInput, Prisma.OrganizerUncheckedUpdateWithoutPayoutRequestsInput>
+  create: Prisma.XOR<Prisma.OrganizerCreateWithoutPayoutRequestsInput, Prisma.OrganizerUncheckedCreateWithoutPayoutRequestsInput>
+  where?: Prisma.OrganizerWhereInput
+}
+
+export type OrganizerUpdateToOneWithWhereWithoutPayoutRequestsInput = {
+  where?: Prisma.OrganizerWhereInput
+  data: Prisma.XOR<Prisma.OrganizerUpdateWithoutPayoutRequestsInput, Prisma.OrganizerUncheckedUpdateWithoutPayoutRequestsInput>
+}
+
+export type OrganizerUpdateWithoutPayoutRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
+}
+
+export type OrganizerUncheckedUpdateWithoutPayoutRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 
@@ -627,10 +1041,14 @@ export type OrganizerUncheckedUpdateWithoutEventsInput = {
 
 export type OrganizerCountOutputType = {
   events: number
+  payoutRequests: number
+  payments: number
 }
 
 export type OrganizerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   events?: boolean | OrganizerCountOutputTypeCountEventsArgs
+  payoutRequests?: boolean | OrganizerCountOutputTypeCountPayoutRequestsArgs
+  payments?: boolean | OrganizerCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -650,6 +1068,20 @@ export type OrganizerCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Type
   where?: Prisma.EventWhereInput
 }
 
+/**
+ * OrganizerCountOutputType without action
+ */
+export type OrganizerCountOutputTypeCountPayoutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PayoutRequestWhereInput
+}
+
+/**
+ * OrganizerCountOutputType without action
+ */
+export type OrganizerCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
 
 export type OrganizerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -660,10 +1092,16 @@ export type OrganizerSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   logoUrl?: boolean
   websiteUrl?: boolean
   status?: boolean
+  feePercent?: boolean
+  bankCode?: boolean
+  bankAccountNumber?: boolean
+  bankAccountName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   events?: boolean | Prisma.Organizer$eventsArgs<ExtArgs>
+  payoutRequests?: boolean | Prisma.Organizer$payoutRequestsArgs<ExtArgs>
+  payments?: boolean | Prisma.Organizer$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizer"]>
 
@@ -676,6 +1114,10 @@ export type OrganizerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   logoUrl?: boolean
   websiteUrl?: boolean
   status?: boolean
+  feePercent?: boolean
+  bankCode?: boolean
+  bankAccountNumber?: boolean
+  bankAccountName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -690,6 +1132,10 @@ export type OrganizerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   logoUrl?: boolean
   websiteUrl?: boolean
   status?: boolean
+  feePercent?: boolean
+  bankCode?: boolean
+  bankAccountNumber?: boolean
+  bankAccountName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -704,14 +1150,20 @@ export type OrganizerSelectScalar = {
   logoUrl?: boolean
   websiteUrl?: boolean
   status?: boolean
+  feePercent?: boolean
+  bankCode?: boolean
+  bankAccountNumber?: boolean
+  bankAccountName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrganizerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "slug" | "bio" | "logoUrl" | "websiteUrl" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["organizer"]>
+export type OrganizerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "slug" | "bio" | "logoUrl" | "websiteUrl" | "status" | "feePercent" | "bankCode" | "bankAccountNumber" | "bankAccountName" | "createdAt" | "updatedAt", ExtArgs["result"]["organizer"]>
 export type OrganizerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   events?: boolean | Prisma.Organizer$eventsArgs<ExtArgs>
+  payoutRequests?: boolean | Prisma.Organizer$payoutRequestsArgs<ExtArgs>
+  payments?: boolean | Prisma.Organizer$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -726,6 +1178,8 @@ export type $OrganizerPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     events: Prisma.$EventPayload<ExtArgs>[]
+    payoutRequests: Prisma.$PayoutRequestPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -736,6 +1190,16 @@ export type $OrganizerPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     logoUrl: string | null
     websiteUrl: string | null
     status: $Enums.OrganizerStatus
+    /**
+     * Custom platform fee % for partner organizers. Null = use env default.
+     */
+    feePercent: number | null
+    /**
+     * Paystack bank details for payouts
+     */
+    bankCode: string | null
+    bankAccountNumber: string | null
+    bankAccountName: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["organizer"]>
@@ -1134,6 +1598,8 @@ export interface Prisma__OrganizerClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   events<T extends Prisma.Organizer$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payoutRequests<T extends Prisma.Organizer$payoutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$payoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.Organizer$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1171,6 +1637,10 @@ export interface OrganizerFieldRefs {
   readonly logoUrl: Prisma.FieldRef<"Organizer", 'String'>
   readonly websiteUrl: Prisma.FieldRef<"Organizer", 'String'>
   readonly status: Prisma.FieldRef<"Organizer", 'OrganizerStatus'>
+  readonly feePercent: Prisma.FieldRef<"Organizer", 'Float'>
+  readonly bankCode: Prisma.FieldRef<"Organizer", 'String'>
+  readonly bankAccountNumber: Prisma.FieldRef<"Organizer", 'String'>
+  readonly bankAccountName: Prisma.FieldRef<"Organizer", 'String'>
   readonly createdAt: Prisma.FieldRef<"Organizer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Organizer", 'DateTime'>
 }
@@ -1595,6 +2065,54 @@ export type Organizer$eventsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+}
+
+/**
+ * Organizer.payoutRequests
+ */
+export type Organizer$payoutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PayoutRequest
+   */
+  select?: Prisma.PayoutRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PayoutRequest
+   */
+  omit?: Prisma.PayoutRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PayoutRequestInclude<ExtArgs> | null
+  where?: Prisma.PayoutRequestWhereInput
+  orderBy?: Prisma.PayoutRequestOrderByWithRelationInput | Prisma.PayoutRequestOrderByWithRelationInput[]
+  cursor?: Prisma.PayoutRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PayoutRequestScalarFieldEnum | Prisma.PayoutRequestScalarFieldEnum[]
+}
+
+/**
+ * Organizer.payments
+ */
+export type Organizer$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**
