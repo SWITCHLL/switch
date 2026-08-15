@@ -1,0 +1,534 @@
+// SWITCH Platform — Prisma Schema
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  ORGANIZER
+  ADMIN
+}
+
+enum OrganizerStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum KycStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum SeatingType {
+  GENERAL_ADMISSION
+  RESERVED
+  MIXED
+}
+
+enum SeatMapStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum SectionType {
+  RESERVED
+  GENERAL_ADMISSION
+}
+
+enum SeatType {
+  STANDARD
+  VIP
+  VVIP
+  ACCESSIBLE
+  COMPANION
+  PREMIUM
+}
+
+enum EventSeatStatus {
+  AVAILABLE
+  HELD
+  RESERVED
+  SOLD
+  BLOCKED
+}
+
+enum TicketTypeStatus {
+  ACTIVE
+  INACTIVE
+  SOLD_OUT
+}
+
+enum ReservationStatus {
+  ACTIVE
+  EXPIRED
+  COMPLETED
+  CANCELLED
+}
+
+enum TicketStatus {
+  ACTIVE
+  USED
+  CANCELLED
+  REFUNDED
+  EXPIRED
+}
+
+// ─── User & Auth ──────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  organizer     Organizer?
+  reservations  Reservation[]
+  tickets       Ticket[]
+  organizerApplication OrganizerApplication?
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── Organizer ────────────────────────────────────────────────────────────────
+
+model Organizer {
+  id          String          @id @default(cuid())
+  userId      String          @unique
+  name        String
+  slug        String          @unique
+  bio         String?         @db.Text
+  logoUrl     String?
+  websiteUrl  String?
+  status      OrganizerStatus @default(PENDING)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events Event[]
+
+  @@map("organizers")
+}
+
+// ─── Organizer Application (KYC) ─────────────────────────────────────────────
+
+model OrganizerApplication {
+  id     String    @id @default(cuid())
+  userId String    @unique
+
+  /// Public display name for the organizer page
+  organizerName String
+  /// Short bio / description
+  bio           String?  @db.Text
+
+  // ── Identity verification ─────────────────────────────────────────────────
+  /// National Identification Number
+  nin    String
+  /// Bank Verification Number
+  bvn    String
+
+  /// Means of ID type submitted (e.g. "NATIONAL_ID", "DRIVERS_LICENSE", "INTL_PASSPORT", "VOTERS_CARD")
+  idType    String
+  /// CDN / storage URL of the uploaded ID document
+  idDocUrl  String
+
+  // ── Social handles (all optional) ────────────────────────────────────────
+  instagramUrl String?
+  twitterUrl   String?
+  facebookUrl  String?
+  websiteUrl   String?
+
+  // ── Review ────────────────────────────────────────────────────────────────
+  kycStatus      KycStatus @default(PENDING)
+  /// Admin note — rejection reason or approval note
+  reviewNote     String?   @db.Text
+  reviewedAt     DateTime?
+  /// Admin user who reviewed this application
+  reviewedBy     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([kycStatus])
+  @@map("organizer_applications")
+}
+
+// ─── Category ─────────────────────────────────────────────────────────────────
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  /// CDN image URL for the category icon/banner
+  imageUrl  String?
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events Event[]
+
+  @@map("categories")
+}
+
+// ─── Venue ────────────────────────────────────────────────────────────────────
+
+model Venue {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  city      String
+  state     String?
+  country   String
+  /// Maximum physical capacity of the venue
+  capacity  Int?
+  /// CDN image URL
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seatMaps SeatMap[]
+  events   Event[]
+
+  @@map("venues")
+}
+
+// ─── Seat Map ─────────────────────────────────────────────────────────────────
+
+model SeatMap {
+  id      String        @id @default(cuid())
+  venueId String
+  name    String
+  /// Incremented when the layout changes — existing events keep their snapshot
+  version Int           @default(1)
+  /// Logical canvas dimensions (px) for the visual builder
+  width   Float?
+  height  Float?
+  status  SeatMapStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  venue    Venue     @relation(fields: [venueId], references: [id])
+  sections Section[]
+  events   Event[]
+
+  @@index([venueId])
+  @@map("seat_maps")
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+
+model Section {
+  id        String      @id @default(cuid())
+  seatMapId String
+  name      String
+  /// Short uppercase code, e.g. "VIP", "REG", "STANDING"
+  code      String
+  type      SectionType @default(RESERVED)
+  capacity  Int?
+  /// Visual builder coordinates
+  positionX Float?
+  positionY Float?
+  width     Float?
+  height    Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seatMap SeatMap @relation(fields: [seatMapId], references: [id])
+  rows    Row[]
+
+  @@index([seatMapId])
+  @@map("sections")
+}
+
+// ─── Row ──────────────────────────────────────────────────────────────────────
+
+model Row {
+  id        String  @id @default(cuid())
+  sectionId String
+  /// Display label: "A", "B", "101", etc.
+  label     String
+  /// Ordering within the section
+  position  Int?
+  seatsCount Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  section Section @relation(fields: [sectionId], references: [id])
+  seats   Seat[]
+
+  /// Label must be unique within a section
+  @@unique([sectionId, label])
+  @@map("rows")
+}
+
+// ─── Seat ─────────────────────────────────────────────────────────────────────
+
+model Seat {
+  id        String   @id @default(cuid())
+  rowId     String
+  sectionId String
+  /// Display label: "A12", "B4", etc.
+  label     String
+  /// Numeric seat number within the row
+  number    Int?
+  type      SeatType @default(STANDARD)
+  /// Visual builder coordinates
+  positionX Float?
+  positionY Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  row        Row         @relation(fields: [rowId], references: [id])
+  eventSeats EventSeat[]
+
+  /// Label must be unique within a row
+  @@unique([rowId, label])
+  @@index([sectionId])
+  @@map("seats")
+}
+
+// ─── Event ────────────────────────────────────────────────────────────────────
+
+model Event {
+  id          String      @id @default(cuid())
+  organizerId String
+  venueId     String?
+  seatMapId   String?
+  categoryId  String?
+
+  title       String
+  slug        String      @unique
+  description String?     @db.Text
+  /// CDN image URL for the event banner/poster
+  imageUrl    String?
+
+  seatingType SeatingType @default(GENERAL_ADMISSION)
+  status      EventStatus @default(DRAFT)
+
+  startsAt    DateTime
+  endsAt      DateTime?
+  /// When tickets go on sale
+  salesStart  DateTime?
+  /// When ticket sales close
+  salesEnd    DateTime?
+
+  /// Total capacity override (for GA events; reserved events use seat inventory)
+  capacity    Int?
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  organizer   Organizer    @relation(fields: [organizerId], references: [id])
+  venue       Venue?       @relation(fields: [venueId], references: [id])
+  seatMap     SeatMap?     @relation(fields: [seatMapId], references: [id])
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  ticketTypes TicketType[]
+  eventSeats  EventSeat[]  @relation("EventToEventSeats")
+  reservations Reservation[]
+  tickets     Ticket[]
+  images      EventImage[]
+
+  @@index([status, startsAt])
+  @@index([organizerId])
+  @@index([categoryId])
+  @@map("events")
+}
+
+// ─── Event Image ──────────────────────────────────────────────────────────────
+
+model EventImage {
+  id        String   @id @default(cuid())
+  eventId   String
+  /// Public CDN/Supabase Storage URL
+  url       String
+  /// Display order — 0 = primary banner
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, position])
+  @@map("event_images")
+}
+
+// ─── Ticket Type ──────────────────────────────────────────────────────────────
+
+model TicketType {
+  id          String           @id @default(cuid())
+  eventId     String
+  name        String
+  description String?
+  /// Price in minor currency units (kobo for NGN, cents for USD)
+  price       Int
+  currency    String           @default("NGN")
+  /// Total available quantity; null = unlimited
+  quantity    Int?
+  /// Number sold — derived, kept in sync on purchase
+  sold        Int              @default(0)
+  salesStart  DateTime?
+  salesEnd    DateTime?
+  status      TicketTypeStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventSeats EventSeat[]
+  tickets    Ticket[]
+
+  @@index([eventId])
+  @@map("ticket_types")
+}
+
+// ─── Event Seat (inventory) ───────────────────────────────────────────────────
+
+model EventSeat {
+  id            String          @id @default(cuid())
+  eventId       String
+  seatId        String
+  ticketTypeId  String?
+  /// Price in minor units for this specific seat/event combination
+  price         Int
+  status        EventSeatStatus @default(AVAILABLE)
+  /// Redis lock expiry mirrors this for consistency
+  lockedUntil   DateTime?
+  /// FK to the reservation currently holding this seat (nullable)
+  reservationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations — Event is the owning side via eventId scalar
+  event       Event        @relation("EventToEventSeats", fields: [eventId], references: [id], onDelete: Cascade)
+  seat        Seat         @relation(fields: [seatId], references: [id])
+  ticketType  TicketType?  @relation(fields: [ticketTypeId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+  // Back-relation to Ticket — Ticket owns the FK
+  tickets     Ticket[]
+
+  /// One EventSeat record per seat per event
+  @@unique([eventId, seatId])
+  @@index([eventId, status])
+  @@map("event_seats")
+}
+
+// ─── Reservation ─────────────────────────────────────────────────────────────
+
+model Reservation {
+  id        String            @id @default(cuid())
+  eventId   String
+  userId    String
+  status    ReservationStatus @default(ACTIVE)
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event      Event       @relation(fields: [eventId], references: [id])
+  user       User        @relation(fields: [userId], references: [id])
+  eventSeats EventSeat[]
+
+  @@index([eventId, status])
+  @@index([userId])
+  @@map("reservations")
+}
+
+// ─── Ticket ───────────────────────────────────────────────────────────────────
+
+model Ticket {
+  id           String       @id @default(cuid())
+  eventId      String
+  userId       String
+  /// Null for general admission tickets
+  eventSeatId  String?      @unique
+  ticketTypeId String
+  /// Human-readable: SWT-2026-8F92A1
+  ticketNumber String       @unique
+  /// Secure opaque token encoded in the QR code
+  qrCode       String       @unique
+  status       TicketStatus @default(ACTIVE)
+  issuedAt     DateTime     @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event      Event      @relation(fields: [eventId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+  /// Ticket owns the FK — EventSeat.ticket is the virtual back-relation
+  eventSeat  EventSeat? @relation(fields: [eventSeatId], references: [id])
+  ticketType TicketType @relation(fields: [ticketTypeId], references: [id])
+
+  @@index([eventId])
+  @@index([userId])
+  @@map("tickets")
+}

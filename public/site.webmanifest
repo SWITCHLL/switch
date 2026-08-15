@@ -1,0 +1,16 @@
+{
+  "name": "SWITCH",
+  "short_name": "SWITCH",
+  "description": "SWITCH — music discovery and live events.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
