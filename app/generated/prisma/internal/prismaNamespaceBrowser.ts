@@ -72,7 +72,9 @@ export const ModelName = {
   Payment: 'Payment',
   PayoutRequest: 'PayoutRequest',
   EventReview: 'EventReview',
-  RefundRequest: 'RefundRequest'
+  RefundRequest: 'RefundRequest',
+  GroupOrder: 'GroupOrder',
+  GroupOrderSlot: 'GroupOrderSlot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -456,6 +458,41 @@ export const RefundRequestScalarFieldEnum = {
 } as const
 
 export type RefundRequestScalarFieldEnum = (typeof RefundRequestScalarFieldEnum)[keyof typeof RefundRequestScalarFieldEnum]
+
+
+export const GroupOrderScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  initiatorId: 'initiatorId',
+  code: 'code',
+  status: 'status',
+  requireFullPayment: 'requireFullPayment',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupOrderScalarFieldEnum = (typeof GroupOrderScalarFieldEnum)[keyof typeof GroupOrderScalarFieldEnum]
+
+
+export const GroupOrderSlotScalarFieldEnum = {
+  id: 'id',
+  groupOrderId: 'groupOrderId',
+  eventSeatId: 'eventSeatId',
+  ticketTypeId: 'ticketTypeId',
+  price: 'price',
+  currency: 'currency',
+  label: 'label',
+  status: 'status',
+  claimedBy: 'claimedBy',
+  claimedAt: 'claimedAt',
+  paymentId: 'paymentId',
+  ticketId: 'ticketId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupOrderSlotScalarFieldEnum = (typeof GroupOrderSlotScalarFieldEnum)[keyof typeof GroupOrderSlotScalarFieldEnum]
 
 
 export const SortOrder = {

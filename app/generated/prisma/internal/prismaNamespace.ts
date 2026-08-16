@@ -418,7 +418,9 @@ export const ModelName = {
   Payment: 'Payment',
   PayoutRequest: 'PayoutRequest',
   EventReview: 'EventReview',
-  RefundRequest: 'RefundRequest'
+  RefundRequest: 'RefundRequest',
+  GroupOrder: 'GroupOrder',
+  GroupOrderSlot: 'GroupOrderSlot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -434,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "organizer" | "organizerApplication" | "category" | "venue" | "seatMap" | "section" | "row" | "seat" | "event" | "eventImage" | "ticketType" | "eventSeat" | "reservation" | "ticket" | "payment" | "payoutRequest" | "eventReview" | "refundRequest"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "organizer" | "organizerApplication" | "category" | "venue" | "seatMap" | "section" | "row" | "seat" | "event" | "eventImage" | "ticketType" | "eventSeat" | "reservation" | "ticket" | "payment" | "payoutRequest" | "eventReview" | "refundRequest" | "groupOrder" | "groupOrderSlot"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2066,6 +2068,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GroupOrder: {
+      payload: Prisma.$GroupOrderPayload<ExtArgs>
+      fields: Prisma.GroupOrderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GroupOrderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GroupOrderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>
+        }
+        findFirst: {
+          args: Prisma.GroupOrderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GroupOrderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>
+        }
+        findMany: {
+          args: Prisma.GroupOrderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>[]
+        }
+        create: {
+          args: Prisma.GroupOrderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>
+        }
+        createMany: {
+          args: Prisma.GroupOrderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GroupOrderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>[]
+        }
+        delete: {
+          args: Prisma.GroupOrderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>
+        }
+        update: {
+          args: Prisma.GroupOrderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>
+        }
+        deleteMany: {
+          args: Prisma.GroupOrderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GroupOrderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GroupOrderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>[]
+        }
+        upsert: {
+          args: Prisma.GroupOrderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderPayload>
+        }
+        aggregate: {
+          args: Prisma.GroupOrderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGroupOrder>
+        }
+        groupBy: {
+          args: Prisma.GroupOrderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupOrderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GroupOrderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupOrderCountAggregateOutputType> | number
+        }
+      }
+    }
+    GroupOrderSlot: {
+      payload: Prisma.$GroupOrderSlotPayload<ExtArgs>
+      fields: Prisma.GroupOrderSlotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GroupOrderSlotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GroupOrderSlotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>
+        }
+        findFirst: {
+          args: Prisma.GroupOrderSlotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GroupOrderSlotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>
+        }
+        findMany: {
+          args: Prisma.GroupOrderSlotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>[]
+        }
+        create: {
+          args: Prisma.GroupOrderSlotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>
+        }
+        createMany: {
+          args: Prisma.GroupOrderSlotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GroupOrderSlotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>[]
+        }
+        delete: {
+          args: Prisma.GroupOrderSlotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>
+        }
+        update: {
+          args: Prisma.GroupOrderSlotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>
+        }
+        deleteMany: {
+          args: Prisma.GroupOrderSlotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GroupOrderSlotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GroupOrderSlotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>[]
+        }
+        upsert: {
+          args: Prisma.GroupOrderSlotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupOrderSlotPayload>
+        }
+        aggregate: {
+          args: Prisma.GroupOrderSlotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGroupOrderSlot>
+        }
+        groupBy: {
+          args: Prisma.GroupOrderSlotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupOrderSlotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GroupOrderSlotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupOrderSlotCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2472,6 +2622,41 @@ export const RefundRequestScalarFieldEnum = {
 export type RefundRequestScalarFieldEnum = (typeof RefundRequestScalarFieldEnum)[keyof typeof RefundRequestScalarFieldEnum]
 
 
+export const GroupOrderScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  initiatorId: 'initiatorId',
+  code: 'code',
+  status: 'status',
+  requireFullPayment: 'requireFullPayment',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupOrderScalarFieldEnum = (typeof GroupOrderScalarFieldEnum)[keyof typeof GroupOrderScalarFieldEnum]
+
+
+export const GroupOrderSlotScalarFieldEnum = {
+  id: 'id',
+  groupOrderId: 'groupOrderId',
+  eventSeatId: 'eventSeatId',
+  ticketTypeId: 'ticketTypeId',
+  price: 'price',
+  currency: 'currency',
+  label: 'label',
+  status: 'status',
+  claimedBy: 'claimedBy',
+  claimedAt: 'claimedAt',
+  paymentId: 'paymentId',
+  ticketId: 'ticketId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupOrderSlotScalarFieldEnum = (typeof GroupOrderSlotScalarFieldEnum)[keyof typeof GroupOrderSlotScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2774,6 +2959,34 @@ export type EnumRefundStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 export type ListEnumRefundStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RefundStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'GroupOrderStatus'
+ */
+export type EnumGroupOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GroupOrderStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'GroupOrderStatus[]'
+ */
+export type ListEnumGroupOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GroupOrderStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GroupSlotStatus'
+ */
+export type EnumGroupSlotStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GroupSlotStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'GroupSlotStatus[]'
+ */
+export type ListEnumGroupSlotStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GroupSlotStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2947,6 +3160,8 @@ export type GlobalOmitConfig = {
   payoutRequest?: Prisma.PayoutRequestOmit
   eventReview?: Prisma.EventReviewOmit
   refundRequest?: Prisma.RefundRequestOmit
+  groupOrder?: Prisma.GroupOrderOmit
+  groupOrderSlot?: Prisma.GroupOrderSlotOmit
 }
 
 /* Types for Logging */

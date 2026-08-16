@@ -215,6 +215,8 @@ export type UserWhereInput = {
   payments?: Prisma.PaymentListRelationFilter
   reviews?: Prisma.EventReviewListRelationFilter
   refundRequests?: Prisma.RefundRequestListRelationFilter
+  initiatedGroups?: Prisma.GroupOrderListRelationFilter
+  claimedSlots?: Prisma.GroupOrderSlotListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -235,6 +237,8 @@ export type UserOrderByWithRelationInput = {
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   reviews?: Prisma.EventReviewOrderByRelationAggregateInput
   refundRequests?: Prisma.RefundRequestOrderByRelationAggregateInput
+  initiatedGroups?: Prisma.GroupOrderOrderByRelationAggregateInput
+  claimedSlots?: Prisma.GroupOrderSlotOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +262,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   payments?: Prisma.PaymentListRelationFilter
   reviews?: Prisma.EventReviewListRelationFilter
   refundRequests?: Prisma.RefundRequestListRelationFilter
+  initiatedGroups?: Prisma.GroupOrderListRelationFilter
+  claimedSlots?: Prisma.GroupOrderSlotListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -306,6 +312,8 @@ export type UserCreateInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -326,6 +334,8 @@ export type UserUncheckedCreateInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUpdateInput = {
@@ -346,6 +356,8 @@ export type UserUpdateInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -366,6 +378,8 @@ export type UserUncheckedUpdateInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -437,6 +451,11 @@ export type UserMinOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -585,6 +604,36 @@ export type UserUpdateOneRequiredWithoutRefundRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefundRequestsInput, Prisma.UserUpdateWithoutRefundRequestsInput>, Prisma.UserUncheckedUpdateWithoutRefundRequestsInput>
 }
 
+export type UserCreateNestedOneWithoutInitiatedGroupsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInitiatedGroupsInput, Prisma.UserUncheckedCreateWithoutInitiatedGroupsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInitiatedGroupsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutInitiatedGroupsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInitiatedGroupsInput, Prisma.UserUncheckedCreateWithoutInitiatedGroupsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInitiatedGroupsInput
+  upsert?: Prisma.UserUpsertWithoutInitiatedGroupsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInitiatedGroupsInput, Prisma.UserUpdateWithoutInitiatedGroupsInput>, Prisma.UserUncheckedUpdateWithoutInitiatedGroupsInput>
+}
+
+export type UserCreateNestedOneWithoutClaimedSlotsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClaimedSlotsInput, Prisma.UserUncheckedCreateWithoutClaimedSlotsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClaimedSlotsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutClaimedSlotsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClaimedSlotsInput, Prisma.UserUncheckedCreateWithoutClaimedSlotsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClaimedSlotsInput
+  upsert?: Prisma.UserUpsertWithoutClaimedSlotsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClaimedSlotsInput, Prisma.UserUpdateWithoutClaimedSlotsInput>, Prisma.UserUncheckedUpdateWithoutClaimedSlotsInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -602,6 +651,8 @@ export type UserCreateWithoutAccountsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -621,6 +672,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -656,6 +709,8 @@ export type UserUpdateWithoutAccountsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -675,6 +730,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -694,6 +751,8 @@ export type UserCreateWithoutSessionsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -713,6 +772,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -748,6 +809,8 @@ export type UserUpdateWithoutSessionsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -767,6 +830,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutOrganizerInput = {
@@ -786,6 +851,8 @@ export type UserCreateWithoutOrganizerInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutOrganizerInput = {
@@ -805,6 +872,8 @@ export type UserUncheckedCreateWithoutOrganizerInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutOrganizerInput = {
@@ -840,6 +909,8 @@ export type UserUpdateWithoutOrganizerInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizerInput = {
@@ -859,6 +930,8 @@ export type UserUncheckedUpdateWithoutOrganizerInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutOrganizerApplicationInput = {
@@ -878,6 +951,8 @@ export type UserCreateWithoutOrganizerApplicationInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutOrganizerApplicationInput = {
@@ -897,6 +972,8 @@ export type UserUncheckedCreateWithoutOrganizerApplicationInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutOrganizerApplicationInput = {
@@ -932,6 +1009,8 @@ export type UserUpdateWithoutOrganizerApplicationInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizerApplicationInput = {
@@ -951,6 +1030,8 @@ export type UserUncheckedUpdateWithoutOrganizerApplicationInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutReservationsInput = {
@@ -970,6 +1051,8 @@ export type UserCreateWithoutReservationsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutReservationsInput = {
@@ -989,6 +1072,8 @@ export type UserUncheckedCreateWithoutReservationsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutReservationsInput = {
@@ -1024,6 +1109,8 @@ export type UserUpdateWithoutReservationsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReservationsInput = {
@@ -1043,6 +1130,8 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutTicketsInput = {
@@ -1062,6 +1151,8 @@ export type UserCreateWithoutTicketsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutTicketsInput = {
@@ -1081,6 +1172,8 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutTicketsInput = {
@@ -1116,6 +1209,8 @@ export type UserUpdateWithoutTicketsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketsInput = {
@@ -1135,6 +1230,8 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1154,6 +1251,8 @@ export type UserCreateWithoutPaymentsInput = {
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1173,6 +1272,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1208,6 +1309,8 @@ export type UserUpdateWithoutPaymentsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1227,6 +1330,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutReviewsInput = {
@@ -1246,6 +1351,8 @@ export type UserCreateWithoutReviewsInput = {
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
@@ -1265,6 +1372,8 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -1300,6 +1409,8 @@ export type UserUpdateWithoutReviewsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -1319,6 +1430,8 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserCreateWithoutRefundRequestsInput = {
@@ -1338,6 +1451,8 @@ export type UserCreateWithoutRefundRequestsInput = {
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
 }
 
 export type UserUncheckedCreateWithoutRefundRequestsInput = {
@@ -1357,6 +1472,8 @@ export type UserUncheckedCreateWithoutRefundRequestsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
 }
 
 export type UserCreateOrConnectWithoutRefundRequestsInput = {
@@ -1392,6 +1509,8 @@ export type UserUpdateWithoutRefundRequestsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefundRequestsInput = {
@@ -1411,6 +1530,208 @@ export type UserUncheckedUpdateWithoutRefundRequestsInput = {
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+}
+
+export type UserCreateWithoutInitiatedGroupsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+}
+
+export type UserUncheckedCreateWithoutInitiatedGroupsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+}
+
+export type UserCreateOrConnectWithoutInitiatedGroupsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInitiatedGroupsInput, Prisma.UserUncheckedCreateWithoutInitiatedGroupsInput>
+}
+
+export type UserUpsertWithoutInitiatedGroupsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInitiatedGroupsInput, Prisma.UserUncheckedUpdateWithoutInitiatedGroupsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInitiatedGroupsInput, Prisma.UserUncheckedCreateWithoutInitiatedGroupsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInitiatedGroupsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInitiatedGroupsInput, Prisma.UserUncheckedUpdateWithoutInitiatedGroupsInput>
+}
+
+export type UserUpdateWithoutInitiatedGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInitiatedGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+}
+
+export type UserCreateWithoutClaimedSlotsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+}
+
+export type UserUncheckedCreateWithoutClaimedSlotsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+}
+
+export type UserCreateOrConnectWithoutClaimedSlotsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutClaimedSlotsInput, Prisma.UserUncheckedCreateWithoutClaimedSlotsInput>
+}
+
+export type UserUpsertWithoutClaimedSlotsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutClaimedSlotsInput, Prisma.UserUncheckedUpdateWithoutClaimedSlotsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutClaimedSlotsInput, Prisma.UserUncheckedCreateWithoutClaimedSlotsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutClaimedSlotsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutClaimedSlotsInput, Prisma.UserUncheckedUpdateWithoutClaimedSlotsInput>
+}
+
+export type UserUpdateWithoutClaimedSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutClaimedSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
 }
 
 
@@ -1426,6 +1747,8 @@ export type UserCountOutputType = {
   payments: number
   reviews: number
   refundRequests: number
+  initiatedGroups: number
+  claimedSlots: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1436,6 +1759,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
   reviews?: boolean | UserCountOutputTypeCountReviewsArgs
   refundRequests?: boolean | UserCountOutputTypeCountRefundRequestsArgs
+  initiatedGroups?: boolean | UserCountOutputTypeCountInitiatedGroupsArgs
+  claimedSlots?: boolean | UserCountOutputTypeCountClaimedSlotsArgs
 }
 
 /**
@@ -1497,6 +1822,20 @@ export type UserCountOutputTypeCountRefundRequestsArgs<ExtArgs extends runtime.T
   where?: Prisma.RefundRequestWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInitiatedGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupOrderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountClaimedSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupOrderSlotWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1516,6 +1855,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   refundRequests?: boolean | Prisma.User$refundRequestsArgs<ExtArgs>
+  initiatedGroups?: boolean | Prisma.User$initiatedGroupsArgs<ExtArgs>
+  claimedSlots?: boolean | Prisma.User$claimedSlotsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1563,6 +1904,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   refundRequests?: boolean | Prisma.User$refundRequestsArgs<ExtArgs>
+  initiatedGroups?: boolean | Prisma.User$initiatedGroupsArgs<ExtArgs>
+  claimedSlots?: boolean | Prisma.User$claimedSlotsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1580,6 +1923,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     reviews: Prisma.$EventReviewPayload<ExtArgs>[]
     refundRequests: Prisma.$RefundRequestPayload<ExtArgs>[]
+    initiatedGroups: Prisma.$GroupOrderPayload<ExtArgs>[]
+    claimedSlots: Prisma.$GroupOrderSlotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1993,6 +2338,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refundRequests<T extends Prisma.User$refundRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refundRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  initiatedGroups<T extends Prisma.User$initiatedGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$initiatedGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  claimedSlots<T extends Prisma.User$claimedSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$claimedSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2626,6 +2973,54 @@ export type User$refundRequestsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.RefundRequestScalarFieldEnum | Prisma.RefundRequestScalarFieldEnum[]
+}
+
+/**
+ * User.initiatedGroups
+ */
+export type User$initiatedGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GroupOrder
+   */
+  select?: Prisma.GroupOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GroupOrder
+   */
+  omit?: Prisma.GroupOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupOrderInclude<ExtArgs> | null
+  where?: Prisma.GroupOrderWhereInput
+  orderBy?: Prisma.GroupOrderOrderByWithRelationInput | Prisma.GroupOrderOrderByWithRelationInput[]
+  cursor?: Prisma.GroupOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupOrderScalarFieldEnum | Prisma.GroupOrderScalarFieldEnum[]
+}
+
+/**
+ * User.claimedSlots
+ */
+export type User$claimedSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GroupOrderSlot
+   */
+  select?: Prisma.GroupOrderSlotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GroupOrderSlot
+   */
+  omit?: Prisma.GroupOrderSlotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupOrderSlotInclude<ExtArgs> | null
+  where?: Prisma.GroupOrderSlotWhereInput
+  orderBy?: Prisma.GroupOrderSlotOrderByWithRelationInput | Prisma.GroupOrderSlotOrderByWithRelationInput[]
+  cursor?: Prisma.GroupOrderSlotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupOrderSlotScalarFieldEnum | Prisma.GroupOrderSlotScalarFieldEnum[]
 }
 
 /**

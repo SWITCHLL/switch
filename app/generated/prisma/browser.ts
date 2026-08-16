@@ -127,3 +127,13 @@ export type EventReview = Prisma.EventReviewModel
  * 
  */
 export type RefundRequest = Prisma.RefundRequestModel
+/**
+ * Model GroupOrder
+ * 
+ */
+export type GroupOrder = Prisma.GroupOrderModel
+/**
+ * Model GroupOrderSlot
+ * 
+ */
+export type GroupOrderSlot = Prisma.GroupOrderSlotModel

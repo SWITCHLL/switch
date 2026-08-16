@@ -154,3 +154,23 @@ export const RefundStatus = {
 } as const
 
 export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus]
+
+
+export const GroupOrderStatus = {
+  PENDING: 'PENDING',
+  COMPLETE: 'COMPLETE',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type GroupOrderStatus = (typeof GroupOrderStatus)[keyof typeof GroupOrderStatus]
+
+
+export const GroupSlotStatus = {
+  OPEN: 'OPEN',
+  HELD: 'HELD',
+  PAID: 'PAID',
+  RELEASED: 'RELEASED'
+} as const
+
+export type GroupSlotStatus = (typeof GroupSlotStatus)[keyof typeof GroupSlotStatus]

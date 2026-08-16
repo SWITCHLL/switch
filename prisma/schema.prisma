@@ -114,6 +114,20 @@ enum RefundStatus {
   REJECTED
 }
 
+enum GroupOrderStatus {
+  PENDING   // waiting for all members to pay
+  COMPLETE  // all slots paid
+  EXPIRED   // deadline passed; partial/full release triggered
+  CANCELLED // initiator cancelled before any slot was paid
+}
+
+enum GroupSlotStatus {
+  OPEN     // unclaimed — any invited member can take it
+  HELD     // member claimed it, payment in progress
+  PAID     // payment complete, ticket issued
+  RELEASED // member dropped out or slot expired unpaid
+}
+
 // ─── User & Auth ──────────────────────────────────────────────────────────────
 
 model User {
@@ -135,6 +149,8 @@ model User {
   payments      Payment[]
   reviews       EventReview[]
   refundRequests RefundRequest[]
+  initiatedGroups GroupOrder[]       @relation("GroupOrderInitiator")
+  claimedSlots    GroupOrderSlot[]   @relation("GroupSlotClaimer")
 
   @@map("users")
 }
@@ -441,6 +457,7 @@ model Event {
   payoutRequests PayoutRequest[]
   reviews     EventReview[]
   refundRequests RefundRequest[]
+  groupOrders  GroupOrder[]
   @@index([status, startsAt])
   @@index([organizerId])
   @@index([categoryId])
@@ -488,6 +505,7 @@ model TicketType {
   event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventSeats EventSeat[]
   tickets    Ticket[]
+  groupSlots GroupOrderSlot[]
 
   @@index([eventId])
   @@map("ticket_types")
@@ -518,6 +536,7 @@ model EventSeat {
   reservation Reservation? @relation(fields: [reservationId], references: [id])
   // Back-relation to Ticket — Ticket owns the FK
   tickets     Ticket[]
+  groupSlots  GroupOrderSlot[]
 
   /// One EventSeat record per seat per event
   @@unique([eventId, seatId])
@@ -572,6 +591,7 @@ model Ticket {
   ticketType TicketType @relation(fields: [ticketTypeId], references: [id])
   payment    Payment?
   review     EventReview?
+  groupSlot  GroupOrderSlot?
 
   @@index([eventId])
   @@index([userId])
@@ -615,6 +635,7 @@ model Payment {
   event           Event         @relation(fields: [eventId], references: [id])
   payoutRequest   PayoutRequest? @relation("PaymentToPayoutRequest", fields: [payoutRequestId], references: [id])
   refundRequest   RefundRequest?
+  groupSlot       GroupOrderSlot?
 
   @@index([organizerId])
   @@index([eventId])
@@ -716,4 +737,69 @@ model RefundRequest {
   @@index([eventId])
   @@index([status])
   @@map("refund_requests")
+}
+
+// ─── Group Order ──────────────────────────────────────────────────────────────
+
+model GroupOrder {
+  id          String           @id @default(cuid())
+  eventId     String
+  initiatorId String
+  /// Short shareable code, e.g. "GRP-8F3A2C"
+  code        String           @unique
+  status      GroupOrderStatus @default(PENDING)
+  /// All-or-nothing: if true the order auto-cancels when it expires with unpaid slots.
+  /// If false, paid slots become confirmed and unpaid slots are released.
+  requireFullPayment Boolean  @default(false)
+  /// Hard deadline — BullMQ fires expiry job at this time
+  expiresAt   DateTime
+
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  event     Event            @relation(fields: [eventId], references: [id])
+  initiator User             @relation("GroupOrderInitiator", fields: [initiatorId], references: [id])
+  slots     GroupOrderSlot[]
+
+  @@index([eventId, status])
+  @@index([initiatorId])
+  @@map("group_orders")
+}
+
+// ─── Group Order Slot ─────────────────────────────────────────────────────────
+
+model GroupOrderSlot {
+  id           String          @id @default(cuid())
+  groupOrderId String
+  /// For RESERVED events: the specific EventSeat being held
+  eventSeatId  String?
+  /// For GA events: the ticket type the member will purchase
+  ticketTypeId String?
+  /// Price in minor units (kobo) — snapshotted at group creation
+  price        Int
+  currency     String          @default("NGN")
+  /// Optional label the initiator sets — e.g. "John's seat"
+  label        String?
+
+  status       GroupSlotStatus @default(OPEN)
+  /// User who claimed this slot (null = unclaimed)
+  claimedBy    String?
+  claimedAt    DateTime?
+  /// Set when member completes payment
+  paymentId    String?         @unique
+  /// Set when ticket is issued after payment
+  ticketId     String?         @unique
+
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  groupOrder   GroupOrder  @relation(fields: [groupOrderId], references: [id], onDelete: Cascade)
+  eventSeat    EventSeat?  @relation(fields: [eventSeatId], references: [id])
+  ticketType   TicketType? @relation(fields: [ticketTypeId], references: [id])
+  claimer      User?       @relation("GroupSlotClaimer", fields: [claimedBy], references: [id])
+  payment      Payment?    @relation(fields: [paymentId], references: [id])
+  ticket       Ticket?     @relation(fields: [ticketId], references: [id])
+
+  @@index([groupOrderId, status])
+  @@map("group_order_slots")
 }

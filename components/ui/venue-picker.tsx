@@ -49,13 +49,14 @@ export function VenuePicker({ defaultValue, onSelect, className }: VenuePickerPr
   const [apiReady, setApiReady] = useState(false)
   const [suggestions, setSuggestions] = useState<google.maps.places.AutocompleteSuggestion[]>([])
   const [open, setOpen] = useState(false)
+  // Computed once on mount — safe to derive directly from env
+  const [apiKeyMissing] = useState(() => !process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
   const sessionToken = useRef<google.maps.places.AutocompleteSessionToken | null>(null)
-  const autocompleteService = useRef<google.maps.places.AutocompleteSuggestion | null>(null)
 
-  // Load the Maps JS SDK once
+  // Load the Maps JS SDK once — runs only on client
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-    if (!apiKey) return
+    if (apiKeyMissing) return
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!
 
     setOptions({ key: apiKey })
 
@@ -65,7 +66,7 @@ export function VenuePicker({ defaultValue, onSelect, className }: VenuePickerPr
         sessionToken.current = new google.maps.places.AutocompleteSessionToken()
       })
       .catch(console.error)
-  }, [])
+  }, [apiKeyMissing])
 
   // Fetch suggestions whenever input changes
   const fetchSuggestions = useCallback(
@@ -167,10 +168,8 @@ export function VenuePicker({ defaultValue, onSelect, className }: VenuePickerPr
     inputRef.current?.focus()
   }
 
-  const apiKeyMissing = !process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-
+  // Render plain text input if API key is missing (determined client-side)
   if (apiKeyMissing) {
-    // Graceful fallback — plain text input when key is not configured
     return (
       <input
         type="text"

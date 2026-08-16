@@ -141,7 +141,6 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
             }}
             checkoutSeats={checkoutSeats}
             subtotal={subtotal}
-            userId={session.userId}
           />
         </div>
       </main>

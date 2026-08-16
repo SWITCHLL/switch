@@ -7,8 +7,23 @@
  *
  * Start with: npx tsx workers/index.ts
  */
+import { createGroupExpiryWorker } from './group-expiry.worker'
 
-// import { notificationWorker } from './notification.worker'
-// import { emailWorker } from './email.worker'
+const redisUrl = process.env.REDIS_URL
+if (!redisUrl) {
+  throw new Error('REDIS_URL is required to start workers')
+}
 
-console.log('[Workers] Worker processes will be registered here.')
+const groupExpiryWorker = createGroupExpiryWorker(redisUrl)
+
+console.log('[Workers] Group expiry worker started.')
+
+// Graceful shutdown
+async function shutdown() {
+  console.log('[Workers] Shutting down…')
+  await groupExpiryWorker.close()
+  process.exit(0)
+}
+
+process.on('SIGTERM', shutdown)
+process.on('SIGINT', shutdown)

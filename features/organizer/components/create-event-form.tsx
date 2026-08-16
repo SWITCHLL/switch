@@ -7,6 +7,7 @@ import { AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
 import { VenuePicker, type VenuePlace } from '@/components/ui/venue-picker'
+import { LocationPicker } from '@/components/ui/location-picker'
 import { EventImageUploader } from '@/components/ui/event-image-uploader'
 import { createEvent } from '../actions'
 interface CreateEventFormProps {
@@ -143,16 +144,20 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
 
       {/* Venue — Google Places Autocomplete */}
       {!isVirtual && (
-        <Field
-          label="Venue"
-          hint={
-            venue
-              ? `${venue.city}${venue.state ? `, ${venue.state}` : ''}, ${venue.country}`
-              : 'Search for a venue verified on Google Maps'
-          }
-        >
-          <VenuePicker onSelect={setVenue} />
-        </Field>
+        <>
+          <Field label="Venue Name" hint="Search on Google Maps or type a name">
+            <VenuePicker onSelect={setVenue} />
+          </Field>
+          <Field label="State & City / LGA" hint="Select the event location">
+            <LocationPicker
+              defaultState={venue?.state}
+              defaultCity={venue?.city}
+              onChange={(loc) => {
+                if (venue) setVenue({ ...venue, state: loc.state, city: loc.city })
+              }}
+            />
+          </Field>
+        </>
       )}
 
       {/* Event dates */}
@@ -275,33 +280,61 @@ function ToggleField({
   onChange: (v: boolean) => void
 }) {
   return (
-    <button
-      type="button"
+    <div
       role="switch"
       aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        'flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors',
-        checked ? 'border-brand-500/40 bg-brand-500/5' : 'border-border hover:border-brand-500/30'
-      )}
+      tabIndex={0}
+      onClick={(e) => {
+        e.stopPropagation()
+        onChange(!checked)
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onChange(!checked)
+        }
+      }}
+      className="border-border flex w-full cursor-pointer items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors select-none"
+      style={
+        checked
+          ? { borderColor: 'rgba(109,40,217,0.4)', backgroundColor: 'rgba(109,40,217,0.05)' }
+          : undefined
+      }
     >
       <div>
         <p className="text-[13px] font-medium">{label}</p>
         <p className="text-muted-foreground text-[11.5px]">{hint}</p>
       </div>
+      {/* Track */}
       <div
-        className={cn(
-          'relative h-5 w-9 shrink-0 rounded-full transition-colors',
-          checked ? 'bg-brand-500' : 'bg-muted-foreground/30'
-        )}
+        suppressHydrationWarning
+        style={{
+          position: 'relative',
+          width: '36px',
+          height: '20px',
+          borderRadius: '9999px',
+          flexShrink: 0,
+          transition: 'background-color 150ms',
+          backgroundColor: checked ? '#7c3aed' : 'rgba(113,113,122,0.35)',
+        }}
       >
+        {/* Thumb */}
         <span
-          className={cn(
-            'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform',
-            checked ? 'translate-x-4' : 'translate-x-0.5'
-          )}
+          suppressHydrationWarning
+          style={{
+            position: 'absolute',
+            top: '2px',
+            left: 0,
+            width: '16px',
+            height: '16px',
+            borderRadius: '9999px',
+            backgroundColor: '#fff',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+            transition: 'transform 150ms',
+            transform: checked ? 'translateX(18px)' : 'translateX(2px)',
+          }}
         />
       </div>
-    </button>
+    </div>
   )
 }

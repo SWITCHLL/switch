@@ -261,6 +261,7 @@ export type EventSeatWhereInput = {
   ticketType?: Prisma.XOR<Prisma.TicketTypeNullableScalarRelationFilter, Prisma.TicketTypeWhereInput> | null
   reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
   tickets?: Prisma.TicketListRelationFilter
+  groupSlots?: Prisma.GroupOrderSlotListRelationFilter
 }
 
 export type EventSeatOrderByWithRelationInput = {
@@ -279,6 +280,7 @@ export type EventSeatOrderByWithRelationInput = {
   ticketType?: Prisma.TicketTypeOrderByWithRelationInput
   reservation?: Prisma.ReservationOrderByWithRelationInput
   tickets?: Prisma.TicketOrderByRelationAggregateInput
+  groupSlots?: Prisma.GroupOrderSlotOrderByRelationAggregateInput
 }
 
 export type EventSeatWhereUniqueInput = Prisma.AtLeast<{
@@ -301,6 +303,7 @@ export type EventSeatWhereUniqueInput = Prisma.AtLeast<{
   ticketType?: Prisma.XOR<Prisma.TicketTypeNullableScalarRelationFilter, Prisma.TicketTypeWhereInput> | null
   reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
   tickets?: Prisma.TicketListRelationFilter
+  groupSlots?: Prisma.GroupOrderSlotListRelationFilter
 }, "id" | "eventId_seatId">
 
 export type EventSeatOrderByWithAggregationInput = {
@@ -349,6 +352,7 @@ export type EventSeatCreateInput = {
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutEventSeatsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutEventSeatsInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUncheckedCreateInput = {
@@ -363,6 +367,7 @@ export type EventSeatUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUpdateInput = {
@@ -377,6 +382,7 @@ export type EventSeatUpdateInput = {
   ticketType?: Prisma.TicketTypeUpdateOneWithoutEventSeatsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutEventSeatsNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateInput = {
@@ -391,6 +397,7 @@ export type EventSeatUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatCreateManyInput = {
@@ -683,6 +690,22 @@ export type EventSeatUpdateOneWithoutTicketsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventSeatUpdateToOneWithWhereWithoutTicketsInput, Prisma.EventSeatUpdateWithoutTicketsInput>, Prisma.EventSeatUncheckedUpdateWithoutTicketsInput>
 }
 
+export type EventSeatCreateNestedOneWithoutGroupSlotsInput = {
+  create?: Prisma.XOR<Prisma.EventSeatCreateWithoutGroupSlotsInput, Prisma.EventSeatUncheckedCreateWithoutGroupSlotsInput>
+  connectOrCreate?: Prisma.EventSeatCreateOrConnectWithoutGroupSlotsInput
+  connect?: Prisma.EventSeatWhereUniqueInput
+}
+
+export type EventSeatUpdateOneWithoutGroupSlotsNestedInput = {
+  create?: Prisma.XOR<Prisma.EventSeatCreateWithoutGroupSlotsInput, Prisma.EventSeatUncheckedCreateWithoutGroupSlotsInput>
+  connectOrCreate?: Prisma.EventSeatCreateOrConnectWithoutGroupSlotsInput
+  upsert?: Prisma.EventSeatUpsertWithoutGroupSlotsInput
+  disconnect?: Prisma.EventSeatWhereInput | boolean
+  delete?: Prisma.EventSeatWhereInput | boolean
+  connect?: Prisma.EventSeatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventSeatUpdateToOneWithWhereWithoutGroupSlotsInput, Prisma.EventSeatUpdateWithoutGroupSlotsInput>, Prisma.EventSeatUncheckedUpdateWithoutGroupSlotsInput>
+}
+
 export type EventSeatCreateWithoutSeatInput = {
   id?: string
   price: number
@@ -694,6 +717,7 @@ export type EventSeatCreateWithoutSeatInput = {
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutEventSeatsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutEventSeatsInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUncheckedCreateWithoutSeatInput = {
@@ -707,6 +731,7 @@ export type EventSeatUncheckedCreateWithoutSeatInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatCreateOrConnectWithoutSeatInput = {
@@ -762,6 +787,7 @@ export type EventSeatCreateWithoutEventInput = {
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutEventSeatsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutEventSeatsInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUncheckedCreateWithoutEventInput = {
@@ -775,6 +801,7 @@ export type EventSeatUncheckedCreateWithoutEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatCreateOrConnectWithoutEventInput = {
@@ -814,6 +841,7 @@ export type EventSeatCreateWithoutTicketTypeInput = {
   seat: Prisma.SeatCreateNestedOneWithoutEventSeatsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutEventSeatsInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUncheckedCreateWithoutTicketTypeInput = {
@@ -827,6 +855,7 @@ export type EventSeatUncheckedCreateWithoutTicketTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatCreateOrConnectWithoutTicketTypeInput = {
@@ -866,6 +895,7 @@ export type EventSeatCreateWithoutReservationInput = {
   seat: Prisma.SeatCreateNestedOneWithoutEventSeatsInput
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutEventSeatsInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUncheckedCreateWithoutReservationInput = {
@@ -879,6 +909,7 @@ export type EventSeatUncheckedCreateWithoutReservationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventSeatInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatCreateOrConnectWithoutReservationInput = {
@@ -918,6 +949,7 @@ export type EventSeatCreateWithoutTicketsInput = {
   seat: Prisma.SeatCreateNestedOneWithoutEventSeatsInput
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutEventSeatsInput
   reservation?: Prisma.ReservationCreateNestedOneWithoutEventSeatsInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatUncheckedCreateWithoutTicketsInput = {
@@ -931,6 +963,7 @@ export type EventSeatUncheckedCreateWithoutTicketsInput = {
   reservationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutEventSeatInput
 }
 
 export type EventSeatCreateOrConnectWithoutTicketsInput = {
@@ -960,6 +993,7 @@ export type EventSeatUpdateWithoutTicketsInput = {
   seat?: Prisma.SeatUpdateOneRequiredWithoutEventSeatsNestedInput
   ticketType?: Prisma.TicketTypeUpdateOneWithoutEventSeatsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutEventSeatsNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateWithoutTicketsInput = {
@@ -973,6 +1007,79 @@ export type EventSeatUncheckedUpdateWithoutTicketsInput = {
   reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutEventSeatNestedInput
+}
+
+export type EventSeatCreateWithoutGroupSlotsInput = {
+  id?: string
+  price: number
+  status?: $Enums.EventSeatStatus
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  event: Prisma.EventCreateNestedOneWithoutEventSeatsInput
+  seat: Prisma.SeatCreateNestedOneWithoutEventSeatsInput
+  ticketType?: Prisma.TicketTypeCreateNestedOneWithoutEventSeatsInput
+  reservation?: Prisma.ReservationCreateNestedOneWithoutEventSeatsInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEventSeatInput
+}
+
+export type EventSeatUncheckedCreateWithoutGroupSlotsInput = {
+  id?: string
+  eventId: string
+  seatId: string
+  ticketTypeId?: string | null
+  price: number
+  status?: $Enums.EventSeatStatus
+  lockedUntil?: Date | string | null
+  reservationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventSeatInput
+}
+
+export type EventSeatCreateOrConnectWithoutGroupSlotsInput = {
+  where: Prisma.EventSeatWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventSeatCreateWithoutGroupSlotsInput, Prisma.EventSeatUncheckedCreateWithoutGroupSlotsInput>
+}
+
+export type EventSeatUpsertWithoutGroupSlotsInput = {
+  update: Prisma.XOR<Prisma.EventSeatUpdateWithoutGroupSlotsInput, Prisma.EventSeatUncheckedUpdateWithoutGroupSlotsInput>
+  create: Prisma.XOR<Prisma.EventSeatCreateWithoutGroupSlotsInput, Prisma.EventSeatUncheckedCreateWithoutGroupSlotsInput>
+  where?: Prisma.EventSeatWhereInput
+}
+
+export type EventSeatUpdateToOneWithWhereWithoutGroupSlotsInput = {
+  where?: Prisma.EventSeatWhereInput
+  data: Prisma.XOR<Prisma.EventSeatUpdateWithoutGroupSlotsInput, Prisma.EventSeatUncheckedUpdateWithoutGroupSlotsInput>
+}
+
+export type EventSeatUpdateWithoutGroupSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumEventSeatStatusFieldUpdateOperationsInput | $Enums.EventSeatStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  event?: Prisma.EventUpdateOneRequiredWithoutEventSeatsNestedInput
+  seat?: Prisma.SeatUpdateOneRequiredWithoutEventSeatsNestedInput
+  ticketType?: Prisma.TicketTypeUpdateOneWithoutEventSeatsNestedInput
+  reservation?: Prisma.ReservationUpdateOneWithoutEventSeatsNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEventSeatNestedInput
+}
+
+export type EventSeatUncheckedUpdateWithoutGroupSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  seatId?: Prisma.StringFieldUpdateOperationsInput | string
+  ticketTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumEventSeatStatusFieldUpdateOperationsInput | $Enums.EventSeatStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatCreateManySeatInput = {
@@ -998,6 +1105,7 @@ export type EventSeatUpdateWithoutSeatInput = {
   ticketType?: Prisma.TicketTypeUpdateOneWithoutEventSeatsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutEventSeatsNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateWithoutSeatInput = {
@@ -1011,6 +1119,7 @@ export type EventSeatUncheckedUpdateWithoutSeatInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateManyWithoutSeatInput = {
@@ -1048,6 +1157,7 @@ export type EventSeatUpdateWithoutEventInput = {
   ticketType?: Prisma.TicketTypeUpdateOneWithoutEventSeatsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutEventSeatsNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateWithoutEventInput = {
@@ -1061,6 +1171,7 @@ export type EventSeatUncheckedUpdateWithoutEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateManyWithoutEventInput = {
@@ -1098,6 +1209,7 @@ export type EventSeatUpdateWithoutTicketTypeInput = {
   seat?: Prisma.SeatUpdateOneRequiredWithoutEventSeatsNestedInput
   reservation?: Prisma.ReservationUpdateOneWithoutEventSeatsNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateWithoutTicketTypeInput = {
@@ -1111,6 +1223,7 @@ export type EventSeatUncheckedUpdateWithoutTicketTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateManyWithoutTicketTypeInput = {
@@ -1148,6 +1261,7 @@ export type EventSeatUpdateWithoutReservationInput = {
   seat?: Prisma.SeatUpdateOneRequiredWithoutEventSeatsNestedInput
   ticketType?: Prisma.TicketTypeUpdateOneWithoutEventSeatsNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateWithoutReservationInput = {
@@ -1161,6 +1275,7 @@ export type EventSeatUncheckedUpdateWithoutReservationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventSeatNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutEventSeatNestedInput
 }
 
 export type EventSeatUncheckedUpdateManyWithoutReservationInput = {
@@ -1182,10 +1297,12 @@ export type EventSeatUncheckedUpdateManyWithoutReservationInput = {
 
 export type EventSeatCountOutputType = {
   tickets: number
+  groupSlots: number
 }
 
 export type EventSeatCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tickets?: boolean | EventSeatCountOutputTypeCountTicketsArgs
+  groupSlots?: boolean | EventSeatCountOutputTypeCountGroupSlotsArgs
 }
 
 /**
@@ -1205,6 +1322,13 @@ export type EventSeatCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.TicketWhereInput
 }
 
+/**
+ * EventSeatCountOutputType without action
+ */
+export type EventSeatCountOutputTypeCountGroupSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupOrderSlotWhereInput
+}
+
 
 export type EventSeatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1222,6 +1346,7 @@ export type EventSeatSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   ticketType?: boolean | Prisma.EventSeat$ticketTypeArgs<ExtArgs>
   reservation?: boolean | Prisma.EventSeat$reservationArgs<ExtArgs>
   tickets?: boolean | Prisma.EventSeat$ticketsArgs<ExtArgs>
+  groupSlots?: boolean | Prisma.EventSeat$groupSlotsArgs<ExtArgs>
   _count?: boolean | Prisma.EventSeatCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["eventSeat"]>
 
@@ -1279,6 +1404,7 @@ export type EventSeatInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   ticketType?: boolean | Prisma.EventSeat$ticketTypeArgs<ExtArgs>
   reservation?: boolean | Prisma.EventSeat$reservationArgs<ExtArgs>
   tickets?: boolean | Prisma.EventSeat$ticketsArgs<ExtArgs>
+  groupSlots?: boolean | Prisma.EventSeat$groupSlotsArgs<ExtArgs>
   _count?: boolean | Prisma.EventSeatCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EventSeatIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1302,6 +1428,7 @@ export type $EventSeatPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     ticketType: Prisma.$TicketTypePayload<ExtArgs> | null
     reservation: Prisma.$ReservationPayload<ExtArgs> | null
     tickets: Prisma.$TicketPayload<ExtArgs>[]
+    groupSlots: Prisma.$GroupOrderSlotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1722,6 +1849,7 @@ export interface Prisma__EventSeatClient<T, Null = never, ExtArgs extends runtim
   ticketType<T extends Prisma.EventSeat$ticketTypeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventSeat$ticketTypeArgs<ExtArgs>>): Prisma.Prisma__TicketTypeClient<runtime.Types.Result.GetResult<Prisma.$TicketTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reservation<T extends Prisma.EventSeat$reservationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventSeat$reservationArgs<ExtArgs>>): Prisma.Prisma__ReservationClient<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   tickets<T extends Prisma.EventSeat$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventSeat$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  groupSlots<T extends Prisma.EventSeat$groupSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventSeat$groupSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2221,6 +2349,30 @@ export type EventSeat$ticketsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+}
+
+/**
+ * EventSeat.groupSlots
+ */
+export type EventSeat$groupSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GroupOrderSlot
+   */
+  select?: Prisma.GroupOrderSlotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GroupOrderSlot
+   */
+  omit?: Prisma.GroupOrderSlotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupOrderSlotInclude<ExtArgs> | null
+  where?: Prisma.GroupOrderSlotWhereInput
+  orderBy?: Prisma.GroupOrderSlotOrderByWithRelationInput | Prisma.GroupOrderSlotOrderByWithRelationInput[]
+  cursor?: Prisma.GroupOrderSlotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupOrderSlotScalarFieldEnum | Prisma.GroupOrderSlotScalarFieldEnum[]
 }
 
 /**

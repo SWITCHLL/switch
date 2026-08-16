@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { db } from '@/lib/db'
 import { getSession } from '@/lib/session'
@@ -21,8 +20,14 @@ const createEventSchema = z.object({
   salesEnd: z.string().datetime().optional(),
   capacity: z.coerce.number().int().positive().optional(),
   imageUrl: z.string().url().optional(),
-  isFree: z.coerce.boolean().optional(),
-  isVirtual: z.coerce.boolean().optional(),
+  isFree: z
+    .string()
+    .optional()
+    .transform((v) => v === 'true'),
+  isVirtual: z
+    .string()
+    .optional()
+    .transform((v) => v === 'true'),
   virtualLink: z.string().url().optional().or(z.literal('')),
 })
 
@@ -226,16 +231,23 @@ export async function updateEvent(formData: FormData): Promise<ActionResult> {
   const event = organizer
     ? await db.event.findUnique({
         where: { id: eventId, organizerId: organizer.id },
-        select: { id: true },
+        select: { id: true, venueId: true },
       })
     : null
 
   if (!event) return { success: false, error: 'Event not found' }
 
+  // Resolve venue: only update if new venue fields were submitted
+  const venueInput = venueInputSchema.parse(raw)
+  const newVenueId = venueInput.venue_name ? await resolveVenueId(venueInput) : undefined
+  // If no new venue was selected, keep the existing venueId (don't overwrite with undefined)
+  const venueId = newVenueId ?? event.venueId ?? undefined
+
   await db.event.update({
     where: { id: eventId },
     data: {
       ...updates,
+      venueId,
       startsAt: updates.startsAt ? new Date(updates.startsAt) : undefined,
       endsAt: updates.endsAt ? new Date(updates.endsAt) : undefined,
       salesStart: updates.salesStart ? new Date(updates.salesStart) : undefined,

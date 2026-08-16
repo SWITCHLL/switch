@@ -101,3 +101,93 @@ export async function sendTicketConfirmationEmail(params: {
     throw new Error(`Failed to send confirmation email: ${error.message}`)
   }
 }
+
+// ─── Group booking invite ─────────────────────────────────────────────────────
+
+export async function sendGroupBookingInviteEmail(params: {
+  toEmail: string
+  toName: string | null
+  initiatorName: string | null
+  eventTitle: string
+  groupCode: string
+  expiresAt: Date
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://switchapp.io'
+  const joinUrl = `${appUrl}/group/${params.groupCode}`
+  const expiresStr = params.expiresAt.toLocaleTimeString('en-NG', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+  const from = params.initiatorName ?? 'Someone'
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `${from} invited you to ${params.eventTitle} on ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Group Booking Invite</p>
+
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">You're invited to</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:13px;margin:0;">
+            <strong style="color:#fafafa;">${from}</strong> is organising a group booking and saved a spot for you.
+          </p>
+        </div>
+
+        <a href="${joinUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;margin-bottom:24px;">
+          Claim my spot →
+        </a>
+
+        <p style="color:#52525b;font-size:12px;margin:0;">
+          This invite expires at <strong style="color:#71717a;">${expiresStr}</strong>.
+          If you didn't expect this, you can ignore it.
+        </p>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send group invite email: ${error.message}`)
+  }
+}
+
+// ─── Group booking complete notification ──────────────────────────────────────
+
+export async function sendGroupCompleteEmail(params: {
+  toEmail: string
+  eventTitle: string
+  groupCode: string
+  paidCount: number
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://switchapp.io'
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Your group is set for ${params.eventTitle} 🎉 — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Group Booking Complete</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#4ade80;font-size:14px;font-weight:600;margin:0;">
+            All ${params.paidCount} ticket${params.paidCount !== 1 ? 's' : ''} confirmed ✓
+          </p>
+        </div>
+        <a href="${appUrl}/dashboard/tickets"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          View my tickets →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send group complete email: ${error.message}`)
+  }
+}

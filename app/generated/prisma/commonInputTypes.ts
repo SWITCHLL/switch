@@ -511,6 +511,40 @@ export type EnumRefundStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
 }
 
+export type EnumGroupOrderStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupOrderStatus | Prisma.EnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupOrderStatusFilter<$PrismaModel> | $Enums.GroupOrderStatus
+}
+
+export type EnumGroupOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupOrderStatus | Prisma.EnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.GroupOrderStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGroupOrderStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGroupOrderStatusFilter<$PrismaModel>
+}
+
+export type EnumGroupSlotStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupSlotStatus | Prisma.EnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupSlotStatusFilter<$PrismaModel> | $Enums.GroupSlotStatus
+}
+
+export type EnumGroupSlotStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupSlotStatus | Prisma.EnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupSlotStatusWithAggregatesFilter<$PrismaModel> | $Enums.GroupSlotStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGroupSlotStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGroupSlotStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -997,6 +1031,40 @@ export type NestedEnumRefundStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumGroupOrderStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupOrderStatus | Prisma.EnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupOrderStatusFilter<$PrismaModel> | $Enums.GroupOrderStatus
+}
+
+export type NestedEnumGroupOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupOrderStatus | Prisma.EnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupOrderStatus[] | Prisma.ListEnumGroupOrderStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.GroupOrderStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGroupOrderStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGroupOrderStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumGroupSlotStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupSlotStatus | Prisma.EnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupSlotStatusFilter<$PrismaModel> | $Enums.GroupSlotStatus
+}
+
+export type NestedEnumGroupSlotStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GroupSlotStatus | Prisma.EnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GroupSlotStatus[] | Prisma.ListEnumGroupSlotStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGroupSlotStatusWithAggregatesFilter<$PrismaModel> | $Enums.GroupSlotStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGroupSlotStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGroupSlotStatusFilter<$PrismaModel>
 }
 
 

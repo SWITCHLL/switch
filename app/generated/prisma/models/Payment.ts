@@ -322,6 +322,7 @@ export type PaymentWhereInput = {
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   payoutRequest?: Prisma.XOR<Prisma.PayoutRequestNullableScalarRelationFilter, Prisma.PayoutRequestWhereInput> | null
   refundRequest?: Prisma.XOR<Prisma.RefundRequestNullableScalarRelationFilter, Prisma.RefundRequestWhereInput> | null
+  groupSlot?: Prisma.XOR<Prisma.GroupOrderSlotNullableScalarRelationFilter, Prisma.GroupOrderSlotWhereInput> | null
 }
 
 export type PaymentOrderByWithRelationInput = {
@@ -347,6 +348,7 @@ export type PaymentOrderByWithRelationInput = {
   event?: Prisma.EventOrderByWithRelationInput
   payoutRequest?: Prisma.PayoutRequestOrderByWithRelationInput
   refundRequest?: Prisma.RefundRequestOrderByWithRelationInput
+  groupSlot?: Prisma.GroupOrderSlotOrderByWithRelationInput
 }
 
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -375,6 +377,7 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   payoutRequest?: Prisma.XOR<Prisma.PayoutRequestNullableScalarRelationFilter, Prisma.PayoutRequestWhereInput> | null
   refundRequest?: Prisma.XOR<Prisma.RefundRequestNullableScalarRelationFilter, Prisma.RefundRequestWhereInput> | null
+  groupSlot?: Prisma.XOR<Prisma.GroupOrderSlotNullableScalarRelationFilter, Prisma.GroupOrderSlotWhereInput> | null
 }, "id" | "ticketId" | "paystackReference">
 
 export type PaymentOrderByWithAggregationInput = {
@@ -441,6 +444,7 @@ export type PaymentCreateInput = {
   event: Prisma.EventCreateNestedOneWithoutPaymentsInput
   payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
   refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateInput = {
@@ -461,6 +465,7 @@ export type PaymentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUpdateInput = {
@@ -481,6 +486,7 @@ export type PaymentUpdateInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
   payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
   refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateInput = {
@@ -501,6 +507,7 @@ export type PaymentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentCreateManyInput = {
@@ -872,6 +879,22 @@ export type PaymentUpdateOneRequiredWithoutRefundRequestNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutRefundRequestInput, Prisma.PaymentUpdateWithoutRefundRequestInput>, Prisma.PaymentUncheckedUpdateWithoutRefundRequestInput>
 }
 
+export type PaymentCreateNestedOneWithoutGroupSlotInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutGroupSlotInput, Prisma.PaymentUncheckedCreateWithoutGroupSlotInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutGroupSlotInput
+  connect?: Prisma.PaymentWhereUniqueInput
+}
+
+export type PaymentUpdateOneWithoutGroupSlotNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutGroupSlotInput, Prisma.PaymentUncheckedCreateWithoutGroupSlotInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutGroupSlotInput
+  upsert?: Prisma.PaymentUpsertWithoutGroupSlotInput
+  disconnect?: Prisma.PaymentWhereInput | boolean
+  delete?: Prisma.PaymentWhereInput | boolean
+  connect?: Prisma.PaymentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutGroupSlotInput, Prisma.PaymentUpdateWithoutGroupSlotInput>, Prisma.PaymentUncheckedUpdateWithoutGroupSlotInput>
+}
+
 export type PaymentCreateWithoutUserInput = {
   id?: string
   amount: number
@@ -889,6 +912,7 @@ export type PaymentCreateWithoutUserInput = {
   event: Prisma.EventCreateNestedOneWithoutPaymentsInput
   payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
   refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutUserInput = {
@@ -908,6 +932,7 @@ export type PaymentUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutUserInput = {
@@ -975,6 +1000,7 @@ export type PaymentCreateWithoutOrganizerInput = {
   event: Prisma.EventCreateNestedOneWithoutPaymentsInput
   payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
   refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutOrganizerInput = {
@@ -994,6 +1020,7 @@ export type PaymentUncheckedCreateWithoutOrganizerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutOrganizerInput = {
@@ -1039,6 +1066,7 @@ export type PaymentCreateWithoutEventInput = {
   user: Prisma.UserCreateNestedOneWithoutPaymentsInput
   payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
   refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutEventInput = {
@@ -1058,6 +1086,7 @@ export type PaymentUncheckedCreateWithoutEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutEventInput = {
@@ -1103,6 +1132,7 @@ export type PaymentCreateWithoutTicketInput = {
   event: Prisma.EventCreateNestedOneWithoutPaymentsInput
   payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
   refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutTicketInput = {
@@ -1122,6 +1152,7 @@ export type PaymentUncheckedCreateWithoutTicketInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutTicketInput = {
@@ -1157,6 +1188,7 @@ export type PaymentUpdateWithoutTicketInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
   payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
   refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutTicketInput = {
@@ -1176,6 +1208,7 @@ export type PaymentUncheckedUpdateWithoutTicketInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentCreateWithoutPayoutRequestInput = {
@@ -1195,6 +1228,7 @@ export type PaymentCreateWithoutPayoutRequestInput = {
   user: Prisma.UserCreateNestedOneWithoutPaymentsInput
   event: Prisma.EventCreateNestedOneWithoutPaymentsInput
   refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutPayoutRequestInput = {
@@ -1214,6 +1248,7 @@ export type PaymentUncheckedCreateWithoutPayoutRequestInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutPayoutRequestInput = {
@@ -1259,6 +1294,7 @@ export type PaymentCreateWithoutRefundRequestInput = {
   user: Prisma.UserCreateNestedOneWithoutPaymentsInput
   event: Prisma.EventCreateNestedOneWithoutPaymentsInput
   payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
+  groupSlot?: Prisma.GroupOrderSlotCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutRefundRequestInput = {
@@ -1278,6 +1314,7 @@ export type PaymentUncheckedCreateWithoutRefundRequestInput = {
   payoutRequestId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  groupSlot?: Prisma.GroupOrderSlotUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutRefundRequestInput = {
@@ -1313,6 +1350,7 @@ export type PaymentUpdateWithoutRefundRequestInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
   payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutRefundRequestInput = {
@@ -1332,6 +1370,103 @@ export type PaymentUncheckedUpdateWithoutRefundRequestInput = {
   payoutRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
+}
+
+export type PaymentCreateWithoutGroupSlotInput = {
+  id?: string
+  amount: number
+  currency?: string
+  platformFeePercent: number
+  platformFeeAmount: number
+  netAmount: number
+  status?: $Enums.PaymentStatus
+  paystackReference?: string | null
+  paystackTransactionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ticket: Prisma.TicketCreateNestedOneWithoutPaymentInput
+  organizer: Prisma.OrganizerCreateNestedOneWithoutPaymentsInput
+  user: Prisma.UserCreateNestedOneWithoutPaymentsInput
+  event: Prisma.EventCreateNestedOneWithoutPaymentsInput
+  payoutRequest?: Prisma.PayoutRequestCreateNestedOneWithoutPaymentsInput
+  refundRequest?: Prisma.RefundRequestCreateNestedOneWithoutPaymentInput
+}
+
+export type PaymentUncheckedCreateWithoutGroupSlotInput = {
+  id?: string
+  ticketId: string
+  organizerId: string
+  userId: string
+  eventId: string
+  amount: number
+  currency?: string
+  platformFeePercent: number
+  platformFeeAmount: number
+  netAmount: number
+  status?: $Enums.PaymentStatus
+  paystackReference?: string | null
+  paystackTransactionId?: string | null
+  payoutRequestId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refundRequest?: Prisma.RefundRequestUncheckedCreateNestedOneWithoutPaymentInput
+}
+
+export type PaymentCreateOrConnectWithoutGroupSlotInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutGroupSlotInput, Prisma.PaymentUncheckedCreateWithoutGroupSlotInput>
+}
+
+export type PaymentUpsertWithoutGroupSlotInput = {
+  update: Prisma.XOR<Prisma.PaymentUpdateWithoutGroupSlotInput, Prisma.PaymentUncheckedUpdateWithoutGroupSlotInput>
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutGroupSlotInput, Prisma.PaymentUncheckedCreateWithoutGroupSlotInput>
+  where?: Prisma.PaymentWhereInput
+}
+
+export type PaymentUpdateToOneWithWhereWithoutGroupSlotInput = {
+  where?: Prisma.PaymentWhereInput
+  data: Prisma.XOR<Prisma.PaymentUpdateWithoutGroupSlotInput, Prisma.PaymentUncheckedUpdateWithoutGroupSlotInput>
+}
+
+export type PaymentUpdateWithoutGroupSlotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  platformFeePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  platformFeeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  netAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paystackReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ticket?: Prisma.TicketUpdateOneRequiredWithoutPaymentNestedInput
+  organizer?: Prisma.OrganizerUpdateOneRequiredWithoutPaymentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
+  event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
+  payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
+  refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+}
+
+export type PaymentUncheckedUpdateWithoutGroupSlotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizerId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  platformFeePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  platformFeeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  netAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paystackReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackTransactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentCreateManyUserInput = {
@@ -1369,6 +1504,7 @@ export type PaymentUpdateWithoutUserInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
   payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
   refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutUserInput = {
@@ -1388,6 +1524,7 @@ export type PaymentUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutUserInput = {
@@ -1443,6 +1580,7 @@ export type PaymentUpdateWithoutOrganizerInput = {
   event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
   payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
   refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutOrganizerInput = {
@@ -1462,6 +1600,7 @@ export type PaymentUncheckedUpdateWithoutOrganizerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutOrganizerInput = {
@@ -1517,6 +1656,7 @@ export type PaymentUpdateWithoutEventInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   payoutRequest?: Prisma.PayoutRequestUpdateOneWithoutPaymentsNestedInput
   refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutEventInput = {
@@ -1536,6 +1676,7 @@ export type PaymentUncheckedUpdateWithoutEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutEventInput = {
@@ -1591,6 +1732,7 @@ export type PaymentUpdateWithoutPayoutRequestInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutPaymentsNestedInput
   refundRequest?: Prisma.RefundRequestUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutPayoutRequestInput = {
@@ -1610,6 +1752,7 @@ export type PaymentUncheckedUpdateWithoutPayoutRequestInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refundRequest?: Prisma.RefundRequestUncheckedUpdateOneWithoutPaymentNestedInput
+  groupSlot?: Prisma.GroupOrderSlotUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutPayoutRequestInput = {
@@ -1655,6 +1798,7 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   payoutRequest?: boolean | Prisma.Payment$payoutRequestArgs<ExtArgs>
   refundRequest?: boolean | Prisma.Payment$refundRequestArgs<ExtArgs>
+  groupSlot?: boolean | Prisma.Payment$groupSlotArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1732,6 +1876,7 @@ export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   payoutRequest?: boolean | Prisma.Payment$payoutRequestArgs<ExtArgs>
   refundRequest?: boolean | Prisma.Payment$refundRequestArgs<ExtArgs>
+  groupSlot?: boolean | Prisma.Payment$groupSlotArgs<ExtArgs>
 }
 export type PaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
@@ -1757,6 +1902,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     event: Prisma.$EventPayload<ExtArgs>
     payoutRequest: Prisma.$PayoutRequestPayload<ExtArgs> | null
     refundRequest: Prisma.$RefundRequestPayload<ExtArgs> | null
+    groupSlot: Prisma.$GroupOrderSlotPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2196,6 +2342,7 @@ export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.
   event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payoutRequest<T extends Prisma.Payment$payoutRequestArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$payoutRequestArgs<ExtArgs>>): Prisma.Prisma__PayoutRequestClient<runtime.Types.Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   refundRequest<T extends Prisma.Payment$refundRequestArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$refundRequestArgs<ExtArgs>>): Prisma.Prisma__RefundRequestClient<runtime.Types.Result.GetResult<Prisma.$RefundRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  groupSlot<T extends Prisma.Payment$groupSlotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$groupSlotArgs<ExtArgs>>): Prisma.Prisma__GroupOrderSlotClient<runtime.Types.Result.GetResult<Prisma.$GroupOrderSlotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2677,6 +2824,25 @@ export type Payment$refundRequestArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.RefundRequestInclude<ExtArgs> | null
   where?: Prisma.RefundRequestWhereInput
+}
+
+/**
+ * Payment.groupSlot
+ */
+export type Payment$groupSlotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GroupOrderSlot
+   */
+  select?: Prisma.GroupOrderSlotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GroupOrderSlot
+   */
+  omit?: Prisma.GroupOrderSlotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupOrderSlotInclude<ExtArgs> | null
+  where?: Prisma.GroupOrderSlotWhereInput
 }
 
 /**

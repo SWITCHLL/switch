@@ -91,3 +91,43 @@ export async function releaseAllSeatLocks(
 ): Promise<void> {
   await Promise.all(seatIds.map((seatId) => releaseSeatLock(eventId, seatId, userId)))
 }
+
+// ─── Group booking slot lock helpers ─────────────────────────────────────────
+
+/** TTL for group slot claims in seconds — 15 minutes to complete payment */
+export const GROUP_SLOT_LOCK_TTL = 900
+
+/** Redis key for a group slot claim lock */
+export function groupSlotLockKey(slotId: string): string {
+  return `group-slot-lock:${slotId}`
+}
+
+/**
+ * Acquire a claim lock on a group slot for a given user.
+ * Returns true if acquired, false if already claimed by another user.
+ */
+export async function acquireGroupSlotLock(slotId: string, userId: string): Promise<boolean> {
+  const key = groupSlotLockKey(slotId)
+  const result = await redis.set(key, userId, 'EX', GROUP_SLOT_LOCK_TTL, 'NX')
+  return result === 'OK'
+}
+
+/**
+ * Release a group slot claim lock — only if owned by this user.
+ */
+export async function releaseGroupSlotLock(slotId: string, userId: string): Promise<void> {
+  const key = groupSlotLockKey(slotId)
+  const script = `
+    if redis.call("get", KEYS[1]) == ARGV[1] then
+      return redis.call("del", KEYS[1])
+    else
+      return 0
+    end
+  `
+  await redis.eval(script, 1, key, userId)
+}
+
+/** Redis key for storing the BullMQ job id that expires a group order */
+export function groupExpiryJobKey(groupOrderId: string): string {
+  return `group-expiry-job:${groupOrderId}`
+}
