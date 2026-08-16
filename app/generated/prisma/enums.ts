@@ -174,3 +174,11 @@ export const GroupSlotStatus = {
 } as const
 
 export type GroupSlotStatus = (typeof GroupSlotStatus)[keyof typeof GroupSlotStatus]
+
+
+export const DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FLAT: 'FLAT'
+} as const
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]

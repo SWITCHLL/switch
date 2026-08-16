@@ -3,6 +3,7 @@
 import { Ticket } from 'lucide-react'
 import { formatPrice } from '@/features/events/utils'
 import type { TicketType } from '@/app/generated/prisma/client'
+import type { PromoValidation } from '@/features/promo-codes/types'
 
 interface CheckoutSeat {
   id: string
@@ -22,9 +23,10 @@ interface OrderSummaryProps {
   }
   checkoutSeats: CheckoutSeat[]
   subtotal: number
+  appliedPromo?: PromoValidation | null
 }
 
-export function OrderSummary({ event, checkoutSeats, subtotal }: OrderSummaryProps) {
+export function OrderSummary({ event, checkoutSeats, subtotal, appliedPromo }: OrderSummaryProps) {
   // Group reserved seats by ticket type
   const grouped = checkoutSeats.reduce<
     Record<string, { name: string; currency: string; price: number; seats: CheckoutSeat[] }>
@@ -41,6 +43,8 @@ export function OrderSummary({ event, checkoutSeats, subtotal }: OrderSummaryPro
     acc[key]!.seats.push(s)
     return acc
   }, {})
+
+  const effectiveTotal = appliedPromo ? appliedPromo.finalTotal : subtotal
 
   return (
     <div className="border-border bg-surface rounded-2xl border p-5">
@@ -77,13 +81,27 @@ export function OrderSummary({ event, checkoutSeats, subtotal }: OrderSummaryPro
           <span className="text-muted-foreground">Subtotal</span>
           <span>{subtotal === 0 ? 'Free' : formatPrice(subtotal)}</span>
         </div>
+
+        {appliedPromo && appliedPromo.discountAmount > 0 && (
+          <div className="flex items-center justify-between text-[13px]">
+            <span className="text-emerald-500">
+              Promo ({appliedPromo.code})
+              {appliedPromo.discountType === 'PERCENTAGE' ? ` −${appliedPromo.discountValue}%` : ''}
+            </span>
+            <span className="font-medium text-emerald-500">
+              −{formatPrice(appliedPromo.discountAmount)}
+            </span>
+          </div>
+        )}
+
         <div className="flex items-center justify-between text-[13px]">
           <span className="text-muted-foreground">Service fee</span>
           <span className="text-muted-foreground">—</span>
         </div>
+
         <div className="border-border/60 flex items-center justify-between border-t pt-3 text-[15px] font-bold">
           <span>Total</span>
-          <span>{subtotal === 0 ? 'Free' : formatPrice(subtotal)}</span>
+          <span>{effectiveTotal === 0 ? 'Free' : formatPrice(effectiveTotal)}</span>
         </div>
       </div>
 

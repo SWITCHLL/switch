@@ -9,9 +9,9 @@
  */
 import { createGroupExpiryWorker } from './group-expiry.worker'
 
-const redisUrl = process.env.REDIS_URL
+const redisUrl = process.env.WORKER_REDIS_URL ?? process.env.REDIS_URL
 if (!redisUrl) {
-  throw new Error('REDIS_URL is required to start workers')
+  throw new Error('WORKER_REDIS_URL (or REDIS_URL) is required to start workers')
 }
 
 const groupExpiryWorker = createGroupExpiryWorker(redisUrl)

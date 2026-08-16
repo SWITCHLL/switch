@@ -74,7 +74,8 @@ export const ModelName = {
   EventReview: 'EventReview',
   RefundRequest: 'RefundRequest',
   GroupOrder: 'GroupOrder',
-  GroupOrderSlot: 'GroupOrderSlot'
+  GroupOrderSlot: 'GroupOrderSlot',
+  PromoCode: 'PromoCode'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -397,6 +398,8 @@ export const PaymentScalarFieldEnum = {
   paystackReference: 'paystackReference',
   paystackTransactionId: 'paystackTransactionId',
   payoutRequestId: 'payoutRequestId',
+  promoCodeId: 'promoCodeId',
+  discountAmount: 'discountAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -493,6 +496,25 @@ export const GroupOrderSlotScalarFieldEnum = {
 } as const
 
 export type GroupOrderSlotScalarFieldEnum = (typeof GroupOrderSlotScalarFieldEnum)[keyof typeof GroupOrderSlotScalarFieldEnum]
+
+
+export const PromoCodeScalarFieldEnum = {
+  id: 'id',
+  organizerId: 'organizerId',
+  eventId: 'eventId',
+  ticketTypeId: 'ticketTypeId',
+  code: 'code',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  maxUses: 'maxUses',
+  usedCount: 'usedCount',
+  expiresAt: 'expiresAt',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PromoCodeScalarFieldEnum = (typeof PromoCodeScalarFieldEnum)[keyof typeof PromoCodeScalarFieldEnum]
 
 
 export const SortOrder = {

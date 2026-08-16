@@ -292,6 +292,7 @@ export type OrganizerWhereInput = {
   events?: Prisma.EventListRelationFilter
   payoutRequests?: Prisma.PayoutRequestListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  promoCodes?: Prisma.PromoCodeListRelationFilter
 }
 
 export type OrganizerOrderByWithRelationInput = {
@@ -313,6 +314,7 @@ export type OrganizerOrderByWithRelationInput = {
   events?: Prisma.EventOrderByRelationAggregateInput
   payoutRequests?: Prisma.PayoutRequestOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  promoCodes?: Prisma.PromoCodeOrderByRelationAggregateInput
 }
 
 export type OrganizerWhereUniqueInput = Prisma.AtLeast<{
@@ -337,6 +339,7 @@ export type OrganizerWhereUniqueInput = Prisma.AtLeast<{
   events?: Prisma.EventListRelationFilter
   payoutRequests?: Prisma.PayoutRequestListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  promoCodes?: Prisma.PromoCodeListRelationFilter
 }, "id" | "userId" | "slug">
 
 export type OrganizerOrderByWithAggregationInput = {
@@ -399,6 +402,7 @@ export type OrganizerCreateInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateInput = {
@@ -419,6 +423,7 @@ export type OrganizerUncheckedCreateInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUpdateInput = {
@@ -439,6 +444,7 @@ export type OrganizerUpdateInput = {
   events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateInput = {
@@ -459,6 +465,7 @@ export type OrganizerUncheckedUpdateInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerCreateManyInput = {
@@ -666,6 +673,20 @@ export type OrganizerUpdateOneRequiredWithoutPayoutRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizerUpdateToOneWithWhereWithoutPayoutRequestsInput, Prisma.OrganizerUpdateWithoutPayoutRequestsInput>, Prisma.OrganizerUncheckedUpdateWithoutPayoutRequestsInput>
 }
 
+export type OrganizerCreateNestedOneWithoutPromoCodesInput = {
+  create?: Prisma.XOR<Prisma.OrganizerCreateWithoutPromoCodesInput, Prisma.OrganizerUncheckedCreateWithoutPromoCodesInput>
+  connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutPromoCodesInput
+  connect?: Prisma.OrganizerWhereUniqueInput
+}
+
+export type OrganizerUpdateOneRequiredWithoutPromoCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizerCreateWithoutPromoCodesInput, Prisma.OrganizerUncheckedCreateWithoutPromoCodesInput>
+  connectOrCreate?: Prisma.OrganizerCreateOrConnectWithoutPromoCodesInput
+  upsert?: Prisma.OrganizerUpsertWithoutPromoCodesInput
+  connect?: Prisma.OrganizerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizerUpdateToOneWithWhereWithoutPromoCodesInput, Prisma.OrganizerUpdateWithoutPromoCodesInput>, Prisma.OrganizerUncheckedUpdateWithoutPromoCodesInput>
+}
+
 export type OrganizerCreateWithoutUserInput = {
   id?: string
   name: string
@@ -683,6 +704,7 @@ export type OrganizerCreateWithoutUserInput = {
   events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateWithoutUserInput = {
@@ -702,6 +724,7 @@ export type OrganizerUncheckedCreateWithoutUserInput = {
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerCreateOrConnectWithoutUserInput = {
@@ -737,6 +760,7 @@ export type OrganizerUpdateWithoutUserInput = {
   events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateWithoutUserInput = {
@@ -756,6 +780,7 @@ export type OrganizerUncheckedUpdateWithoutUserInput = {
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerCreateWithoutEventsInput = {
@@ -775,6 +800,7 @@ export type OrganizerCreateWithoutEventsInput = {
   user: Prisma.UserCreateNestedOneWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateWithoutEventsInput = {
@@ -794,6 +820,7 @@ export type OrganizerUncheckedCreateWithoutEventsInput = {
   updatedAt?: Date | string
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerCreateOrConnectWithoutEventsInput = {
@@ -829,6 +856,7 @@ export type OrganizerUpdateWithoutEventsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateWithoutEventsInput = {
@@ -848,6 +876,7 @@ export type OrganizerUncheckedUpdateWithoutEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerCreateWithoutPaymentsInput = {
@@ -867,6 +896,7 @@ export type OrganizerCreateWithoutPaymentsInput = {
   user: Prisma.UserCreateNestedOneWithoutOrganizerInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateWithoutPaymentsInput = {
@@ -886,6 +916,7 @@ export type OrganizerUncheckedCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerCreateOrConnectWithoutPaymentsInput = {
@@ -921,6 +952,7 @@ export type OrganizerUpdateWithoutPaymentsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateWithoutPaymentsInput = {
@@ -940,6 +972,7 @@ export type OrganizerUncheckedUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerCreateWithoutPayoutRequestsInput = {
@@ -959,6 +992,7 @@ export type OrganizerCreateWithoutPayoutRequestsInput = {
   user: Prisma.UserCreateNestedOneWithoutOrganizerInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerUncheckedCreateWithoutPayoutRequestsInput = {
@@ -978,6 +1012,7 @@ export type OrganizerUncheckedCreateWithoutPayoutRequestsInput = {
   updatedAt?: Date | string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutOrganizerInput
 }
 
 export type OrganizerCreateOrConnectWithoutPayoutRequestsInput = {
@@ -1013,6 +1048,7 @@ export type OrganizerUpdateWithoutPayoutRequestsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutOrganizerNestedInput
 }
 
 export type OrganizerUncheckedUpdateWithoutPayoutRequestsInput = {
@@ -1032,6 +1068,103 @@ export type OrganizerUncheckedUpdateWithoutPayoutRequestsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutOrganizerNestedInput
+}
+
+export type OrganizerCreateWithoutPromoCodesInput = {
+  id?: string
+  name: string
+  slug: string
+  bio?: string | null
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutOrganizerInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizerInput
+}
+
+export type OrganizerUncheckedCreateWithoutPromoCodesInput = {
+  id?: string
+  userId: string
+  name: string
+  slug: string
+  bio?: string | null
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  status?: $Enums.OrganizerStatus
+  feePercent?: number | null
+  bankCode?: string | null
+  bankAccountNumber?: string | null
+  bankAccountName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizerInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutOrganizerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizerInput
+}
+
+export type OrganizerCreateOrConnectWithoutPromoCodesInput = {
+  where: Prisma.OrganizerWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizerCreateWithoutPromoCodesInput, Prisma.OrganizerUncheckedCreateWithoutPromoCodesInput>
+}
+
+export type OrganizerUpsertWithoutPromoCodesInput = {
+  update: Prisma.XOR<Prisma.OrganizerUpdateWithoutPromoCodesInput, Prisma.OrganizerUncheckedUpdateWithoutPromoCodesInput>
+  create: Prisma.XOR<Prisma.OrganizerCreateWithoutPromoCodesInput, Prisma.OrganizerUncheckedCreateWithoutPromoCodesInput>
+  where?: Prisma.OrganizerWhereInput
+}
+
+export type OrganizerUpdateToOneWithWhereWithoutPromoCodesInput = {
+  where?: Prisma.OrganizerWhereInput
+  data: Prisma.XOR<Prisma.OrganizerUpdateWithoutPromoCodesInput, Prisma.OrganizerUncheckedUpdateWithoutPromoCodesInput>
+}
+
+export type OrganizerUpdateWithoutPromoCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutOrganizerNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizerNestedInput
+}
+
+export type OrganizerUncheckedUpdateWithoutPromoCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  websiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrganizerStatusFieldUpdateOperationsInput | $Enums.OrganizerStatus
+  feePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizerNestedInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutOrganizerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizerNestedInput
 }
 
 
@@ -1043,12 +1176,14 @@ export type OrganizerCountOutputType = {
   events: number
   payoutRequests: number
   payments: number
+  promoCodes: number
 }
 
 export type OrganizerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   events?: boolean | OrganizerCountOutputTypeCountEventsArgs
   payoutRequests?: boolean | OrganizerCountOutputTypeCountPayoutRequestsArgs
   payments?: boolean | OrganizerCountOutputTypeCountPaymentsArgs
+  promoCodes?: boolean | OrganizerCountOutputTypeCountPromoCodesArgs
 }
 
 /**
@@ -1082,6 +1217,13 @@ export type OrganizerCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * OrganizerCountOutputType without action
+ */
+export type OrganizerCountOutputTypeCountPromoCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PromoCodeWhereInput
+}
+
 
 export type OrganizerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1102,6 +1244,7 @@ export type OrganizerSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   events?: boolean | Prisma.Organizer$eventsArgs<ExtArgs>
   payoutRequests?: boolean | Prisma.Organizer$payoutRequestsArgs<ExtArgs>
   payments?: boolean | Prisma.Organizer$paymentsArgs<ExtArgs>
+  promoCodes?: boolean | Prisma.Organizer$promoCodesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizer"]>
 
@@ -1164,6 +1307,7 @@ export type OrganizerInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   events?: boolean | Prisma.Organizer$eventsArgs<ExtArgs>
   payoutRequests?: boolean | Prisma.Organizer$payoutRequestsArgs<ExtArgs>
   payments?: boolean | Prisma.Organizer$paymentsArgs<ExtArgs>
+  promoCodes?: boolean | Prisma.Organizer$promoCodesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1180,6 +1324,7 @@ export type $OrganizerPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     events: Prisma.$EventPayload<ExtArgs>[]
     payoutRequests: Prisma.$PayoutRequestPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    promoCodes: Prisma.$PromoCodePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1600,6 +1745,7 @@ export interface Prisma__OrganizerClient<T, Null = never, ExtArgs extends runtim
   events<T extends Prisma.Organizer$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payoutRequests<T extends Prisma.Organizer$payoutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$payoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Organizer$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  promoCodes<T extends Prisma.Organizer$promoCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organizer$promoCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2113,6 +2259,30 @@ export type Organizer$paymentsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Organizer.promoCodes
+ */
+export type Organizer$promoCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PromoCode
+   */
+  select?: Prisma.PromoCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PromoCode
+   */
+  omit?: Prisma.PromoCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PromoCodeInclude<ExtArgs> | null
+  where?: Prisma.PromoCodeWhereInput
+  orderBy?: Prisma.PromoCodeOrderByWithRelationInput | Prisma.PromoCodeOrderByWithRelationInput[]
+  cursor?: Prisma.PromoCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PromoCodeScalarFieldEnum | Prisma.PromoCodeScalarFieldEnum[]
 }
 
 /**

@@ -128,6 +128,11 @@ enum GroupSlotStatus {
   RELEASED // member dropped out or slot expired unpaid
 }
 
+enum DiscountType {
+  PERCENTAGE
+  FLAT
+}
+
 // ─── User & Auth ──────────────────────────────────────────────────────────────
 
 model User {
@@ -219,6 +224,7 @@ model Organizer {
   events Event[]
   payoutRequests PayoutRequest[]
   payments       Payment[]
+  promoCodes     PromoCode[]
 
   @@map("organizers")
 }
@@ -458,6 +464,7 @@ model Event {
   reviews     EventReview[]
   refundRequests RefundRequest[]
   groupOrders  GroupOrder[]
+  promoCodes   PromoCode[]
   @@index([status, startsAt])
   @@index([organizerId])
   @@index([categoryId])
@@ -506,6 +513,7 @@ model TicketType {
   eventSeats EventSeat[]
   tickets    Ticket[]
   groupSlots GroupOrderSlot[]
+  promoCodes PromoCode[]
 
   @@index([eventId])
   @@map("ticket_types")
@@ -626,6 +634,11 @@ model Payment {
   /// FK to the payout request this payment is included in (set when payout is approved)
   payoutRequestId String?
 
+  /// FK to the promo code used for this payment (nullable)
+  promoCodeId     String?
+  /// Discount amount applied in minor units (0 if no promo code used)
+  discountAmount  Int?
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -634,6 +647,7 @@ model Payment {
   user            User          @relation(fields: [userId], references: [id])
   event           Event         @relation(fields: [eventId], references: [id])
   payoutRequest   PayoutRequest? @relation("PaymentToPayoutRequest", fields: [payoutRequestId], references: [id])
+  promoCode       PromoCode?    @relation(fields: [promoCodeId], references: [id])
   refundRequest   RefundRequest?
   groupSlot       GroupOrderSlot?
 
@@ -802,4 +816,41 @@ model GroupOrderSlot {
 
   @@index([groupOrderId, status])
   @@map("group_order_slots")
+}
+
+// ─── Promo Code ───────────────────────────────────────────────────────────────
+
+model PromoCode {
+  id           String       @id @default(cuid())
+  organizerId  String
+  /// null = applies to all events by this organizer
+  eventId      String?
+  /// null = applies to all ticket types on the scoped event
+  ticketTypeId String?
+
+  /// Human-readable code, e.g. "EARLYBIRD20" — stored uppercase
+  code         String       @unique
+  discountType DiscountType
+  /// Percentage (1–100) or flat amount in minor units (kobo)
+  discountValue Int
+  /// null = unlimited uses
+  maxUses      Int?
+  /// How many times this code has been successfully used
+  usedCount    Int          @default(0)
+  /// null = never expires
+  expiresAt    DateTime?
+  isActive     Boolean      @default(true)
+
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  organizer    Organizer    @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  event        Event?       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketType   TicketType?  @relation(fields: [ticketTypeId], references: [id], onDelete: SetNull)
+  payments     Payment[]
+
+  @@index([code])
+  @@index([organizerId])
+  @@index([eventId])
+  @@map("promo_codes")
 }

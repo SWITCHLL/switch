@@ -4,8 +4,10 @@
  * Redis is used for:
  *  - Seat locking during checkout (TTL-based distributed locks)
  *  - Reservation expiry tracking
+ *  - BullMQ job queue (group booking expiry)
  *
- * Falls back gracefully when REDIS_URL is not set (dev without Redis).
+ * Supports Upstash TCP connections (rediss:// with TLS).
+ * The rediss:// scheme enables TLS automatically in ioredis.
  */
 import 'server-only'
 import Redis from 'ioredis'
@@ -17,15 +19,22 @@ function createRedisClient(): Redis {
   if (!url) {
     throw new Error('REDIS_URL is not set. Redis is required for seat locking.')
   }
+
+  // Upstash uses TLS (rediss://) — allow their shared certificate
+  const isTls = url.startsWith('rediss://')
+
   const client = new Redis(url, {
     maxRetriesPerRequest: 3,
     lazyConnect: true,
-    // Don't crash the process on connection errors — let callers handle
     enableOfflineQueue: false,
+    // Required for Upstash: their TLS cert is on a shared *.upstash.io domain
+    ...(isTls && { tls: { rejectUnauthorized: false } }),
   })
+
   client.on('error', (err) => {
     console.error('[Redis] connection error:', err.message)
   })
+
   return client
 }
 

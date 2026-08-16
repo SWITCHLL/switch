@@ -42,7 +42,7 @@ export async function scheduleGroupExpiry(groupOrderId: string, expiresAt: Date)
     { groupOrderId },
     {
       delay,
-      jobId: `group-expiry:${groupOrderId}`, // idempotent — won't duplicate
+      jobId: `group-expiry-${groupOrderId}`, // idempotent — won't duplicate
     }
   )
   return job.id ?? groupOrderId

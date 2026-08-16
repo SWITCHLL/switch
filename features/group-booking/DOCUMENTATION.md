@@ -16,11 +16,13 @@ A feature that lets one user initiate a group ticket order, share a link, and ha
 8. [Redis Keys](#redis-keys)
 9. [BullMQ Worker](#bullmq-worker)
 10. [UI Components](#ui-components)
-11. [Pages](#pages)
+11. [Pages & Routes](#pages--routes)
 12. [Email Notifications](#email-notifications)
 13. [Expiry Modes](#expiry-modes)
 14. [Security Model](#security-model)
-15. [What's Next](#whats-next)
+15. [Environment Variables](#environment-variables)
+16. [Fixes & Known Issues Log](#fixes--known-issues-log)
+17. [What's Next](#whats-next)
 
 ---
 
@@ -28,7 +30,7 @@ A feature that lets one user initiate a group ticket order, share a link, and ha
 
 Group booking solves the "who's paying?" problem for social events. One person (the **initiator**) picks seats or tickets, sets a payment deadline, and shares a link. Each group member opens the link, claims a slot, and pays independently via Paystack. No one person is on the hook for the whole bill.
 
-Supports both **reserved seating** (specific seat IDs) and **general admission** (ticket type + quantity) events, and both modes can be mixed via MIXED seating events.
+Supports both **reserved seating** (specific seat IDs) and **general admission** (ticket type + quantity) events, and both modes can be mixed for MIXED seating events.
 
 ---
 
@@ -37,19 +39,22 @@ Supports both **reserved seating** (specific seat IDs) and **general admission**
 ### Initiator flow
 
 ```
-1. Browse event → select seats or ticket quantities
-2. Click "Book as group"
-3. Set deadline (5–60 min) and payment mode (all-or-nothing vs best-effort)
-4. Group order created → gets code GRP-XXXXXX
-5. Share the link /group/GRP-XXXXXX with friends
-6. Monitor slot status from the same page
-7. Receives email when all slots are paid
+1. Browse event → event detail page
+2. "Get Tickets" widget → click "Group" tab
+3. Select quantities (GA) or seats are pre-selected (Reserved)
+4. Set deadline (10 / 15 / 30 / 60 min)
+5. Toggle all-or-nothing if needed
+6. Click "Create group · N slots"
+7. Redirected to /group/GRP-XXXXXX
+8. Copy shareable link → send via WhatsApp, DM, etc.
+9. Monitor slot status live on the same page
+10. Receives email when all slots are paid
 ```
 
 ### Member flow
 
 ```
-1. Receive link /group/GRP-XXXXXX (via message, WhatsApp, etc.)
+1. Receive link /group/GRP-XXXXXX
 2. Open page — see event info, countdown timer, slot list
 3. Sign in if not already authenticated
 4. Click "Claim" on an open slot
@@ -66,9 +71,9 @@ Deadline fires (BullMQ job)
 All-or-nothing mode:
   → Unpaid slots released back to general inventory
   → If any paid slots exist → order marked EXPIRED (admin handles refunds)
-  → If no paid slots → order marked EXPIRED (nothing to refund)
+  → If no paid slots → order marked EXPIRED
 
-Best-effort mode:
+Best-effort mode (default):
   → Unpaid slots released back to general inventory
   → Paid slots keep their tickets
   → Order marked COMPLETE (if any paid) or EXPIRED (if none paid)
@@ -85,18 +90,23 @@ features/group-booking/
 ├── schemas.ts      ← Zod validation schemas
 ├── types.ts        ← TypeScript domain types + action result types
 ├── index.ts        ← Public API
+├── DOCUMENTATION.md
 └── components/
-    ├── slot-list.tsx         ← Per-slot status + claim buttons
-    ├── group-countdown.tsx   ← Live countdown timer
-    ← group-progress.tsx      ← Animated paid/total progress bar
-    └── copy-link.tsx         ← One-tap copy + native share API
+    ├── group-booking-panel.tsx   ← Creation UI inside TicketSelector
+    ├── slot-list.tsx             ← Per-slot status + claim buttons
+    ├── group-countdown.tsx       ← Live countdown timer
+    ├── group-progress.tsx        ← Animated paid/total progress bar
+    └── copy-link.tsx             ← One-tap copy + native share API
 
 app/(marketing)/group/[code]/
 ├── page.tsx              ← Server-rendered join page (SSR + metadata)
 └── group-join-client.tsx ← Client island: countdown, claims, cancel
 
+features/events/components/
+└── ticket-selector.tsx   ← Updated with Solo / Group tab toggle
+
 lib/
-├── redis.ts    ← Group slot lock helpers (acquireGroupSlotLock, etc.)
+├── redis.ts    ← Seat + group slot lock helpers, TLS-aware Upstash config
 ├── queues.ts   ← BullMQ queue singleton + scheduleGroupExpiry()
 └── email.ts    ← sendGroupBookingInviteEmail, sendGroupCompleteEmail
 
@@ -169,6 +179,27 @@ One row per ticket/seat in the group. Each member claims and pays for one slot.
 | `TicketType` | `groupSlots GroupOrderSlot[]`                                   |
 | `Ticket`     | `groupSlot GroupOrderSlot?`                                     |
 | `Payment`    | `groupSlot GroupOrderSlot?`                                     |
+
+### Migration
+
+File: `prisma/migrations/20260816000001_group_booking/migration.sql`
+
+All statements are additive (`CREATE TABLE IF NOT EXISTS`, `DO $$ BEGIN … EXCEPTION` enum guards). Safe to apply to an existing database.
+
+To apply:
+
+```bash
+npx prisma migrate deploy
+```
+
+If you previously used `db push` to set up the database, baseline the older migrations first:
+
+```bash
+npx prisma migrate resolve --applied "20260809000000_init"
+npx prisma migrate resolve --applied "20260809000001_domain"
+# etc. for any migrations that already exist as tables in the DB
+npx prisma migrate deploy
+```
 
 ---
 
@@ -244,7 +275,9 @@ Creates a group order, holds reserved seats, and schedules the expiry job.
 - For reserved slots: acquires Redis seat locks before the DB transaction, double-checks availability inside the transaction
 - Generates a unique `GRP-XXXXXX` code (retries on collision)
 - Sets `EventSeat.status = HELD` for all reserved seats
-- Schedules BullMQ expiry job with idempotent `jobId`
+- Schedules BullMQ expiry job with idempotent `jobId` (`group-expiry-{groupOrderId}`)
+
+> **Note:** BullMQ job IDs cannot contain `:` — the job ID uses `-` as a separator, not `:`.
 
 ---
 
@@ -273,7 +306,7 @@ Called when a member clicks "Claim" on a slot. Acquires a Redis lock on the slot
 - Validates group order is `PENDING` and not expired
 - Acquires `group-slot-lock:{slotId}` in Redis (15 min TTL, `SET NX EX`)
 - Double-checks slot is still `OPEN` inside a DB transaction
-- On success: redirects caller to `/checkout/group-slot?slotId=…&amount=…`
+- On success: caller is redirected to `/checkout/group-slot?slotId=…&amount=…`
 
 ---
 
@@ -308,7 +341,7 @@ Called from the Paystack webhook after successful payment. Issues the ticket and
   - Increments `TicketType.sold` (GA seating)
   - Sets slot `status = PAID` and links `ticketId`
 - Releases the Redis slot lock
-- Checks if all sibling slots are `PAID` → marks order `COMPLETE` + fires completion email to initiator
+- Checks if all sibling slots are `PAID` → marks order `COMPLETE` + fires completion email
 
 ---
 
@@ -333,9 +366,9 @@ Called when a member drops out of a `HELD` slot before paying.
 **Behaviour**
 
 - Only the user who claimed the slot can release it
-- `PAID` slots cannot be released (must submit a refund request)
+- `PAID` slots cannot be released (must submit a refund request instead)
 - Resets slot to `OPEN` and releases Redis lock
-- The underlying `EventSeat` stays `HELD` for the group (not returned to general inventory yet)
+- The underlying `EventSeat` stays `HELD` for the group (not returned to general inventory)
 
 ---
 
@@ -377,11 +410,11 @@ Fetches a full `GroupOrderDetail` by the public shareable code. Used on the join
 
 ### `getGroupOrderById(id: string)`
 
-Same shape as above but looks up by internal ID. Used in server actions that already have the ID.
+Same shape as above but looks up by internal ID.
 
 ### `getMyGroupOrders(userId: string)`
 
-Returns all group orders initiated by a user, with event info and slot status summary. Used on the user dashboard.
+Returns all group orders initiated by a user, with event info and slot status summary.
 
 ### `GroupOrderDetail` shape
 
@@ -426,7 +459,7 @@ Both use atomic `SET NX EX` for acquisition and a Lua check-and-delete script fo
 }
 ```
 
-**Scheduling:** Jobs are enqueued by `scheduleGroupExpiry()` in `lib/queues.ts` with a `delay` calculated from `expiresAt`. The `jobId` is `group-expiry:{groupOrderId}` — idempotent, so re-enqueuing the same order won't create duplicate jobs.
+**Scheduling:** Jobs are enqueued by `scheduleGroupExpiry()` in `lib/queues.ts` with a `delay` calculated from `expiresAt`. The `jobId` is `group-expiry-{groupOrderId}` (hyphen separator — BullMQ disallows colons in job IDs).
 
 **Starting the worker:**
 
@@ -444,6 +477,26 @@ npx tsx workers/index.ts
 
 All components are in `features/group-booking/components/`.
 
+### `<GroupBookingPanel>`
+
+The main creation UI. Rendered inside the existing `TicketSelector` widget when the user switches to the "Group" tab.
+
+```tsx
+<GroupBookingPanel
+  event={event}
+  selectedSeatIds={['es_abc', 'es_xyz']} // pre-selected from seat map (reserved events)
+/>
+```
+
+For GA events: shows quantity steppers per ticket type.
+For Reserved events: shows a seat count summary (seats already chosen on the seat map page).
+
+Includes:
+
+- Deadline picker (10 / 15 / 30 / 60 min)
+- All-or-nothing toggle
+- "Create group · N slots" CTA that calls `createGroupOrder` and redirects to `/group/[code]`
+
 ### `<SlotList>`
 
 Renders the list of slots with per-slot status badges and claim buttons.
@@ -455,13 +508,11 @@ Renders the list of slots with per-slot status badges and claim buttons.
   onClaim={(slotId) => {
     /* call claimSlot */
   }}
-  claimingSlotId={slotId | null} // shows loading state on that specific slot
+  claimingSlotId={slotId | null}
 />
 ```
 
-Slot status badges:
-
-| Status     | Color          | Label    |
+| Status     | Colour         | Label    |
 | ---------- | -------------- | -------- |
 | `OPEN`     | Emerald        | Open     |
 | `HELD`     | Amber          | Claimed  |
@@ -470,7 +521,7 @@ Slot status badges:
 
 ### `<GroupCountdown>`
 
-Live countdown timer that ticks every second. Turns amber when ≥ 3 min remain, red + animated pulse when < 3 min. Fires `onExpired` callback when it reaches zero.
+Live countdown timer that ticks every second. Amber when ≥ 3 min, red + animated pulse when < 3 min. Calls `onExpired` when it reaches zero.
 
 ```tsx
 <GroupCountdown expiresAt={order.expiresAt} onExpired={() => setExpired(true)} />
@@ -478,7 +529,7 @@ Live countdown timer that ticks every second. Turns amber when ≥ 3 min remain,
 
 ### `<GroupProgress>`
 
-Animated progress bar showing paid vs total slots. Shows "All-or-nothing" label badge when `requireFullPayment` is true. Bar turns solid emerald when 100% complete.
+Animated progress bar showing paid vs total slots. Shows "All-or-nothing" badge when `requireFullPayment` is true. Bar turns solid emerald at 100%.
 
 ```tsx
 <GroupProgress paidSlots={3} totalSlots={5} requireFullPayment={false} />
@@ -486,17 +537,21 @@ Animated progress bar showing paid vs total slots. Shows "All-or-nothing" label 
 
 ### `<CopyLink>`
 
-One-tap copy-to-clipboard with fallback to `window.prompt`. Renders a native share button (`navigator.share`) on mobile when available.
+One-tap copy-to-clipboard with `window.prompt` fallback. Renders a native share button (`navigator.share`) on mobile when available.
 
 ```tsx
 <CopyLink url="https://switchapp.io/group/GRP-8F3A2C" />
 ```
 
+### `TicketSelector` — updated
+
+The existing `TicketSelector` component now has a **Solo | Group** tab toggle at the top of the widget. The Group tab is only shown to authenticated users on available events. Unauthenticated users still see the standard solo flow.
+
 ---
 
-## Pages
+## Pages & Routes
 
-### `/group/[code]` — Join page
+### `/group/[code]` — Public join page
 
 **File:** `app/(marketing)/group/[code]/page.tsx`
 
@@ -504,23 +559,23 @@ Server-rendered. Fetches group order and current session in parallel. Renders:
 
 - Event banner with image, title, date, venue
 - 3-stat summary grid (total / paid / open slots)
-- `<GroupJoinClient>` for interactive elements
+- `<GroupJoinClient>` for all interactive elements
 
-Generates dynamic `<title>` and `<description>` metadata for link preview cards.
+Generates dynamic `<title>` and `<description>` metadata for link preview cards (WhatsApp, Telegram, Twitter).
 
-`404` if the code doesn't match any group order.
+Returns `404` if the code doesn't match any group order.
 
-### `GroupJoinClient` — Interactive island
+### `GroupJoinClient`
 
 **File:** `app/(marketing)/group/[code]/group-join-client.tsx`
 
-Client component. Handles:
+Client component handling:
 
 - Live countdown with expiry state
-- Slot claiming with optimistic loading states
+- Slot claiming with per-slot loading states
 - Unauthenticated redirect to `/login?next=/group/{code}`
-- Post-claim redirect to `/checkout/group-slot?slotId=…`
-- Cancel confirmation (two-tap: first click reveals confirm button)
+- Post-claim redirect to `/checkout/group-slot?slotId=…&amount=…&currency=…&code=…`
+- Cancel confirmation (two-tap pattern)
 - Terminal state displays (complete / cancelled / expired)
 
 ---
@@ -531,7 +586,7 @@ Both functions are in `lib/email.ts`.
 
 ### `sendGroupBookingInviteEmail`
 
-Sent to invited members when the initiator shares the link manually (call this from your invite flow when you build it).
+Send manually when you want to invite specific members by email.
 
 ```ts
 await sendGroupBookingInviteEmail({
@@ -546,62 +601,103 @@ await sendGroupBookingInviteEmail({
 
 ### `sendGroupCompleteEmail`
 
-Sent to the initiator when the last slot is paid and the group order becomes `COMPLETE`. Fired non-blocking (`.catch()` on error) inside `confirmGroupSlotPayment`.
+Sent to the initiator automatically when the last slot is paid. Fires non-blocking (`.catch()`) inside `confirmGroupSlotPayment`.
 
 ---
 
 ## Expiry Modes
 
-The initiator chooses one of two modes when creating a group order via `requireFullPayment`.
+Set via `requireFullPayment` when creating the group order.
 
 ### Best-effort (`requireFullPayment: false`) — default
 
-The group proceeds with whoever paid. At the deadline:
+Everyone who paid gets their ticket. At the deadline:
 
-- Unpaid slots are released back to general inventory
+- Unpaid slots released back to general inventory
 - Paid slots keep their tickets
-- Order closes as `COMPLETE` (if any paid) or `EXPIRED` (if none)
+- Order closes as `COMPLETE` (any paid) or `EXPIRED` (none paid)
 
-Best for: large GA groups, concerts, festivals where partial attendance is fine.
+Best for: large GA groups, concerts, festivals.
 
 ### All-or-nothing (`requireFullPayment: true`)
 
 Everyone pays or nobody gets in. At the deadline:
 
-- If all slots paid: order closes `COMPLETE` (same as normal)
-- If any slots unpaid: order closes `EXPIRED`, unpaid seats released
-- Paid slots in an `EXPIRED` order need manual admin refunds (flagged in the system)
+- If all slots paid → `COMPLETE` (normal)
+- If any slots unpaid → `EXPIRED`, unpaid seats released, paid slots flagged for admin refund
 
-Best for: table bookings, reserved rows, small groups where the whole point is going together.
+Best for: table bookings, reserved rows, small groups where going together is the point.
 
 ---
 
 ## Security Model
 
-| Concern                           | Mitigation                                                                                      |
-| --------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Two users claiming the same slot  | Redis `SET NX EX` atomic lock + DB transaction double-check                                     |
-| Seat price manipulation           | Price is snapshotted at group creation time from the DB, never from the client                  |
-| Claiming someone else's slot      | `claimedBy` check in `releaseSlot`; only the session user can release their own slot            |
-| Cancelling with paid members      | `cancelGroupOrder` blocks if any slot has `status = PAID`                                       |
-| Replay attacks on webhooks        | `paystackReference` stored as `@unique` on `Payment` — duplicate webhook calls fail at DB level |
-| Expired slots still being claimed | `expiresAt` checked in `claimSlot` before any lock is acquired                                  |
-| Initiator-only actions            | `initiatorId === userId` check before cancel                                                    |
+| Concern                           | Mitigation                                                                       |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| Two users claiming the same slot  | Redis `SET NX EX` atomic lock + DB transaction double-check                      |
+| Seat price manipulation           | Price snapshotted at group creation from DB, never from client                   |
+| Claiming someone else's slot      | `claimedBy === userId` check in `releaseSlot`                                    |
+| Cancelling with paid members      | `cancelGroupOrder` blocks if any slot has `status = PAID`                        |
+| Replay attacks on webhooks        | `paystackReference` is `@unique` on `Payment` — duplicate calls fail at DB level |
+| Expired slots still being claimed | `expiresAt` checked in `claimSlot` before any lock is acquired                   |
+| Initiator-only cancel             | `initiatorId === userId` guard in `cancelGroupOrder`                             |
+
+---
+
+## Environment Variables
+
+### Required
+
+| Variable           | Description                                             | Where to get it                       |
+| ------------------ | ------------------------------------------------------- | ------------------------------------- |
+| `REDIS_URL`        | Upstash TCP connection string                           | Upstash dashboard → Connect → ioredis |
+| `WORKER_REDIS_URL` | Same as `REDIS_URL` — used by the BullMQ worker process | Same source                           |
+
+### Format
+
+Upstash TCP connections use TLS. The URL **must** start with `rediss://` (double `s`):
+
+```
+REDIS_URL=rediss://default:your_password@your-db.upstash.io:6379
+WORKER_REDIS_URL=rediss://default:your_password@your-db.upstash.io:6379
+```
+
+Using `redis://` (single `s`) will be rejected by Upstash in production.
+
+### TLS handling
+
+`lib/redis.ts` detects the `rediss://` prefix and automatically sets `tls: { rejectUnauthorized: false }` on the ioredis client. This is required for Upstash because their TLS certificate is issued to a shared `*.upstash.io` domain. The worker (`workers/group-expiry.worker.ts`) applies the same option to its own connection.
+
+### Local development
+
+For local dev without Upstash, you can use a plain local Redis instance:
+
+```
+REDIS_URL=redis://localhost:6379
+```
+
+The TLS option is only applied when the URL starts with `rediss://`, so local dev is unaffected.
+
+---
+
+## Fixes & Known Issues Log
+
+| Date       | Issue                                                  | Fix                                                                                                                                                                                   |
+| ---------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-16 | `public.group_orders` table not found                  | Database had tables from `db push` with no migration history. Resolved by baselining existing migrations with `prisma migrate resolve --applied` then running `prisma migrate deploy` |
+| 2026-08-16 | `[createGroupOrder] Error: Custom Id cannot contain :` | BullMQ job IDs do not allow colons. Changed `group-expiry:{id}` to `group-expiry-{id}` in `lib/queues.ts`                                                                             |
+| 2026-08-16 | Upstash TLS connection failures                        | Added `tls: { rejectUnauthorized: false }` to ioredis client options in `lib/redis.ts` and `workers/group-expiry.worker.ts` when `rediss://` scheme is detected                       |
 
 ---
 
 ## What's Next
 
-These are the natural next steps to complete the feature end-to-end:
-
-1. **Checkout page** — build `/checkout/group-slot` to collect Paystack payment for a single slot using the `slotId` and `amount` query params passed by `claimSlot`
+1. **Checkout page** — build `/checkout/group-slot` to collect Paystack payment for a single slot using the `slotId` and `amount` query params set by `claimSlot`
 
 2. **Paystack webhook handler** — wire `confirmGroupSlotPayment` into `/api/webhooks/paystack` (verify HMAC signature from `PAYSTACK_WEBHOOK_SECRET`, match on `paystackReference`)
 
-3. **Creation UI** — add "Book as group" entry point in the event checkout flow, with TTL slider and payment mode toggle
+3. **Dashboard view** — add a "My Groups" tab to `/dashboard/tickets` using `getMyGroupOrders`, showing status and slot progress per group
 
-4. **Dashboard view** — add a "My Groups" tab to `/dashboard/tickets` using `getMyGroupOrders`, showing status and slot progress per group
+4. **Admin view** — surface `EXPIRED` orders with paid slots so admins can process refunds
 
-5. **Admin view** — surface `EXPIRED` orders with paid slots for manual refund processing
-
-6. **Real-time updates** — replace `router.refresh()` with SSE or polling on the join page so members see slot claims live without refreshing
+5. **Real-time slot updates** — replace `router.refresh()` with SSE or polling on the join page so members see claims live without a manual refresh

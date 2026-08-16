@@ -23,6 +23,7 @@ const serverSchema = z.object({
 
   // Redis
   REDIS_URL: z.string().url('REDIS_URL must be a valid URL').optional(),
+  WORKER_REDIS_URL: z.string().url('WORKER_REDIS_URL must be a valid URL').optional(),
 
   // Resend (email)
   RESEND_API_KEY: z.string().startsWith('re_', 'RESEND_API_KEY must start with re_').optional(),

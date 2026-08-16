@@ -84,6 +84,8 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
   const meta = (data.metadata ?? {}) as Record<string, unknown>
   const reservationId = meta.reservationId as string | undefined
   const userId = meta.userId as string | undefined
+  const promoCodeId = (meta.promoCodeId as string | undefined) || undefined
+  const discountAmount = typeof meta.discountAmount === 'number' ? meta.discountAmount : 0
 
   if (!reservationId || !userId) {
     console.error('[webhook/paystack] Missing metadata on charge', { reference })
@@ -162,6 +164,10 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
           status: PaymentStatus.SUCCESS,
           paystackReference: reference,
           paystackTransactionId,
+          // Promo code — spread the discount evenly across tickets
+          promoCodeId: promoCodeId ?? null,
+          discountAmount:
+            discountAmount > 0 ? Math.round(discountAmount / reservation.eventSeats.length) : null,
         },
       })
 
@@ -176,6 +182,14 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
           data: { sold: { increment: 1 } },
         })
       }
+    }
+
+    // Increment promo code usage count atomically
+    if (promoCodeId) {
+      await tx.promoCode.update({
+        where: { id: promoCodeId },
+        data: { usedCount: { increment: 1 } },
+      })
     }
 
     await tx.reservation.update({

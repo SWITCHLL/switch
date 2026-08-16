@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Clock, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react'
+import { Clock, ShieldCheck, AlertCircle, Loader2, Tag, X, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatPrice } from '@/features/events/utils'
 import { reserveSeats, releaseReservation } from '../actions'
+import { validatePromoCode } from '@/features/promo-codes/actions'
 import { OrderSummary } from './order-summary'
 import type { TicketType } from '@/app/generated/prisma/client'
+import type { PromoValidation } from '@/features/promo-codes/types'
 
 interface CheckoutSeat {
   id: string
@@ -44,7 +46,15 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
   const [error, setError] = useState<string | null>(null)
   const [expired, setExpired] = useState(false)
 
+  // ── Promo code state ──────────────────────────────────────────────────────
+  const [promoInput, setPromoInput] = useState('')
+  const [isValidatingPromo, setIsValidatingPromo] = useState(false)
+  const [promoError, setPromoError] = useState<string | null>(null)
+  const [appliedPromo, setAppliedPromo] = useState<PromoValidation | null>(null)
+
   const isFree = subtotal === 0
+  const effectiveTotal = appliedPromo ? appliedPromo.finalTotal : subtotal
+  const isEffectivelyFree = effectiveTotal === 0
 
   // ── Step 1: Create reservation on mount for reserved seating ──
   useEffect(() => {
@@ -104,9 +114,45 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reservationId])
 
+  // ── Apply promo code ──────────────────────────────────────────────────────
+
+  async function handleApplyPromo() {
+    if (!promoInput.trim()) return
+    setPromoError(null)
+    setIsValidatingPromo(true)
+
+    const ticketTypeIds = [
+      ...new Set(
+        checkoutSeats.map((s) => s.ticketType?.id).filter((id): id is string => Boolean(id))
+      ),
+    ]
+
+    const result = await validatePromoCode({
+      code: promoInput.trim(),
+      eventId: event.id,
+      ticketTypeIds: ticketTypeIds.length > 0 ? ticketTypeIds : event.ticketTypes.map((t) => t.id),
+      subtotal,
+    })
+
+    setIsValidatingPromo(false)
+
+    if (result.success) {
+      setAppliedPromo(result.data)
+      setPromoInput('')
+    } else {
+      setPromoError(result.error)
+    }
+  }
+
+  function handleRemovePromo() {
+    setAppliedPromo(null)
+    setPromoInput('')
+    setPromoError(null)
+  }
+
   // ── Pay / confirm ──
   const handlePay = async () => {
-    if (!reservationId && !isFree) return
+    if (!reservationId && !isFree && !isEffectivelyFree) return
     setError(null)
     setIsInitiatingPayment(true)
 
@@ -114,12 +160,17 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
       const res = await fetch('/api/payments/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reservationId }),
+        body: JSON.stringify({
+          reservationId,
+          promoCode: appliedPromo?.code ?? undefined,
+        }),
       })
       const json = (await res.json()) as {
         authorizationUrl?: string
         free?: boolean
         error?: string
+        discountAmount?: number
+        finalTotal?: number
       }
 
       if (!res.ok || json.error) {
@@ -128,13 +179,11 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
       }
 
       if (json.free) {
-        // Free ticket — navigate to success directly
         router.push(`/events/${event.slug}/checkout/success?reservation=${reservationId}`)
         return
       }
 
       if (json.authorizationUrl) {
-        // Redirect to Paystack hosted checkout
         window.location.href = json.authorizationUrl
       }
     } catch {
@@ -149,7 +198,11 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
   const isUrgent = secondsLeft <= 120
 
   const canPay =
-    !isInitiatingPayment && !isReserving && !error && !expired && (isFree || reservationId !== null)
+    !isInitiatingPayment &&
+    !isReserving &&
+    !error &&
+    !expired &&
+    (isFree || isEffectivelyFree || reservationId !== null)
 
   if (expired) {
     return (
@@ -210,18 +263,104 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
           </div>
         )}
 
+        {/* ── Promo code ── */}
+        {!isFree && (
+          <div className="border-border mb-6 rounded-2xl border p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <Tag className="text-brand-500 h-4 w-4" />
+              <h2 className="text-[15px] font-semibold">Promo Code</h2>
+            </div>
+
+            {appliedPromo ? (
+              // Applied state
+              <div className="flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3">
+                <div className="flex items-center gap-2.5">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+                  <div>
+                    <p className="text-[13px] font-semibold text-emerald-500">
+                      {appliedPromo.code}
+                    </p>
+                    <p className="text-muted-foreground text-[12px]">
+                      {appliedPromo.discountType === 'PERCENTAGE'
+                        ? `${appliedPromo.discountValue}% off`
+                        : `${formatPrice(appliedPromo.discountValue)} off`}
+                      {' — '}
+                      {formatPrice(appliedPromo.discountAmount)} saved
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemovePromo}
+                  aria-label="Remove promo code"
+                  className="text-muted-foreground hover:text-foreground ml-2 rounded-lg p-1 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              // Input state
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={promoInput}
+                  onChange={(e) => {
+                    setPromoInput(e.target.value.toUpperCase())
+                    setPromoError(null)
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      void handleApplyPromo()
+                    }
+                  }}
+                  placeholder="Enter code"
+                  maxLength={30}
+                  className={cn(
+                    'border-border bg-background flex-1 rounded-lg border px-3 py-2',
+                    'placeholder:text-muted-foreground font-mono text-[13px] uppercase placeholder:normal-case',
+                    'focus:border-brand-500 focus:ring-brand-500/30 outline-none focus:ring-1',
+                    promoError && 'border-red-500/60'
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyPromo}
+                  disabled={isValidatingPromo || !promoInput.trim()}
+                  className={cn(
+                    'flex items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-semibold transition-all',
+                    isValidatingPromo || !promoInput.trim()
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                      : 'bg-brand-600 text-white hover:opacity-90'
+                  )}
+                >
+                  {isValidatingPromo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Apply'}
+                </button>
+              </div>
+            )}
+
+            {promoError && (
+              <p className="mt-2 flex items-center gap-1.5 text-[12px] text-red-500">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                {promoError}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Payment info */}
         <div className="border-border rounded-2xl border p-6">
           <h2 className="mb-1 text-[16px] font-semibold">Payment</h2>
           <p className="text-muted-foreground mb-6 text-[13px]">
-            {isFree
-              ? 'This is a free event. Click below to confirm your tickets.'
-              : 'You will be redirected to Paystack to complete your payment securely.'}
+            {isEffectivelyFree
+              ? 'Your promo code covers the full amount. Click below to confirm your tickets.'
+              : isFree
+                ? 'This is a free event. Click below to confirm your tickets.'
+                : 'You will be redirected to Paystack to complete your payment securely.'}
           </p>
 
-          {!isFree && (
+          {!isFree && !isEffectivelyFree && (
             <div className="border-border bg-muted/20 flex items-center gap-4 rounded-xl border px-5 py-4">
-              {/* Paystack logo placeholder */}
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#00C3F7]/10">
                 <svg viewBox="0 0 40 40" className="h-6 w-6 fill-[#00C3F7]">
                   <rect x="4" y="12" width="32" height="5" rx="2.5" />
@@ -258,18 +397,30 @@ export function CheckoutClient({ event, checkoutSeats, subtotal }: CheckoutClien
               <>
                 <Loader2 className="h-4 w-4 animate-spin" /> Processing…
               </>
-            ) : isFree ? (
+            ) : isFree || isEffectivelyFree ? (
               'Confirm free tickets'
             ) : (
-              <>Pay {formatPrice(subtotal)} with Paystack</>
+              <>Pay {formatPrice(effectiveTotal)} with Paystack</>
             )}
           </button>
+
+          {/* Show savings summary below the CTA when a promo is active */}
+          {appliedPromo && !isEffectivelyFree && (
+            <p className="mt-2 text-center text-[12px] text-emerald-500">
+              You save {formatPrice(appliedPromo.discountAmount)} with code {appliedPromo.code}
+            </p>
+          )}
         </div>
       </div>
 
       {/* ── Right: order summary ── */}
       <div className="lg:sticky lg:top-[80px] lg:self-start">
-        <OrderSummary event={event} checkoutSeats={checkoutSeats} subtotal={subtotal} />
+        <OrderSummary
+          event={event}
+          checkoutSeats={checkoutSeats}
+          subtotal={subtotal}
+          appliedPromo={appliedPromo}
+        />
       </div>
     </div>
   )

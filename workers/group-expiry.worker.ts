@@ -20,7 +20,12 @@ export interface GroupExpiryJobData {
 const QUEUE_NAME = 'group-expiry'
 
 export function createGroupExpiryWorker(redisUrl: string) {
-  const connection = new Redis(redisUrl, { maxRetriesPerRequest: null })
+  const isTls = redisUrl.startsWith('rediss://')
+
+  const connection = new Redis(redisUrl, {
+    maxRetriesPerRequest: null,
+    ...(isTls && { tls: { rejectUnauthorized: false } }),
+  })
 
   const worker = new Worker<GroupExpiryJobData>(
     QUEUE_NAME,

@@ -12,6 +12,8 @@ import { EventStatusControl } from '@/features/organizer/components/event-status
 import { TicketTypesManager } from '@/features/organizer/components/ticket-types-manager'
 import { EventImagesManager } from '@/features/organizer/components/event-images-manager'
 import { EditEventForm } from '@/features/organizer/components/edit-event-form'
+import { PromoCodesManager } from '@/features/promo-codes/components/promo-codes-manager'
+import { getPromoCodesForEvent } from '@/features/promo-codes/queries'
 import { db } from '@/lib/db'
 import { format } from 'date-fns'
 import { formatPrice } from '@/features/events/utils'
@@ -34,10 +36,11 @@ export default async function ManageEventPage({ params }: PageProps) {
   const organizer = await getOrganizerByUserId(session.userId)
   if (!organizer) redirect('/dashboard')
 
-  const [event, eventImages, categories] = await Promise.all([
+  const [event, eventImages, categories, promoCodes] = await Promise.all([
     getOrganizerEvent(id, organizer.id),
     getEventImages(id),
     db.category.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+    getPromoCodesForEvent(id, organizer.id),
   ])
 
   if (!event) notFound()
@@ -116,6 +119,13 @@ export default async function ManageEventPage({ params }: PageProps) {
 
       {/* ── Ticket types ── */}
       <TicketTypesManager eventId={event.id} ticketTypes={event.ticketTypes} />
+
+      {/* ── Promo codes ── */}
+      <PromoCodesManager
+        eventId={event.id}
+        promoCodes={promoCodes}
+        ticketTypes={event.ticketTypes.map((tt) => ({ id: tt.id, name: tt.name }))}
+      />
     </div>
   )
 }

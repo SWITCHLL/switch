@@ -137,3 +137,8 @@ export type GroupOrder = Prisma.GroupOrderModel
  * 
  */
 export type GroupOrderSlot = Prisma.GroupOrderSlotModel
+/**
+ * Model PromoCode
+ * 
+ */
+export type PromoCode = Prisma.PromoCodeModel

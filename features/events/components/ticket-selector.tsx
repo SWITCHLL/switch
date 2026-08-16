@@ -2,21 +2,31 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Minus, Plus, ShoppingCart, Lock, AlertCircle, Map } from 'lucide-react'
+import { Minus, Plus, ShoppingCart, Lock, AlertCircle, Map, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatPrice, getMinPrice } from '../utils'
 import type { EventDetail } from '../types'
 import { format } from 'date-fns'
+import { GroupBookingPanel } from '@/features/group-booking/components/group-booking-panel'
 
 interface TicketSelectorProps {
   event: EventDetail
   minPrice: number | null
   soldOut: boolean
   isLoggedIn: boolean
+  /** Pre-selected seat IDs passed from the seat-map page */
+  selectedSeatIds?: string[]
 }
 
-export function TicketSelector({ event, minPrice, soldOut, isLoggedIn }: TicketSelectorProps) {
+export function TicketSelector({
+  event,
+  minPrice,
+  soldOut,
+  isLoggedIn,
+  selectedSeatIds = [],
+}: TicketSelectorProps) {
   const isReserved = event.seatingType === 'RESERVED' || event.seatingType === 'MIXED'
+  const [mode, setMode] = useState<'solo' | 'group'>('solo')
 
   const salesNotStarted = Boolean(event.salesStart && new Date(event.salesStart) > new Date())
   const salesEnded = Boolean(event.salesEnd && new Date(event.salesEnd) < new Date())
@@ -44,22 +54,63 @@ export function TicketSelector({ event, minPrice, soldOut, isLoggedIn }: TicketS
         </Notice>
       )}
 
-      {/* ── Reserved / Mixed: show pricing summary + seat map CTA ── */}
-      {isReserved && !unavailable && (
-        <ReservedTicketSummary event={event} isLoggedIn={isLoggedIn} />
+      {/* ── Solo / Group tabs ── */}
+      {!unavailable && isLoggedIn && (
+        <div className="border-border mb-4 flex rounded-xl border p-1">
+          <button
+            onClick={() => setMode('solo')}
+            className={cn(
+              'flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-[12.5px] font-semibold transition-all',
+              mode === 'solo'
+                ? 'bg-brand-600 text-white shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            Solo
+          </button>
+          <button
+            onClick={() => setMode('group')}
+            className={cn(
+              'flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-[12.5px] font-semibold transition-all',
+              mode === 'group'
+                ? 'bg-brand-600 text-white shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            <Users className="h-3.5 w-3.5" />
+            Group
+          </button>
+        </div>
       )}
 
-      {/* ── General Admission: quantity pickers ── */}
-      {!isReserved && !unavailable && <GATicketSelector event={event} isLoggedIn={isLoggedIn} />}
+      {/* ── Group booking panel ── */}
+      {!unavailable && isLoggedIn && mode === 'group' && (
+        <GroupBookingPanel event={event} selectedSeatIds={selectedSeatIds} />
+      )}
 
-      {/* Unavailable CTA */}
-      {unavailable && (
-        <button
-          disabled
-          className="border-border text-muted-foreground mt-2 w-full cursor-not-allowed rounded-xl border py-3 text-[14px] font-semibold"
-        >
-          {soldOut ? 'Sold Out' : salesEnded ? 'Sales Ended' : 'Sales Not Open Yet'}
-        </button>
+      {/* ── Solo booking ── */}
+      {(unavailable || !isLoggedIn || mode === 'solo') && (
+        <>
+          {/* ── Reserved / Mixed: show pricing summary + seat map CTA ── */}
+          {isReserved && !unavailable && (
+            <ReservedTicketSummary event={event} isLoggedIn={isLoggedIn} />
+          )}
+
+          {/* ── General Admission: quantity pickers ── */}
+          {!isReserved && !unavailable && (
+            <GATicketSelector event={event} isLoggedIn={isLoggedIn} />
+          )}
+
+          {/* Unavailable CTA */}
+          {unavailable && (
+            <button
+              disabled
+              className="border-border text-muted-foreground mt-2 w-full cursor-not-allowed rounded-xl border py-3 text-[14px] font-semibold"
+            >
+              {soldOut ? 'Sold Out' : salesEnded ? 'Sales Ended' : 'Sales Not Open Yet'}
+            </button>
+          )}
+        </>
       )}
 
       <p className="text-muted-foreground mt-3 text-center text-[11px]">

@@ -358,6 +358,7 @@ export type EventWhereInput = {
   reviews?: Prisma.EventReviewListRelationFilter
   refundRequests?: Prisma.RefundRequestListRelationFilter
   groupOrders?: Prisma.GroupOrderListRelationFilter
+  promoCodes?: Prisma.PromoCodeListRelationFilter
 }
 
 export type EventOrderByWithRelationInput = {
@@ -396,6 +397,7 @@ export type EventOrderByWithRelationInput = {
   reviews?: Prisma.EventReviewOrderByRelationAggregateInput
   refundRequests?: Prisma.RefundRequestOrderByRelationAggregateInput
   groupOrders?: Prisma.GroupOrderOrderByRelationAggregateInput
+  promoCodes?: Prisma.PromoCodeOrderByRelationAggregateInput
 }
 
 export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -437,6 +439,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   reviews?: Prisma.EventReviewListRelationFilter
   refundRequests?: Prisma.RefundRequestListRelationFilter
   groupOrders?: Prisma.GroupOrderListRelationFilter
+  promoCodes?: Prisma.PromoCodeListRelationFilter
 }, "id" | "slug">
 
 export type EventOrderByWithAggregationInput = {
@@ -527,6 +530,7 @@ export type EventCreateInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateInput = {
@@ -561,6 +565,7 @@ export type EventUncheckedCreateInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventUpdateInput = {
@@ -595,6 +600,7 @@ export type EventUpdateInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateInput = {
@@ -629,6 +635,7 @@ export type EventUncheckedUpdateInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateManyInput = {
@@ -792,6 +799,11 @@ export type EventSumOrderByAggregateInput = {
 export type EventScalarRelationFilter = {
   is?: Prisma.EventWhereInput
   isNot?: Prisma.EventWhereInput
+}
+
+export type EventNullableScalarRelationFilter = {
+  is?: Prisma.EventWhereInput | null
+  isNot?: Prisma.EventWhereInput | null
 }
 
 export type EventCreateNestedManyWithoutOrganizerInput = {
@@ -1114,6 +1126,22 @@ export type EventUpdateOneRequiredWithoutGroupOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutGroupOrdersInput, Prisma.EventUpdateWithoutGroupOrdersInput>, Prisma.EventUncheckedUpdateWithoutGroupOrdersInput>
 }
 
+export type EventCreateNestedOneWithoutPromoCodesInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutPromoCodesInput, Prisma.EventUncheckedCreateWithoutPromoCodesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutPromoCodesInput
+  connect?: Prisma.EventWhereUniqueInput
+}
+
+export type EventUpdateOneWithoutPromoCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutPromoCodesInput, Prisma.EventUncheckedCreateWithoutPromoCodesInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutPromoCodesInput
+  upsert?: Prisma.EventUpsertWithoutPromoCodesInput
+  disconnect?: Prisma.EventWhereInput | boolean
+  delete?: Prisma.EventWhereInput | boolean
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutPromoCodesInput, Prisma.EventUpdateWithoutPromoCodesInput>, Prisma.EventUncheckedUpdateWithoutPromoCodesInput>
+}
+
 export type EventCreateWithoutOrganizerInput = {
   id?: string
   title: string
@@ -1145,6 +1173,7 @@ export type EventCreateWithoutOrganizerInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutOrganizerInput = {
@@ -1178,6 +1207,7 @@ export type EventUncheckedCreateWithoutOrganizerInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutOrganizerInput = {
@@ -1264,6 +1294,7 @@ export type EventCreateWithoutCategoryInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutCategoryInput = {
@@ -1297,6 +1328,7 @@ export type EventUncheckedCreateWithoutCategoryInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutCategoryInput = {
@@ -1356,6 +1388,7 @@ export type EventCreateWithoutVenueInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutVenueInput = {
@@ -1389,6 +1422,7 @@ export type EventUncheckedCreateWithoutVenueInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutVenueInput = {
@@ -1448,6 +1482,7 @@ export type EventCreateWithoutSeatMapInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutSeatMapInput = {
@@ -1481,6 +1516,7 @@ export type EventUncheckedCreateWithoutSeatMapInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutSeatMapInput = {
@@ -1540,6 +1576,7 @@ export type EventCreateWithoutImagesInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutImagesInput = {
@@ -1573,6 +1610,7 @@ export type EventUncheckedCreateWithoutImagesInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutImagesInput = {
@@ -1622,6 +1660,7 @@ export type EventUpdateWithoutImagesInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutImagesInput = {
@@ -1655,6 +1694,7 @@ export type EventUncheckedUpdateWithoutImagesInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutTicketTypesInput = {
@@ -1688,6 +1728,7 @@ export type EventCreateWithoutTicketTypesInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutTicketTypesInput = {
@@ -1721,6 +1762,7 @@ export type EventUncheckedCreateWithoutTicketTypesInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutTicketTypesInput = {
@@ -1770,6 +1812,7 @@ export type EventUpdateWithoutTicketTypesInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutTicketTypesInput = {
@@ -1803,6 +1846,7 @@ export type EventUncheckedUpdateWithoutTicketTypesInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutEventSeatsInput = {
@@ -1836,6 +1880,7 @@ export type EventCreateWithoutEventSeatsInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutEventSeatsInput = {
@@ -1869,6 +1914,7 @@ export type EventUncheckedCreateWithoutEventSeatsInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutEventSeatsInput = {
@@ -1918,6 +1964,7 @@ export type EventUpdateWithoutEventSeatsInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutEventSeatsInput = {
@@ -1951,6 +1998,7 @@ export type EventUncheckedUpdateWithoutEventSeatsInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutReservationsInput = {
@@ -1984,6 +2032,7 @@ export type EventCreateWithoutReservationsInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutReservationsInput = {
@@ -2017,6 +2066,7 @@ export type EventUncheckedCreateWithoutReservationsInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutReservationsInput = {
@@ -2066,6 +2116,7 @@ export type EventUpdateWithoutReservationsInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutReservationsInput = {
@@ -2099,6 +2150,7 @@ export type EventUncheckedUpdateWithoutReservationsInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutTicketsInput = {
@@ -2132,6 +2184,7 @@ export type EventCreateWithoutTicketsInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutTicketsInput = {
@@ -2165,6 +2218,7 @@ export type EventUncheckedCreateWithoutTicketsInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutTicketsInput = {
@@ -2214,6 +2268,7 @@ export type EventUpdateWithoutTicketsInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutTicketsInput = {
@@ -2247,6 +2302,7 @@ export type EventUncheckedUpdateWithoutTicketsInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutPaymentsInput = {
@@ -2280,6 +2336,7 @@ export type EventCreateWithoutPaymentsInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutPaymentsInput = {
@@ -2313,6 +2370,7 @@ export type EventUncheckedCreateWithoutPaymentsInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutPaymentsInput = {
@@ -2362,6 +2420,7 @@ export type EventUpdateWithoutPaymentsInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutPaymentsInput = {
@@ -2395,6 +2454,7 @@ export type EventUncheckedUpdateWithoutPaymentsInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutPayoutRequestsInput = {
@@ -2428,6 +2488,7 @@ export type EventCreateWithoutPayoutRequestsInput = {
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutPayoutRequestsInput = {
@@ -2461,6 +2522,7 @@ export type EventUncheckedCreateWithoutPayoutRequestsInput = {
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutPayoutRequestsInput = {
@@ -2510,6 +2572,7 @@ export type EventUpdateWithoutPayoutRequestsInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutPayoutRequestsInput = {
@@ -2543,6 +2606,7 @@ export type EventUncheckedUpdateWithoutPayoutRequestsInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutReviewsInput = {
@@ -2576,6 +2640,7 @@ export type EventCreateWithoutReviewsInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutReviewsInput = {
@@ -2609,6 +2674,7 @@ export type EventUncheckedCreateWithoutReviewsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutReviewsInput = {
@@ -2658,6 +2724,7 @@ export type EventUpdateWithoutReviewsInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutReviewsInput = {
@@ -2691,6 +2758,7 @@ export type EventUncheckedUpdateWithoutReviewsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutRefundRequestsInput = {
@@ -2724,6 +2792,7 @@ export type EventCreateWithoutRefundRequestsInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutEventInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutRefundRequestsInput = {
@@ -2757,6 +2826,7 @@ export type EventUncheckedCreateWithoutRefundRequestsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutEventInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutRefundRequestsInput = {
@@ -2806,6 +2876,7 @@ export type EventUpdateWithoutRefundRequestsInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutEventNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutRefundRequestsInput = {
@@ -2839,6 +2910,7 @@ export type EventUncheckedUpdateWithoutRefundRequestsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutEventNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateWithoutGroupOrdersInput = {
@@ -2872,6 +2944,7 @@ export type EventCreateWithoutGroupOrdersInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutEventInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateWithoutGroupOrdersInput = {
@@ -2905,6 +2978,7 @@ export type EventUncheckedCreateWithoutGroupOrdersInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutEventInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventCreateOrConnectWithoutGroupOrdersInput = {
@@ -2954,6 +3028,7 @@ export type EventUpdateWithoutGroupOrdersInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutEventNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutGroupOrdersInput = {
@@ -2987,6 +3062,159 @@ export type EventUncheckedUpdateWithoutGroupOrdersInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutEventNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
+}
+
+export type EventCreateWithoutPromoCodesInput = {
+  id?: string
+  title: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  seatingType?: $Enums.SeatingType
+  status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
+  startsAt: Date | string
+  endsAt?: Date | string | null
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  capacity?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organizer: Prisma.OrganizerCreateNestedOneWithoutEventsInput
+  venue?: Prisma.VenueCreateNestedOneWithoutEventsInput
+  seatMap?: Prisma.SeatMapCreateNestedOneWithoutEventsInput
+  category?: Prisma.CategoryCreateNestedOneWithoutEventsInput
+  ticketTypes?: Prisma.TicketTypeCreateNestedManyWithoutEventInput
+  eventSeats?: Prisma.EventSeatCreateNestedManyWithoutEventInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutEventInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEventInput
+  images?: Prisma.EventImageCreateNestedManyWithoutEventInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutEventInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutEventInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutEventInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutEventInput
+  groupOrders?: Prisma.GroupOrderCreateNestedManyWithoutEventInput
+}
+
+export type EventUncheckedCreateWithoutPromoCodesInput = {
+  id?: string
+  organizerId: string
+  venueId?: string | null
+  seatMapId?: string | null
+  categoryId?: string | null
+  title: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  seatingType?: $Enums.SeatingType
+  status?: $Enums.EventStatus
+  isFree?: boolean
+  isVirtual?: boolean
+  virtualLink?: string | null
+  startsAt: Date | string
+  endsAt?: Date | string | null
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  capacity?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ticketTypes?: Prisma.TicketTypeUncheckedCreateNestedManyWithoutEventInput
+  eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutEventInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutEventInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEventInput
+  images?: Prisma.EventImageUncheckedCreateNestedManyWithoutEventInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutEventInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutEventInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutEventInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutEventInput
+  groupOrders?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutEventInput
+}
+
+export type EventCreateOrConnectWithoutPromoCodesInput = {
+  where: Prisma.EventWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventCreateWithoutPromoCodesInput, Prisma.EventUncheckedCreateWithoutPromoCodesInput>
+}
+
+export type EventUpsertWithoutPromoCodesInput = {
+  update: Prisma.XOR<Prisma.EventUpdateWithoutPromoCodesInput, Prisma.EventUncheckedUpdateWithoutPromoCodesInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutPromoCodesInput, Prisma.EventUncheckedCreateWithoutPromoCodesInput>
+  where?: Prisma.EventWhereInput
+}
+
+export type EventUpdateToOneWithWhereWithoutPromoCodesInput = {
+  where?: Prisma.EventWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutPromoCodesInput, Prisma.EventUncheckedUpdateWithoutPromoCodesInput>
+}
+
+export type EventUpdateWithoutPromoCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
+  status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organizer?: Prisma.OrganizerUpdateOneRequiredWithoutEventsNestedInput
+  venue?: Prisma.VenueUpdateOneWithoutEventsNestedInput
+  seatMap?: Prisma.SeatMapUpdateOneWithoutEventsNestedInput
+  category?: Prisma.CategoryUpdateOneWithoutEventsNestedInput
+  ticketTypes?: Prisma.TicketTypeUpdateManyWithoutEventNestedInput
+  eventSeats?: Prisma.EventSeatUpdateManyWithoutEventNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutEventNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEventNestedInput
+  images?: Prisma.EventImageUpdateManyWithoutEventNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutEventNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutEventNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
+  groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+}
+
+export type EventUncheckedUpdateWithoutPromoCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizerId?: Prisma.StringFieldUpdateOperationsInput | string
+  venueId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seatMapId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seatingType?: Prisma.EnumSeatingTypeFieldUpdateOperationsInput | $Enums.SeatingType
+  status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
+  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  virtualLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startsAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ticketTypes?: Prisma.TicketTypeUncheckedUpdateManyWithoutEventNestedInput
+  eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutEventNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutEventNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEventNestedInput
+  images?: Prisma.EventImageUncheckedUpdateManyWithoutEventNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutEventNestedInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutEventNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
+  groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateManyOrganizerInput = {
@@ -3043,6 +3271,7 @@ export type EventUpdateWithoutOrganizerInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutOrganizerInput = {
@@ -3076,6 +3305,7 @@ export type EventUncheckedUpdateWithoutOrganizerInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutOrganizerInput = {
@@ -3155,6 +3385,7 @@ export type EventUpdateWithoutCategoryInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutCategoryInput = {
@@ -3188,6 +3419,7 @@ export type EventUncheckedUpdateWithoutCategoryInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutCategoryInput = {
@@ -3267,6 +3499,7 @@ export type EventUpdateWithoutVenueInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutVenueInput = {
@@ -3300,6 +3533,7 @@ export type EventUncheckedUpdateWithoutVenueInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutVenueInput = {
@@ -3379,6 +3613,7 @@ export type EventUpdateWithoutSeatMapInput = {
   reviews?: Prisma.EventReviewUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateWithoutSeatMapInput = {
@@ -3412,6 +3647,7 @@ export type EventUncheckedUpdateWithoutSeatMapInput = {
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutEventNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutEventNestedInput
   groupOrders?: Prisma.GroupOrderUncheckedUpdateManyWithoutEventNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateManyWithoutSeatMapInput = {
@@ -3453,6 +3689,7 @@ export type EventCountOutputType = {
   reviews: number
   refundRequests: number
   groupOrders: number
+  promoCodes: number
 }
 
 export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3466,6 +3703,7 @@ export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   reviews?: boolean | EventCountOutputTypeCountReviewsArgs
   refundRequests?: boolean | EventCountOutputTypeCountRefundRequestsArgs
   groupOrders?: boolean | EventCountOutputTypeCountGroupOrdersArgs
+  promoCodes?: boolean | EventCountOutputTypeCountPromoCodesArgs
 }
 
 /**
@@ -3548,6 +3786,13 @@ export type EventCountOutputTypeCountGroupOrdersArgs<ExtArgs extends runtime.Typ
   where?: Prisma.GroupOrderWhereInput
 }
 
+/**
+ * EventCountOutputType without action
+ */
+export type EventCountOutputTypeCountPromoCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PromoCodeWhereInput
+}
+
 
 export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3585,6 +3830,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reviews?: boolean | Prisma.Event$reviewsArgs<ExtArgs>
   refundRequests?: boolean | Prisma.Event$refundRequestsArgs<ExtArgs>
   groupOrders?: boolean | Prisma.Event$groupOrdersArgs<ExtArgs>
+  promoCodes?: boolean | Prisma.Event$promoCodesArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
@@ -3684,6 +3930,7 @@ export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   reviews?: boolean | Prisma.Event$reviewsArgs<ExtArgs>
   refundRequests?: boolean | Prisma.Event$refundRequestsArgs<ExtArgs>
   groupOrders?: boolean | Prisma.Event$groupOrdersArgs<ExtArgs>
+  promoCodes?: boolean | Prisma.Event$promoCodesArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3716,6 +3963,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     reviews: Prisma.$EventReviewPayload<ExtArgs>[]
     refundRequests: Prisma.$RefundRequestPayload<ExtArgs>[]
     groupOrders: Prisma.$GroupOrderPayload<ExtArgs>[]
+    promoCodes: Prisma.$PromoCodePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4168,6 +4416,7 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
   reviews<T extends Prisma.Event$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refundRequests<T extends Prisma.Event$refundRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$refundRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groupOrders<T extends Prisma.Event$groupOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$groupOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  promoCodes<T extends Prisma.Event$promoCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$promoCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4913,6 +5162,30 @@ export type Event$groupOrdersArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.GroupOrderScalarFieldEnum | Prisma.GroupOrderScalarFieldEnum[]
+}
+
+/**
+ * Event.promoCodes
+ */
+export type Event$promoCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PromoCode
+   */
+  select?: Prisma.PromoCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PromoCode
+   */
+  omit?: Prisma.PromoCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PromoCodeInclude<ExtArgs> | null
+  where?: Prisma.PromoCodeWhereInput
+  orderBy?: Prisma.PromoCodeOrderByWithRelationInput | Prisma.PromoCodeOrderByWithRelationInput[]
+  cursor?: Prisma.PromoCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PromoCodeScalarFieldEnum | Prisma.PromoCodeScalarFieldEnum[]
 }
 
 /**
