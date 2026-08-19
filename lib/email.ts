@@ -40,8 +40,15 @@ export async function sendTicketConfirmationEmail(params: {
   userId: string
   eventTitle: string
   eventDate: Date
+  eventSlug: string
   ticketCount: number
   reservationId: string
+  tickets: Array<{
+    ticketNumber: string
+    qrCode: string
+    ticketTypeName: string
+    seatLabel?: string | null
+  }>
 }): Promise<void> {
   // Look up the user's email
   const { db } = await import('@/lib/db')
@@ -51,50 +58,146 @@ export async function sendTicketConfirmationEmail(params: {
   })
   if (!user) return
 
+  const QRCode = await import('qrcode')
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+
   const dateStr = params.eventDate.toLocaleDateString('en-NG', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   })
+
+  // Generate QR data URLs for each ticket (max 6 shown inline)
+  const ticketsToShow = params.tickets.slice(0, 6)
+  const qrDataUrls = await Promise.all(
+    ticketsToShow.map((t) =>
+      QRCode.default.toDataURL(t.qrCode, {
+        width: 160,
+        margin: 1,
+        color: { dark: '#000000', light: '#ffffff' },
+        errorCorrectionLevel: 'M',
+      })
+    )
+  )
+
+  const ticketRows = ticketsToShow
+    .map(
+      (t, i) => `
+      <tr>
+        <td style="padding:16px 0;border-bottom:1px solid #27272a;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="vertical-align:top;padding-right:16px;">
+                <p style="margin:0 0 2px;font-size:14px;font-weight:600;color:#fafafa;">
+                  ${t.ticketTypeName}${t.seatLabel ? ` · Seat ${t.seatLabel}` : ''}
+                </p>
+                <p style="margin:0;font-size:11px;font-family:monospace;color:#71717a;letter-spacing:0.05em;">
+                  ${t.ticketNumber}
+                </p>
+              </td>
+              <td style="vertical-align:top;text-align:right;width:84px;">
+                <img
+                  src="${qrDataUrls[i]}"
+                  width="76"
+                  height="76"
+                  alt="QR code for ${t.ticketNumber}"
+                  style="border-radius:6px;display:block;margin-left:auto;"
+                />
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>`
+    )
+    .join('')
+
+  const extraCount = params.tickets.length - ticketsToShow.length
 
   const { error } = await resend.emails.send({
     from: FROM,
     to: user.email,
     subject: `Your tickets for ${params.eventTitle} — ${APP_NAME}`,
     html: `
-      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
-        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
-        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Booking Confirmation</p>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#09090b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#09090b;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
 
-        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
-          <p style="color:#71717a;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 8px;">You're going to</p>
-          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
-          <p style="color:#a1a1aa;font-size:14px;margin:0;">${dateStr}</p>
-        </div>
+          <!-- Header -->
+          <tr>
+            <td style="padding-bottom:28px;">
+              <p style="margin:0;font-size:22px;font-weight:700;color:#fafafa;">${APP_NAME}</p>
+              <p style="margin:4px 0 0;font-size:13px;color:#71717a;">Booking Confirmation</p>
+            </td>
+          </tr>
 
-        <div style="display:flex;gap:12px;margin-bottom:24px;">
-          <div style="flex:1;background:#18181b;border-radius:10px;padding:16px;text-align:center;">
-            <p style="color:#71717a;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 4px;">Tickets</p>
-            <p style="font-size:28px;font-weight:700;margin:0;">${params.ticketCount}</p>
-          </div>
-          <div style="flex:1;background:#18181b;border-radius:10px;padding:16px;text-align:center;">
-            <p style="color:#71717a;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 4px;">Status</p>
-            <p style="font-size:16px;font-weight:600;color:#4ade80;margin:0;">Confirmed</p>
-          </div>
-        </div>
+          <!-- Event block -->
+          <tr>
+            <td style="background:#18181b;border-radius:12px;padding:20px;margin-bottom:16px;">
+              <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#71717a;">You&apos;re going to</p>
+              <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#fafafa;">${params.eventTitle}</p>
+              <p style="margin:0;font-size:13px;color:#a1a1aa;">${dateStr}</p>
+            </td>
+          </tr>
 
-        <p style="color:#71717a;font-size:13px;margin:0 0 16px;">
-          Your tickets are ready. You can view and download them from your 
-          <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://switchapp.io'}/dashboard/tickets" 
-             style="color:#818cf8;text-decoration:none;">tickets page</a>.
-        </p>
+          <tr><td style="height:12px;"></td></tr>
 
-        <p style="color:#52525b;font-size:12px;margin:0;">
-          Reference: ${params.reservationId}
-        </p>
-      </div>
-    `,
+          <!-- Tickets -->
+          <tr>
+            <td style="background:#18181b;border-radius:12px;padding:20px;">
+              <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#71717a;">
+                Your ticket${params.ticketCount !== 1 ? 's' : ''} (${params.ticketCount})
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                ${ticketRows}
+              </table>
+              ${
+                extraCount > 0
+                  ? `<p style="margin:12px 0 0;font-size:12px;color:#71717a;">+ ${extraCount} more ticket${extraCount !== 1 ? 's' : ''} — view all in your dashboard</p>`
+                  : ''
+              }
+            </td>
+          </tr>
+
+          <tr><td style="height:16px;"></td></tr>
+
+          <!-- CTA -->
+          <tr>
+            <td align="center">
+              <a href="${appUrl}/dashboard/tickets"
+                 style="display:inline-block;background:#6366f1;color:#fff;font-weight:600;font-size:14px;padding:13px 28px;border-radius:10px;text-decoration:none;">
+                View all my tickets →
+              </a>
+            </td>
+          </tr>
+
+          <tr><td style="height:28px;"></td></tr>
+
+          <!-- Footer -->
+          <tr>
+            <td>
+              <p style="margin:0;font-size:12px;color:#52525b;text-align:center;">
+                Booking ref: <span style="font-family:monospace;">${params.reservationId}</span>
+              </p>
+              <p style="margin:6px 0 0;font-size:11px;color:#3f3f46;text-align:center;">
+                Present your QR code at the entrance. Keep this email safe.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
   })
 
   if (error) {

@@ -64,6 +64,7 @@ export const ModelName = {
   Row: 'Row',
   Seat: 'Seat',
   Event: 'Event',
+  EventSpeaker: 'EventSpeaker',
   EventImage: 'EventImage',
   TicketType: 'TicketType',
   EventSeat: 'EventSeat',
@@ -305,6 +306,20 @@ export const EventScalarFieldEnum = {
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const EventSpeakerScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  name: 'name',
+  role: 'role',
+  avatarUrl: 'avatarUrl',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventSpeakerScalarFieldEnum = (typeof EventSpeakerScalarFieldEnum)[keyof typeof EventSpeakerScalarFieldEnum]
 
 
 export const EventImageScalarFieldEnum = {

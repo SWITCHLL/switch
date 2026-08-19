@@ -30,7 +30,9 @@ const serverSchema = z.object({
   RESEND_FROM_EMAIL: z.string().email().optional(),
 
   // Supabase Storage
+  SUPABASE_URL: z.string().url().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  SUPABASE_ANON_KEY: z.string().min(1).optional(),
   SUPABASE_EVENTS_BUCKET: z.string().default('event-images'),
 
   // Paystack
@@ -49,8 +51,6 @@ const clientSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
   NEXT_PUBLIC_APP_NAME: z.string().default('SWITCH'),
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: z.string().startsWith('pk_').optional(),
 })
 

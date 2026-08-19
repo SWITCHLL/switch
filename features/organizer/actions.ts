@@ -418,6 +418,99 @@ export async function saveEventImages(eventId: string, imageUrls: string[]): Pro
   return { success: true, data: undefined }
 }
 
+// ─── Speakers / Guests / Performers ──────────────────────────────────────────
+
+const upsertSpeakerSchema = z.object({
+  eventId: z.string().min(1),
+  speakerId: z.string().optional(), // present when updating
+  name: z.string().min(1).max(120),
+  role: z.string().max(80).optional(),
+  avatarUrl: z.string().url().optional().or(z.literal('')),
+})
+
+export async function saveSpeaker(formData: FormData): Promise<ActionResult<{ id: string }>> {
+  const session = await getSession()
+  if (!session) return { success: false, error: 'Not authenticated' }
+
+  const raw = Object.fromEntries(formData)
+  const parsed = upsertSpeakerSchema.safeParse(raw)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  }
+
+  const { eventId, speakerId, name, role, avatarUrl } = parsed.data
+
+  // Verify ownership
+  const organizer = await db.organizer.findUnique({
+    where: { userId: session.userId },
+    select: { id: true },
+  })
+  const event = organizer
+    ? await db.event.findUnique({
+        where: { id: eventId, organizerId: organizer.id },
+        select: { id: true },
+      })
+    : null
+  if (!event) return { success: false, error: 'Event not found' }
+
+  const data = {
+    name,
+    role: role || null,
+    avatarUrl: avatarUrl || null,
+  }
+
+  if (speakerId) {
+    // Update existing
+    await db.eventSpeaker.update({
+      where: { id: speakerId, eventId },
+      data,
+    })
+    revalidatePath(`/dashboard/events/${eventId}`)
+    return { success: true, data: { id: speakerId } }
+  } else {
+    // Create new — append at end
+    const count = await db.eventSpeaker.count({ where: { eventId } })
+    const speaker = await db.eventSpeaker.create({
+      data: { eventId, ...data, position: count },
+      select: { id: true },
+    })
+    revalidatePath(`/dashboard/events/${eventId}`)
+    return { success: true, data: speaker }
+  }
+}
+
+export async function deleteSpeaker(speakerId: string, eventId: string): Promise<ActionResult> {
+  const session = await getSession()
+  if (!session) return { success: false, error: 'Not authenticated' }
+
+  const organizer = await db.organizer.findUnique({
+    where: { userId: session.userId },
+    select: { id: true },
+  })
+  const event = organizer
+    ? await db.event.findUnique({
+        where: { id: eventId, organizerId: organizer.id },
+        select: { id: true },
+      })
+    : null
+  if (!event) return { success: false, error: 'Event not found' }
+
+  await db.eventSpeaker.delete({ where: { id: speakerId, eventId } })
+
+  // Re-order remaining speakers
+  const remaining = await db.eventSpeaker.findMany({
+    where: { eventId },
+    orderBy: { position: 'asc' },
+    select: { id: true },
+  })
+  await Promise.all(
+    remaining.map((s, i) => db.eventSpeaker.update({ where: { id: s.id }, data: { position: i } }))
+  )
+
+  revalidatePath(`/dashboard/events/${eventId}`)
+  return { success: true, data: undefined }
+}
+
 // ─── Cancel event ─────────────────────────────────────────────────────────────
 
 export async function cancelEvent(eventId: string): Promise<ActionResult> {

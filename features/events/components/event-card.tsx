@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Calendar, Clock, MapPin, Users } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { formatPrice, getMinPrice, isSoldOut, hasFreeTickets } from '../utils'
@@ -21,106 +21,93 @@ export function EventCard({ event, index = 0 }: EventCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.45, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Link href={`/events/${event.slug}`} className="group block h-full">
-        <article
-          className={cn(
-            'bg-surface border-border flex h-full flex-col overflow-hidden rounded-2xl border',
-            'transition-all duration-300',
-            'hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)]'
-          )}
-        >
+      <Link href={`/events/${event.slug}`} className="group block">
+        <article aria-label={event.title}>
           {/* Image */}
-          <div className="relative h-[160px] overflow-hidden">
+          <div className="relative mb-4 overflow-hidden rounded-xl" style={{ aspectRatio: '4/5' }}>
             {event.imageUrl ? (
               <Image
                 src={event.imageUrl}
                 alt={event.title}
                 fill
-                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 340px"
-                loading={index < 4 ? 'eager' : 'lazy'}
+                className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                loading={index < 3 ? 'eager' : 'lazy'}
               />
             ) : (
-              <div className="from-brand-900/60 to-background h-full w-full bg-gradient-to-br via-violet-900/40" />
+              <div className="h-full w-full bg-gradient-to-br from-[#1a1a18] via-[#1e1a2e] to-[#111110]" />
             )}
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            {/* Subtle bottom gradient for readability if overlaid */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
-            {/* Status badges */}
-            <div className="absolute top-3 left-3 flex items-center gap-1.5">
-              {soldOut && (
-                <span className="rounded-full bg-red-500/80 px-2 py-0.5 text-[10.5px] font-semibold text-white backdrop-blur-sm">
-                  Sold out
-                </span>
-              )}
-              {free && !soldOut && (
-                <span className="rounded-full bg-emerald-500/80 px-2 py-0.5 text-[10.5px] font-semibold text-white backdrop-blur-sm">
-                  Free
-                </span>
-              )}
-            </div>
-
-            {/* Category */}
-            {event.category && (
-              <div className="absolute top-3 right-3">
-                <span
-                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm"
-                  style={{ backgroundColor: event.category.color ?? 'rgba(99,102,241,0.75)' }}
-                >
-                  {event.category.name}
-                </span>
+            {/* Status badge */}
+            {(soldOut || free) && (
+              <div className="absolute top-3 left-3">
+                {soldOut ? (
+                  <span className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-white backdrop-blur-sm">
+                    Sold out
+                  </span>
+                ) : (
+                  <span className="rounded-full bg-emerald-500/90 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-white backdrop-blur-sm">
+                    Free
+                  </span>
+                )}
               </div>
             )}
           </div>
 
-          {/* Body */}
-          <div className="flex flex-1 flex-col p-4">
-            <h3 className="text-foreground group-hover:text-brand-400 line-clamp-2 text-[14px] leading-snug font-semibold transition-colors duration-200">
+          {/* Meta */}
+          <div className="space-y-1.5">
+            {/* Category */}
+            {event.category && (
+              <p
+                className="text-[11px] font-semibold tracking-widest uppercase"
+                style={{ color: event.category.color ?? '#6366f1' }}
+              >
+                {event.category.name}
+              </p>
+            )}
+
+            {/* Title */}
+            <h3 className="text-foreground group-hover:text-foreground/80 line-clamp-2 text-[15px] leading-snug font-semibold transition-colors duration-200">
               {event.title}
             </h3>
 
-            <div className="mt-3 flex flex-col gap-1.5">
-              <div className="text-muted-foreground flex items-center gap-1.5 text-[12px]">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                <span>{format(event.startsAt, 'EEE, MMM d, yyyy')}</span>
-              </div>
-              <div className="text-muted-foreground flex items-center gap-1.5 text-[12px]">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                <span>{format(event.startsAt, 'h:mm a')}</span>
-              </div>
-              {event.venue && (
-                <div className="text-muted-foreground flex items-center gap-1.5 text-[12px]">
-                  <MapPin className="h-3.5 w-3.5 shrink-0" />
-                  <span className="truncate">
-                    {event.venue.name}, {event.venue.city}
-                  </span>
-                </div>
-              )}
-            </div>
+            {/* Date */}
+            <p className="text-muted-foreground text-[13px]">
+              {format(event.startsAt, 'EEE, MMM d · h:mm a')}
+            </p>
 
-            {/* Footer: price + attendees */}
-            <div className="border-border/60 mt-4 mt-auto flex items-center justify-between border-t pt-3.5">
-              <div>
-                {soldOut ? (
-                  <span className="text-[13.5px] font-semibold text-red-500">Sold out</span>
-                ) : minPrice !== null ? (
-                  <span className="text-foreground text-[14px] font-bold">
-                    {minPrice === 0 ? 'Free' : `From ${formatPrice(minPrice)}`}
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground text-[13px]">No tickets available</span>
-                )}
-              </div>
-              <div className="text-muted-foreground flex items-center gap-1 text-[11.5px]">
-                <Users className="h-3.5 w-3.5" />
-                <span>{event._count.tickets.toLocaleString()}</span>
-              </div>
-            </div>
+            {/* Location */}
+            {event.venue && (
+              <p className="text-muted-foreground flex items-center gap-1 text-[13px]">
+                <MapPin className="h-3 w-3 shrink-0" aria-hidden />
+                <span className="truncate">
+                  {event.venue.city}
+                </span>
+              </p>
+            )}
+
+            {/* Price */}
+            <p
+              className={cn(
+                'pt-0.5 text-[13px] font-semibold',
+                soldOut ? 'text-red-400' : 'text-foreground'
+              )}
+            >
+              {soldOut
+                ? 'Sold out'
+                : minPrice !== null
+                  ? minPrice === 0
+                    ? 'Free'
+                    : `From ${formatPrice(minPrice)}`
+                  : null}
+            </p>
           </div>
         </article>
       </Link>

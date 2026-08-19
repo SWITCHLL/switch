@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { acquireSeatLock, releaseAllSeatLocks, SEAT_LOCK_TTL } from '@/lib/redis'
 import { getSession } from '@/lib/session'
 import { sendTicketConfirmationEmail } from '@/lib/email'
+import { scheduleReservationExpiry } from '@/lib/queues'
 import {
   reserveSeatsSchema,
   reserveGASchema,
@@ -130,6 +131,9 @@ export async function reserveSeats(input: unknown): Promise<ReserveSeatsResult> 
       return reservation
     })
 
+    // Schedule background cleanup in case the user abandons checkout
+    scheduleReservationExpiry(result.id, result.expiresAt).catch(console.error)
+
     return {
       success: true,
       reservationId: result.id,
@@ -146,8 +150,6 @@ export async function reserveSeats(input: unknown): Promise<ReserveSeatsResult> 
     return { success: false, error: 'Failed to reserve seats. Please try again.' }
   }
 }
-
-// ─── Reserve GA tickets ───────────────────────────────────────────────────────
 
 export async function reserveGATickets(input: unknown): Promise<ReserveSeatsResult> {
   const session = await getSession()
@@ -194,6 +196,9 @@ export async function reserveGATickets(input: unknown): Promise<ReserveSeatsResu
         },
       })
     })
+
+    // Schedule background cleanup in case the user abandons checkout
+    scheduleReservationExpiry(result.id, result.expiresAt).catch(console.error)
 
     return {
       success: true,
@@ -306,13 +311,30 @@ export async function confirmOrder(input: unknown): Promise<ConfirmOrderResult> 
     )
 
     // Send confirmation email (non-blocking — don't fail the order if email fails)
-    sendTicketConfirmationEmail({
-      userId,
-      eventTitle: reservation.event.title,
-      eventDate: reservation.event.startsAt,
-      ticketCount: ticketIds.length,
-      reservationId,
-    }).catch((err) => console.error('[confirmOrder] email error:', err))
+    db.ticket.findMany({
+      where: { id: { in: ticketIds } },
+      select: {
+        ticketNumber: true,
+        qrCode: true,
+        ticketType: { select: { name: true } },
+        eventSeat: { select: { seat: { select: { label: true } } } },
+      },
+    }).then((tickets) =>
+      sendTicketConfirmationEmail({
+        userId,
+        eventTitle: reservation.event.title,
+        eventDate: reservation.event.startsAt,
+        eventSlug: reservation.event.slug,
+        ticketCount: ticketIds.length,
+        reservationId,
+        tickets: tickets.map((t) => ({
+          ticketNumber: t.ticketNumber,
+          qrCode: t.qrCode,
+          ticketTypeName: t.ticketType.name,
+          seatLabel: t.eventSeat?.seat?.label ?? null,
+        })),
+      })
+    ).catch((err) => console.error('[confirmOrder] email error:', err))
 
     return { success: true, ticketIds }
   } catch (err) {

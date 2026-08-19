@@ -8,11 +8,12 @@ import { getSession } from '@/lib/session'
 import { getEventBySlug } from '@/features/events'
 import { db } from '@/lib/db'
 import { CheckoutClient } from '@/features/checkout/components/checkout-client'
+import { GACheckoutClient } from '@/features/checkout/components/ga-checkout-client'
 import { format } from 'date-fns'
 
 interface PageProps {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ seats?: string; reservation?: string }>
+  searchParams: Promise<{ seats?: string; tickets?: string; reservation?: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -24,12 +25,117 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CheckoutPage({ params, searchParams }: PageProps) {
   const { slug } = await params
-  const { seats: seatsParam, reservation: reservationParam } = await searchParams
+  const { seats: seatsParam, tickets: ticketsParam } = await searchParams
 
   const [session, event] = await Promise.all([getSession(), getEventBySlug(slug)])
 
   if (!event) notFound()
   if (!session) redirect(`/login?redirect=/events/${slug}/checkout`)
+
+  // ── General Admission: parse ticket type selections from URL ─────────────
+  // URL format: ?tickets=ticketTypeId1:qty1,ticketTypeId2:qty2
+  if (event.seatingType === 'GENERAL_ADMISSION' || (!seatsParam && ticketsParam)) {
+    if (!ticketsParam) {
+      redirect(`/events/${slug}`)
+    }
+
+    // Parse "id:qty" pairs
+    const gaSelections: Array<{ ticketTypeId: string; quantity: number }> = ticketsParam
+      .split(',')
+      .filter(Boolean)
+      .map((chunk) => {
+        const [id, qtyStr] = chunk.split(':')
+        return { ticketTypeId: id ?? '', quantity: parseInt(qtyStr ?? '0', 10) }
+      })
+      .filter((s) => s.ticketTypeId && s.quantity > 0)
+
+    if (gaSelections.length === 0) {
+      redirect(`/events/${slug}`)
+    }
+
+    // Validate ticket types belong to this event and are available
+    const ticketTypeIds = gaSelections.map((s) => s.ticketTypeId)
+    const ticketTypes = await db.ticketType.findMany({
+      where: { id: { in: ticketTypeIds }, eventId: event.id, status: { not: 'INACTIVE' } },
+      select: { id: true, name: true, price: true, currency: true, quantity: true, sold: true },
+    })
+
+    if (ticketTypes.length === 0) {
+      redirect(`/events/${slug}`)
+    }
+
+    const ttMap = Object.fromEntries(ticketTypes.map((tt) => [tt.id, tt]))
+
+    const resolvedSelections = gaSelections
+      .filter((s) => ttMap[s.ticketTypeId])
+      .map((s) => ({
+        ticketTypeId: s.ticketTypeId,
+        ticketTypeName: ttMap[s.ticketTypeId]!.name,
+        price: ttMap[s.ticketTypeId]!.price,
+        currency: ttMap[s.ticketTypeId]!.currency,
+        quantity: s.quantity,
+      }))
+
+    const subtotal = resolvedSelections.reduce((sum, s) => sum + s.price * s.quantity, 0)
+
+    return (
+      <div className="relative flex min-h-screen flex-col">
+        <SiteHeader userEmail={session.email} />
+
+        <main className="flex-1 pt-[60px]">
+          {/* ── Top bar ── */}
+          <div className="border-border/60 border-b">
+            <div className="mx-auto flex max-w-[1120px] items-center gap-4 px-5 py-3.5 sm:px-8">
+              <Link
+                href={`/events/${slug}`}
+                className="text-muted-foreground hover:text-foreground flex shrink-0 items-center gap-1.5 text-[13px] transition-colors"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                Back to event
+              </Link>
+
+              <div className="border-border hidden h-4 w-px sm:block" />
+
+              <div className="min-w-0 flex-1">
+                <p className="text-foreground truncate text-[13.5px] font-semibold">{event.title}</p>
+                {event.startsAt && (
+                  <p className="text-muted-foreground text-[11.5px]">
+                    {format(event.startsAt, 'EEE, MMM d, yyyy · h:mm a')}
+                    {event.venue ? ` · ${event.venue.name}` : ''}
+                  </p>
+                )}
+              </div>
+
+              {/* Step indicator */}
+              <div className="hidden shrink-0 items-center gap-1.5 sm:flex">
+                <Step n={1} label="Select tickets" active={false} done />
+                <div className="bg-border h-px w-6" />
+                <Step n={2} label="Checkout" active />
+                <div className="bg-border h-px w-6" />
+                <Step n={3} label="Confirmation" active={false} />
+              </div>
+            </div>
+          </div>
+
+          {/* ── Checkout content ── */}
+          <div className="mx-auto max-w-[1120px] px-5 py-8 sm:px-8 sm:py-10">
+            <GACheckoutClient
+              event={{
+                id: event.id,
+                slug: event.slug,
+                title: event.title,
+                ticketTypes: event.ticketTypes,
+              }}
+              selections={resolvedSelections}
+              subtotal={subtotal}
+            />
+          </div>
+        </main>
+
+        <SiteFooter />
+      </div>
+    )
+  }
 
   // ── Reserved seating: load EventSeat data from the seat IDs in the URL ──
   let checkoutSeats: Array<{
@@ -41,7 +147,7 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
     row: { label: string }
   }> = []
 
-  if (seatsParam && event.seatingType !== 'GENERAL_ADMISSION') {
+  if (seatsParam) {
     const eventSeatIds = seatsParam.split(',').filter(Boolean).slice(0, 10)
 
     if (eventSeatIds.length > 0) {

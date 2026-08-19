@@ -459,6 +459,7 @@ model Event {
   reservations Reservation[]
   tickets     Ticket[]
   images      EventImage[]
+  speakers    EventSpeaker[]
   payments    Payment[]
   payoutRequests PayoutRequest[]
   reviews     EventReview[]
@@ -469,6 +470,26 @@ model Event {
   @@index([organizerId])
   @@index([categoryId])
   @@map("events")
+}
+
+// ─── Event Speaker / Guest / Performer ───────────────────────────────────────
+
+model EventSpeaker {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  /// e.g. "Speaker", "Performer", "Guest", "Host", "DJ", etc.
+  role      String?
+  avatarUrl String?
+  /// Display order
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, position])
+  @@map("event_speakers")
 }
 
 // ─── Event Image ──────────────────────────────────────────────────────────────

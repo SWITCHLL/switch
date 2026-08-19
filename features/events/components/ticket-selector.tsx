@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Minus, Plus, ShoppingCart, Lock, AlertCircle, Map, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatPrice, getMinPrice } from '../utils'
@@ -193,6 +194,7 @@ function ReservedTicketSummary({ event, isLoggedIn }: { event: EventDetail; isLo
 // ─── General Admission: quantity steppers ─────────────────────────────────────
 
 function GATicketSelector({ event, isLoggedIn }: { event: EventDetail; isLoggedIn: boolean }) {
+  const router = useRouter()
   const [selections, setSelections] = useState<Record<string, number>>({})
 
   const activeTypes = event.ticketTypes.filter(
@@ -326,6 +328,15 @@ function GATicketSelector({ event, isLoggedIn }: { event: EventDetail; isLoggedI
         ) : (
           <button
             disabled={totalItems === 0}
+            onClick={() => {
+              if (totalItems === 0) return
+              // Encode selections as ticketTypeId:quantity pairs, e.g. "abc:2,def:1"
+              const ticketsParam = Object.entries(selections)
+                .filter(([, qty]) => qty > 0)
+                .map(([id, qty]) => `${id}:${qty}`)
+                .join(',')
+              router.push(`/events/${event.slug}/checkout?tickets=${ticketsParam}`)
+            }}
             className={cn(
               'flex w-full items-center justify-center gap-2 rounded-xl py-3',
               'text-[14px] font-semibold text-white transition-all',
@@ -333,7 +344,6 @@ function GATicketSelector({ event, isLoggedIn }: { event: EventDetail; isLoggedI
                 ? 'from-brand-600 cursor-pointer bg-gradient-to-r to-violet-600 hover:opacity-90'
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
             )}
-            // TODO: wire to checkout flow
           >
             <ShoppingCart className="h-4 w-4" />
             {totalItems === 0 ? 'Select tickets' : 'Continue to checkout'}

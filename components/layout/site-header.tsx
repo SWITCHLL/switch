@@ -1,6 +1,7 @@
 ﻿'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -12,16 +13,14 @@ import { ThemeToggle } from '@/components/shared/theme-toggle'
 // ─── Logo mark ────────────────────────────────────────────────────────────────
 function LogoMark() {
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
-      <rect width="22" height="22" rx="6" fill="currentColor" className="text-brand-600" />
-      <path
-        d="M6 11.5L10 7l6 8"
-        stroke="white"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <Image
+      src="/android-chrome-192x192.png"
+      alt="SWITCH logo"
+      width={28}
+      height={28}
+      className="rounded-md"
+      priority
+    />
   )
 }
 

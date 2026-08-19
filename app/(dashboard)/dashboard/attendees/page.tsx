@@ -134,7 +134,7 @@ export default async function AttendeesPage({ searchParams }: PageProps) {
         </form>
       </div>
 
-      {/* ── Table ── */}
+      {/* ── List / Table ── */}
       {tickets.length === 0 ? (
         <div className="border-border bg-surface flex flex-col items-center justify-center rounded-2xl border py-20 text-center">
           <div className="bg-muted mb-4 flex h-14 w-14 items-center justify-center rounded-2xl">
@@ -148,62 +148,109 @@ export default async function AttendeesPage({ searchParams }: PageProps) {
           </p>
         </div>
       ) : (
-        <div className="border-border bg-surface overflow-hidden rounded-2xl border">
-          <div className="overflow-x-auto">
-            <table className="w-full text-[13px]">
-              <thead>
-                <tr className="border-border border-b">
-                  <th className="text-muted-foreground px-4 py-3 text-left font-medium">
-                    Attendee
-                  </th>
-                  <th className="text-muted-foreground px-4 py-3 text-left font-medium">Event</th>
-                  <th className="text-muted-foreground px-4 py-3 text-left font-medium">Ticket</th>
-                  <th className="text-muted-foreground px-4 py-3 text-left font-medium">Seat</th>
-                  <th className="text-muted-foreground px-4 py-3 text-left font-medium">Status</th>
-                  <th className="text-muted-foreground px-4 py-3 text-left font-medium">Issued</th>
-                </tr>
-              </thead>
-              <tbody className="divide-border divide-y">
-                {tickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-3">
-                      <p className="font-medium">{ticket.user.name ?? '—'}</p>
-                      <p className="text-muted-foreground text-[12px]">{ticket.user.email}</p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="max-w-[180px] truncate font-medium">{ticket.event.title}</p>
-                      <p className="text-muted-foreground text-[12px]">
-                        {format(ticket.event.startsAt, 'MMM d, yyyy')}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="font-medium">{ticket.ticketType.name}</p>
-                      <p className="text-muted-foreground font-mono text-[11px]">
-                        {ticket.ticketNumber}
-                      </p>
-                    </td>
-                    <td className="text-muted-foreground px-4 py-3">
-                      {ticket.eventSeat?.seat?.label ?? '—'}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={cn(
-                          'rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
-                          STATUS_STYLES[ticket.status] ?? STATUS_STYLES.ACTIVE
-                        )}
-                      >
-                        {ticket.status}
+        <>
+          {/* ── Mobile card list (< md) ── */}
+          <div className="space-y-2.5 md:hidden">
+            {tickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                className="border-border bg-surface rounded-2xl border p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13.5px] font-semibold">{ticket.user.name ?? '—'}</p>
+                    <p className="text-muted-foreground truncate text-[12px]">{ticket.user.email}</p>
+                  </div>
+                  <span
+                    className={cn(
+                      'shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
+                      STATUS_STYLES[ticket.status] ?? STATUS_STYLES.ACTIVE
+                    )}
+                  >
+                    {ticket.status}
+                  </span>
+                </div>
+                <div className="border-border/60 mt-3 space-y-1 border-t pt-3 text-[12px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground truncate">{ticket.event.title}</span>
+                    <span className="text-muted-foreground shrink-0">
+                      {format(ticket.event.startsAt, 'MMM d, yyyy')}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium">{ticket.ticketType.name}</span>
+                    {ticket.eventSeat?.seat?.label && (
+                      <span className="text-muted-foreground">
+                        Seat {ticket.eventSeat.seat.label}
                       </span>
-                    </td>
-                    <td className="text-muted-foreground px-4 py-3">
-                      {format(ticket.issuedAt, 'MMM d, h:mm a')}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground font-mono text-[11px]">
+                    {ticket.ticketNumber}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+
+          {/* ── Desktop table (≥ md) ── */}
+          <div className="border-border bg-surface hidden overflow-hidden rounded-2xl border md:block">
+            <div className="overflow-x-auto">
+              <table className="w-full text-[13px]">
+                <thead>
+                  <tr className="border-border border-b">
+                    <th className="text-muted-foreground px-4 py-3 text-left font-medium">
+                      Attendee
+                    </th>
+                    <th className="text-muted-foreground px-4 py-3 text-left font-medium">Event</th>
+                    <th className="text-muted-foreground px-4 py-3 text-left font-medium">Ticket</th>
+                    <th className="text-muted-foreground px-4 py-3 text-left font-medium">Seat</th>
+                    <th className="text-muted-foreground px-4 py-3 text-left font-medium">Status</th>
+                    <th className="text-muted-foreground px-4 py-3 text-left font-medium">Issued</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-border divide-y">
+                  {tickets.map((ticket) => (
+                    <tr key={ticket.id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3">
+                        <p className="font-medium">{ticket.user.name ?? '—'}</p>
+                        <p className="text-muted-foreground text-[12px]">{ticket.user.email}</p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="max-w-[180px] truncate font-medium">{ticket.event.title}</p>
+                        <p className="text-muted-foreground text-[12px]">
+                          {format(ticket.event.startsAt, 'MMM d, yyyy')}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium">{ticket.ticketType.name}</p>
+                        <p className="text-muted-foreground font-mono text-[11px]">
+                          {ticket.ticketNumber}
+                        </p>
+                      </td>
+                      <td className="text-muted-foreground px-4 py-3">
+                        {ticket.eventSeat?.seat?.label ?? '—'}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={cn(
+                            'rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
+                            STATUS_STYLES[ticket.status] ?? STATUS_STYLES.ACTIVE
+                          )}
+                        >
+                          {ticket.status}
+                        </span>
+                      </td>
+                      <td className="text-muted-foreground px-4 py-3">
+                        {format(ticket.issuedAt, 'MMM d, h:mm a')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
       )}
     </div>
   )

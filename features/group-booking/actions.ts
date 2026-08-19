@@ -296,6 +296,8 @@ export async function confirmGroupSlotPayment(input: unknown): Promise<ConfirmGr
           slots: { select: { status: true } },
         },
       },
+      // Pre-load the eventSeat's ticketTypeId so we don't need a nested await
+      eventSeat: { select: { id: true, ticketTypeId: true } },
     },
   })
 
@@ -304,6 +306,12 @@ export async function confirmGroupSlotPayment(input: unknown): Promise<ConfirmGr
     return { success: false, error: `Slot is not in HELD state (current: ${slot.status})` }
   }
   if (!slot.claimedBy) return { success: false, error: 'Slot has no claimer' }
+
+  // Resolve the ticket type ID:
+  //   - GA slots  → slot.ticketTypeId
+  //   - Reserved  → eventSeat.ticketTypeId
+  const resolvedTicketTypeId = slot.ticketTypeId ?? slot.eventSeat?.ticketTypeId
+  if (!resolvedTicketTypeId) return { success: false, error: 'Cannot resolve ticket type for slot' }
 
   // Resolve organizer fee
   const { resolveFeePercent, calculateFee } = await import('@/lib/fees')
@@ -324,15 +332,7 @@ export async function confirmGroupSlotPayment(input: unknown): Promise<ConfirmGr
           eventId: slot.groupOrder.eventId,
           userId: slot.claimedBy!,
           eventSeatId: slot.eventSeatId ?? undefined,
-          ticketTypeId:
-            (slot.ticketTypeId ?? slot.eventSeatId)
-              ? ((
-                  await tx.eventSeat.findUnique({
-                    where: { id: slot.eventSeatId! },
-                    select: { ticketTypeId: true },
-                  })
-                )?.ticketTypeId ?? '')
-              : '',
+          ticketTypeId: resolvedTicketTypeId,
           ticketNumber: generateTicketNumber(),
           qrCode: generateQrCode(),
           status: TicketStatus.ACTIVE,

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { Plus, CalendarDays, Eye, EyeOff, Settings } from 'lucide-react'
+import { Plus, CalendarDays, Eye, Settings, ScanLine } from 'lucide-react'
 import { getSession } from '@/lib/session'
 import { getOrganizerByUserId, getOrganizerEvents } from '@/features/organizer/queries'
 import { format } from 'date-fns'
@@ -75,68 +75,76 @@ export default async function OrganizerEventsPage() {
             return (
               <div
                 key={event.id}
-                className="border-border bg-surface flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center"
+                className="border-border bg-surface rounded-2xl border p-4 sm:p-5"
               >
-                {/* Info */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2.5">
-                    <span
-                      className={cn(
-                        'rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
-                        STATUS_STYLES[event.status] ?? STATUS_STYLES.DRAFT
-                      )}
-                    >
-                      {event.status}
-                    </span>
-                    {event.category && (
+                <div className="flex items-start gap-3">
+                  {/* Info — takes all space */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className="rounded-full px-2.5 py-0.5 text-[11px] font-medium text-white"
-                        style={{ backgroundColor: event.category.color ?? '#6366f1' }}
+                        className={cn(
+                          'rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
+                          STATUS_STYLES[event.status] ?? STATUS_STYLES.DRAFT
+                        )}
                       >
-                        {event.category.name}
+                        {event.status}
                       </span>
-                    )}
-                  </div>
-                  <h3 className="mt-2 text-[15px] font-semibold">{event.title}</h3>
-                  <p className="text-muted-foreground mt-0.5 text-[12.5px]">
-                    {format(event.startsAt, 'EEE, MMM d, yyyy · h:mm a')}
-                    {event.venue ? ` · ${event.venue.name}` : ''}
-                  </p>
-                </div>
-
-                {/* Stats */}
-                <div className="flex items-center gap-6 text-center">
-                  <div>
-                    <p className="text-[18px] font-bold">{totalSold}</p>
-                    <p className="text-muted-foreground text-[11px]">
-                      {totalCapacity > 0 ? `/ ${totalCapacity}` : 'sold'}
+                      {event.category && (
+                        <span
+                          className="rounded-full px-2.5 py-0.5 text-[11px] font-medium text-white"
+                          style={{ backgroundColor: event.category.color ?? '#6366f1' }}
+                        >
+                          {event.category.name}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-2 text-[14.5px] font-semibold leading-snug">{event.title}</h3>
+                    <p className="text-muted-foreground mt-0.5 text-[12px]">
+                      {format(event.startsAt, 'EEE, MMM d, yyyy · h:mm a')}
+                      {event.venue ? ` · ${event.venue.name}` : ''}
                     </p>
-                  </div>
-                  <div>
-                    <p className="text-[18px] font-bold">
-                      ₦{(totalRevenue / 100).toLocaleString()}
-                    </p>
-                    <p className="text-muted-foreground text-[11px]">revenue</p>
-                  </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex shrink-0 items-center gap-2">
-                  <Link
-                    href={`/events/${event.slug}`}
-                    target="_blank"
-                    aria-label="View public page"
-                    className="text-muted-foreground hover:text-foreground border-border hover:bg-muted flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href={`/dashboard/events/${event.id}`}
-                    aria-label="Manage event"
-                    className="text-muted-foreground hover:text-foreground border-border hover:bg-muted flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Link>
+                    {/* Stats row — inline on mobile */}
+                    <div className="mt-3 flex items-center gap-4 text-[12.5px]">
+                      <div>
+                        <span className="font-bold">{totalSold}</span>
+                        {totalCapacity > 0 && (
+                          <span className="text-muted-foreground"> / {totalCapacity}</span>
+                        )}
+                        <span className="text-muted-foreground ml-1">sold</span>
+                      </div>
+                      <div>
+                        <span className="font-bold">₦{(totalRevenue / 100).toLocaleString()}</span>
+                        <span className="text-muted-foreground ml-1">revenue</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action buttons — stacked vertically on the right */}
+                  <div className="flex shrink-0 flex-col items-end gap-1.5">
+                    <Link
+                      href={`/dashboard/events/${event.id}`}
+                      aria-label="Manage event"
+                      className="text-muted-foreground hover:text-foreground border-border hover:bg-muted flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href={`/events/${event.slug}`}
+                      target="_blank"
+                      aria-label="View public page"
+                      className="text-muted-foreground hover:text-foreground border-border hover:bg-muted flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href={`/dashboard/events/${event.id}/scan`}
+                      aria-label="Check-in scanner"
+                      className="text-muted-foreground hover:text-foreground border-border hover:bg-muted flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
+                    >
+                      <ScanLine className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             )

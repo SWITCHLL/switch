@@ -115,7 +115,7 @@ export default async function AnalyticsPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
         {/* ── Daily sales chart (30 days) ── */}
         <div className="border-border bg-surface rounded-2xl border p-6">
           <div className="mb-6 flex items-center justify-between">

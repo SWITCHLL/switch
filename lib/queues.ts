@@ -8,6 +8,7 @@ import 'server-only'
 import { Queue } from 'bullmq'
 import { redis } from './redis'
 import type { GroupExpiryJobData } from '@/workers/group-expiry.worker'
+import type { ReservationExpiryJobData } from '@/workers/reservation-expiry.worker'
 
 // ─── Group Order Expiry Queue ─────────────────────────────────────────────────
 
@@ -46,4 +47,46 @@ export async function scheduleGroupExpiry(groupOrderId: string, expiresAt: Date)
     }
   )
   return job.id ?? groupOrderId
+}
+
+// ─── Reservation Expiry Queue ─────────────────────────────────────────────────
+
+const RESERVATION_EXPIRY_QUEUE = 'reservation-expiry'
+
+let _reservationExpiryQueue: Queue<ReservationExpiryJobData> | null = null
+
+export function getReservationExpiryQueue(): Queue<ReservationExpiryJobData> {
+  if (!_reservationExpiryQueue) {
+    _reservationExpiryQueue = new Queue<ReservationExpiryJobData>(RESERVATION_EXPIRY_QUEUE, {
+      connection: redis,
+      defaultJobOptions: {
+        removeOnComplete: 200,
+        removeOnFail: 50,
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 3000 },
+      },
+    })
+  }
+  return _reservationExpiryQueue
+}
+
+/**
+ * Schedule a reservation expiry job to fire when the reservation times out.
+ * Idempotent — won't create a duplicate job for the same reservationId.
+ */
+export async function scheduleReservationExpiry(
+  reservationId: string,
+  expiresAt: Date
+): Promise<string> {
+  const queue = getReservationExpiryQueue()
+  const delay = Math.max(0, expiresAt.getTime() - Date.now())
+  const job = await queue.add(
+    'expire',
+    { reservationId },
+    {
+      delay,
+      jobId: `reservation-expiry-${reservationId}`,
+    }
+  )
+  return job.id ?? reservationId
 }

@@ -107,6 +107,11 @@ export type Seat = Prisma.SeatModel
  */
 export type Event = Prisma.EventModel
 /**
+ * Model EventSpeaker
+ * 
+ */
+export type EventSpeaker = Prisma.EventSpeakerModel
+/**
  * Model EventImage
  * 
  */

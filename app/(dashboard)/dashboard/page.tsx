@@ -124,7 +124,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
         {/* ── Recent tickets ── */}
         <div>
           <div className="mb-4 flex items-center justify-between">
@@ -145,19 +145,19 @@ export default async function DashboardPage() {
               action={{ href: '/events', label: 'Browse events' }}
             />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {recentTickets.slice(0, 5).map((ticket) => (
                 <Link
                   key={ticket.id}
                   href={`/events/${ticket.event.slug}`}
-                  className="border-border bg-surface hover:border-border/80 flex items-center gap-4 rounded-xl border p-4 transition-all hover:-translate-y-px"
+                  className="border-border bg-surface hover:border-border/80 flex items-center gap-3 rounded-xl border p-3.5 transition-all hover:-translate-y-px"
                 >
-                  <div className="bg-brand-600/15 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
-                    <Ticket className="text-brand-400 h-5 w-5" />
+                  <div className="bg-brand-600/15 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+                    <Ticket className="text-brand-400 h-4.5 w-4.5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-semibold">{ticket.event.title}</p>
-                    <p className="text-muted-foreground mt-0.5 text-[12px]">
+                    <p className="truncate text-[13px] font-semibold">{ticket.event.title}</p>
+                    <p className="text-muted-foreground mt-0.5 text-[11.5px]">
                       {format(ticket.event.startsAt, 'MMM d, yyyy')}
                       {ticket.event.venue ? ` · ${ticket.event.venue.name}` : ''}
                     </p>
@@ -179,7 +179,7 @@ export default async function DashboardPage() {
         {/* ── Quick actions ── */}
         <div>
           <h2 className="mb-4 text-[15px] font-semibold">Quick Actions</h2>
-          <div className="space-y-2">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
             <Link
               href="/events"
               className="border-border bg-surface hover:bg-muted/40 flex items-center gap-3 rounded-xl border p-4 transition-colors"

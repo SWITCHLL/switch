@@ -13,6 +13,7 @@ export {
   getCategories,
   getUpcomingEvents,
   getEventsByCategory,
+  getRelatedEvents,
 } from './queries'
 
 export { eventFiltersSchema } from './schemas'

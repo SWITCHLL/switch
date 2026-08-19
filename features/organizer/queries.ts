@@ -103,12 +103,27 @@ export async function getEventImages(eventId: string) {
   })
 }
 
+// ─── Get event speakers ───────────────────────────────────────────────────────
+
+export async function getEventSpeakers(eventId: string) {
+  return db.eventSpeaker.findMany({
+    where: { eventId },
+    select: { id: true, name: true, role: true, avatarUrl: true, position: true },
+    orderBy: { position: 'asc' },
+  })
+}
+
 // ─── User ticket history ──────────────────────────────────────────────────────
 
 export async function getUserTickets(userId: string) {
   return db.ticket.findMany({
     where: { userId },
-    include: {
+    select: {
+      id: true,
+      ticketNumber: true,
+      qrCode: true,
+      status: true,
+      issuedAt: true,
       event: {
         select: {
           id: true,
@@ -121,7 +136,7 @@ export async function getUserTickets(userId: string) {
       },
       ticketType: { select: { name: true, currency: true } },
       eventSeat: {
-        include: {
+        select: {
           seat: { select: { label: true } },
         },
       },

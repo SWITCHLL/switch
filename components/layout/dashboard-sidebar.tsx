@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
@@ -59,9 +60,14 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           href="/"
           className="text-foreground flex items-center gap-2 text-[15px] font-semibold tracking-tight transition-opacity hover:opacity-80"
         >
-          <span className="bg-brand-600 flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-black text-white">
-            S
-          </span>
+          <Image
+            src="/android-chrome-192x192.png"
+            alt="SWITCH logo"
+            width={26}
+            height={26}
+            className="rounded-md"
+            priority
+          />
           SWITCH
         </Link>
       </div>

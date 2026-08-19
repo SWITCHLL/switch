@@ -410,6 +410,7 @@ export const ModelName = {
   Row: 'Row',
   Seat: 'Seat',
   Event: 'Event',
+  EventSpeaker: 'EventSpeaker',
   EventImage: 'EventImage',
   TicketType: 'TicketType',
   EventSeat: 'EventSeat',
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "organizer" | "organizerApplication" | "category" | "venue" | "seatMap" | "section" | "row" | "seat" | "event" | "eventImage" | "ticketType" | "eventSeat" | "reservation" | "ticket" | "payment" | "payoutRequest" | "eventReview" | "refundRequest" | "groupOrder" | "groupOrderSlot" | "promoCode"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "organizer" | "organizerApplication" | "category" | "venue" | "seatMap" | "section" | "row" | "seat" | "event" | "eventSpeaker" | "eventImage" | "ticketType" | "eventSeat" | "reservation" | "ticket" | "payment" | "payoutRequest" | "eventReview" | "refundRequest" | "groupOrder" | "groupOrderSlot" | "promoCode"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1400,6 +1401,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.EventCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.EventCountAggregateOutputType> | number
+        }
+      }
+    }
+    EventSpeaker: {
+      payload: Prisma.$EventSpeakerPayload<ExtArgs>
+      fields: Prisma.EventSpeakerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventSpeakerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventSpeakerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>
+        }
+        findFirst: {
+          args: Prisma.EventSpeakerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventSpeakerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>
+        }
+        findMany: {
+          args: Prisma.EventSpeakerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>[]
+        }
+        create: {
+          args: Prisma.EventSpeakerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>
+        }
+        createMany: {
+          args: Prisma.EventSpeakerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EventSpeakerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>[]
+        }
+        delete: {
+          args: Prisma.EventSpeakerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>
+        }
+        update: {
+          args: Prisma.EventSpeakerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventSpeakerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventSpeakerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EventSpeakerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>[]
+        }
+        upsert: {
+          args: Prisma.EventSpeakerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventSpeakerPayload>
+        }
+        aggregate: {
+          args: Prisma.EventSpeakerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEventSpeaker>
+        }
+        groupBy: {
+          args: Prisma.EventSpeakerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventSpeakerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventSpeakerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventSpeakerCountAggregateOutputType> | number
         }
       }
     }
@@ -2543,6 +2618,20 @@ export const EventScalarFieldEnum = {
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
 
 
+export const EventSpeakerScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  name: 'name',
+  role: 'role',
+  avatarUrl: 'avatarUrl',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventSpeakerScalarFieldEnum = (typeof EventSpeakerScalarFieldEnum)[keyof typeof EventSpeakerScalarFieldEnum]
+
+
 export const EventImageScalarFieldEnum = {
   id: 'id',
   eventId: 'eventId',
@@ -3261,6 +3350,7 @@ export type GlobalOmitConfig = {
   row?: Prisma.RowOmit
   seat?: Prisma.SeatOmit
   event?: Prisma.EventOmit
+  eventSpeaker?: Prisma.EventSpeakerOmit
   eventImage?: Prisma.EventImageOmit
   ticketType?: Prisma.TicketTypeOmit
   eventSeat?: Prisma.EventSeatOmit
