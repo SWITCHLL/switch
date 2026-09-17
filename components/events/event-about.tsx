@@ -25,7 +25,7 @@ export function EventAbout({ description }: EventAboutProps) {
     <section aria-labelledby="about-heading">
       <h2
         id="about-heading"
-        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         About this event
       </h2>
@@ -33,7 +33,7 @@ export function EventAbout({ description }: EventAboutProps) {
       <div className="relative">
         <div
           className={cn(
-            'text-[16px] leading-[1.8] text-white/75 transition-all',
+            'text-[16px] leading-[1.8] text-foreground/80 transition-all',
             !expanded && isLong && 'line-clamp-[8]'
           )}
         >
@@ -50,7 +50,7 @@ export function EventAbout({ description }: EventAboutProps) {
         {isLong && !expanded && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent"
           />
         )}
       </div>
@@ -60,8 +60,8 @@ export function EventAbout({ description }: EventAboutProps) {
           onClick={() => setExpanded((v) => !v)}
           className={cn(
             'mt-3 text-[13.5px] font-medium transition-colors',
-            'text-white/50 hover:text-white/80',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 rounded-md px-1'
+            'text-muted-foreground hover:text-foreground',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border rounded-md px-1'
           )}
           aria-expanded={expanded}
         >

@@ -5,6 +5,8 @@ import { DashboardSidebar } from '@/components/layout/dashboard-sidebar'
 import { DashboardHeader } from '@/components/layout/dashboard-header'
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav'
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await getSession()
   if (!session) redirect('/login?redirect=/dashboard')

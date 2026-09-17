@@ -10,7 +10,7 @@ import {
 } from '@/lib/redis'
 import { scheduleGroupExpiry } from '@/lib/queues'
 import { sendGroupCompleteEmail } from '@/lib/email'
-import { randomBytes } from 'crypto'
+import { randomBytes } from 'node:crypto'
 import {
   createGroupOrderSchema,
   claimSlotSchema,
@@ -45,7 +45,8 @@ function generateTicketNumber(): string {
 }
 
 function generateQrCode(): string {
-  return randomBytes(16).toString('hex')
+  // 32 bytes = 64 hex chars — consistent with submitRsvp and crypto-utils
+  return randomBytes(32).toString('hex')
 }
 
 // ─── Create a group order ─────────────────────────────────────────────────────
@@ -315,6 +316,7 @@ export async function confirmGroupSlotPayment(input: unknown): Promise<ConfirmGr
 
   // Resolve organizer fee
   const { resolveFeePercent, calculateFee } = await import('@/lib/fees')
+  const { createOrder, createPayment, setTicketOrder } = await import('@/lib/order-helpers')
   const organizer = await db.organizer.findUnique({
     where: { id: slot.groupOrder.event.organizerId },
     select: { id: true, feePercent: true },
@@ -326,35 +328,42 @@ export async function confirmGroupSlotPayment(input: unknown): Promise<ConfirmGr
 
   try {
     const ticketId = await db.$transaction(async (tx) => {
-      // Issue the ticket
+      // Issue the ticket via standard Prisma (ticket fields unchanged)
       const ticket = await tx.ticket.create({
         data: {
-          eventId: slot.groupOrder.eventId,
-          userId: slot.claimedBy!,
-          eventSeatId: slot.eventSeatId ?? undefined,
+          eventId:      slot.groupOrder.eventId,
+          userId:       slot.claimedBy!,
+          eventSeatId:  slot.eventSeatId ?? undefined,
           ticketTypeId: resolvedTicketTypeId,
           ticketNumber: generateTicketNumber(),
-          qrCode: generateQrCode(),
-          status: TicketStatus.ACTIVE,
-          issuedAt: new Date(),
+          qrCode:       generateQrCode(),
+          status:       TicketStatus.ACTIVE,
+          issuedAt:     new Date(),
         },
       })
 
-      // Record the payment
-      await tx.payment.create({
-        data: {
-          ticketId: ticket.id,
-          organizerId: organizer.id,
-          userId: slot.claimedBy!,
-          eventId: slot.groupOrder.eventId,
-          amount: slot.price,
-          currency: slot.currency,
-          platformFeePercent: feePercent,
-          platformFeeAmount: feeAmount,
-          netAmount,
-          status: 'SUCCESS',
-          paystackReference,
-        },
+      // Create Order + Payment via raw SQL helpers (Order not yet in generated client)
+      const order = await createOrder(tx, {
+        userId:        slot.claimedBy!,
+        eventId:       slot.groupOrder.eventId,
+        totalAmount:   slot.price,
+        currency:      slot.currency,
+        discountAmount: 0,
+      })
+
+      await setTicketOrder(tx, ticket.id, order.id)
+
+      await createPayment(tx, {
+        orderId:            order.id,
+        organizerId:        organizer.id,
+        userId:             slot.claimedBy!,
+        eventId:            slot.groupOrder.eventId,
+        amount:             slot.price,
+        currency:           slot.currency,
+        platformFeePercent: feePercent,
+        platformFeeAmount:  feeAmount,
+        netAmount,
+        paystackReference,
       })
 
       // Mark the event seat as SOLD (reserved seating)

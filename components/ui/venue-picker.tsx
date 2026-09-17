@@ -1,21 +1,12 @@
 'use client'
 
 /**
- * VenuePicker
- *
- * Text input backed by Google Places Autocomplete (New).
- * On selection it populates hidden form fields:
- *   venue_name, venue_address, venue_city, venue_state, venue_country, venue_place_id
- *
- * Requires NEXT_PUBLIC_GOOGLE_MAPS_API_KEY with:
- *   - Maps JavaScript API
- *   - Places API (New)
- * both enabled in Google Cloud Console.
+ * VenuePicker — inline venue fields.
+ * Renders four plain text inputs and keeps hidden form fields in sync.
+ * No external API or map SDK required here.
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { setOptions, importLibrary } from '@googlemaps/js-api-loader'
-import { MapPin, X, Loader2 } from 'lucide-react'
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface VenuePlace {
@@ -28,275 +19,112 @@ export interface VenuePlace {
 }
 
 interface VenuePickerProps {
-  /** Pre-populated value (edit mode) */
   defaultValue?: string
+  defaultAddress?: string
+  defaultCity?: string
+  defaultState?: string
   onSelect?: (place: VenuePlace | null) => void
   className?: string
 }
 
-// Extract a specific address component type from the Places result
-// Places API (New) uses longText/shortText instead of long_name/short_name
-function extractComponent(components: google.maps.places.AddressComponent[], type: string): string {
-  return components.find((c) => c.types.includes(type))?.longText ?? ''
-}
+const inputCls = cn(
+  'w-full rounded-xl border border-border bg-surface px-3.5 py-2.5',
+  'text-[14px] text-foreground placeholder:text-muted-foreground',
+  'outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
+)
 
-export function VenuePicker({ defaultValue, onSelect, className }: VenuePickerProps) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [inputValue, setInputValue] = useState(defaultValue ?? '')
-  const [selected, setSelected] = useState<VenuePlace | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [apiReady, setApiReady] = useState(false)
-  const [suggestions, setSuggestions] = useState<google.maps.places.AutocompleteSuggestion[]>([])
-  const [open, setOpen] = useState(false)
-  // Computed once on mount — safe to derive directly from env
-  const [apiKeyMissing] = useState(() => !process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
-  const sessionToken = useRef<google.maps.places.AutocompleteSessionToken | null>(null)
+export function VenuePicker({
+  defaultValue = '',
+  defaultAddress = '',
+  defaultCity = '',
+  defaultState = '',
+  onSelect,
+  className,
+}: VenuePickerProps) {
+  const [name, setName] = useState(defaultValue)
+  const [address, setAddress] = useState(defaultAddress)
+  const [city, setCity] = useState(defaultCity)
+  const [state, setState] = useState(defaultState)
 
-  // Load the Maps JS SDK once — runs only on client
-  useEffect(() => {
-    if (apiKeyMissing) return
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!
-
-    setOptions({ key: apiKey })
-
-    importLibrary('places')
-      .then(() => {
-        setApiReady(true)
-        sessionToken.current = new google.maps.places.AutocompleteSessionToken()
+  function notify(updates: Partial<{ name: string; address: string; city: string; state: string }>) {
+    const next = { name, address, city, state, ...updates }
+    if (next.name) {
+      onSelect?.({
+        name: next.name,
+        address: next.address,
+        city: next.city,
+        state: next.state,
+        country: 'Nigeria',
+        placeId: '',
       })
-      .catch(console.error)
-  }, [apiKeyMissing])
-
-  // Fetch suggestions whenever input changes
-  const fetchSuggestions = useCallback(
-    async (input: string) => {
-      if (!apiReady || input.length < 3) {
-        setSuggestions([])
-        setOpen(false)
-        return
-      }
-
-      try {
-        const { suggestions: results } =
-          await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
-            input,
-            sessionToken: sessionToken.current ?? undefined,
-            // Bias toward establishment and geocode types (venues, not just roads)
-            includedPrimaryTypes: [
-              'establishment',
-              'stadium',
-              'event_venue',
-              'cultural_center',
-              'performing_arts_theater',
-              'concert_hall',
-              'convention_center',
-              'banquet_hall',
-            ],
-          })
-        setSuggestions(results ?? [])
-        setOpen((results?.length ?? 0) > 0)
-      } catch {
-        setSuggestions([])
-        setOpen(false)
-      }
-    },
-    [apiReady]
-  )
-
-  // Debounce the API call
-  useEffect(() => {
-    const timer = setTimeout(() => fetchSuggestions(inputValue), 300)
-    return () => clearTimeout(timer)
-  }, [inputValue, fetchSuggestions])
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function onOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
+    } else {
+      onSelect?.(null)
     }
-    document.addEventListener('mousedown', onOutside)
-    return () => document.removeEventListener('mousedown', onOutside)
-  }, [])
-
-  async function handleSelectSuggestion(suggestion: google.maps.places.AutocompleteSuggestion) {
-    setOpen(false)
-    setLoading(true)
-
-    try {
-      const placePrediction = suggestion.placePrediction
-      if (!placePrediction) return
-
-      const place = placePrediction.toPlace()
-      await place.fetchFields({
-        fields: ['displayName', 'formattedAddress', 'addressComponents', 'id'],
-      })
-
-      const components = place.addressComponents ?? []
-      const resolved: VenuePlace = {
-        name: place.displayName ?? placePrediction.mainText?.toString() ?? '',
-        address: place.formattedAddress ?? '',
-        city:
-          extractComponent(components, 'locality') ||
-          extractComponent(components, 'administrative_area_level_2'),
-        state: extractComponent(components, 'administrative_area_level_1'),
-        country: extractComponent(components, 'country'),
-        placeId: place.id ?? '',
-      }
-
-      setInputValue(resolved.name)
-      setSelected(resolved)
-      onSelect?.(resolved)
-
-      // Refresh session token after a completed selection
-      sessionToken.current = new google.maps.places.AutocompleteSessionToken()
-    } catch (err) {
-      console.error('[VenuePicker] fetchFields error', err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  function handleClear() {
-    setInputValue('')
-    setSelected(null)
-    setSuggestions([])
-    setOpen(false)
-    onSelect?.(null)
-    inputRef.current?.focus()
-  }
-
-  // Render plain text input if API key is missing (determined client-side)
-  if (apiKeyMissing) {
-    return (
-      <input
-        type="text"
-        placeholder="Enter venue name and address"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        className={cn(
-          'border-border bg-surface w-full rounded-xl border px-3.5 py-2.5',
-          'text-foreground placeholder:text-muted-foreground text-[14px]',
-          'focus:border-brand-500 focus:ring-brand-500/20 transition-colors outline-none focus:ring-2',
-          className
-        )}
-      />
-    )
   }
 
   return (
-    <div ref={containerRef} className={cn('relative', className)}>
-      {/* ── Hidden fields submitted with the form ── */}
-      <input type="hidden" name="venue_name" value={selected?.name ?? ''} />
-      <input type="hidden" name="venue_address" value={selected?.address ?? ''} />
-      <input type="hidden" name="venue_city" value={selected?.city ?? ''} />
-      <input type="hidden" name="venue_state" value={selected?.state ?? ''} />
-      <input type="hidden" name="venue_country" value={selected?.country ?? ''} />
-      <input type="hidden" name="venue_place_id" value={selected?.placeId ?? ''} />
+    <div className={cn('space-y-3', className)}>
+      {/* Hidden fields submitted with the form */}
+      <input type="hidden" name="venue_name" value={name} />
+      <input type="hidden" name="venue_address" value={address} />
+      <input type="hidden" name="venue_city" value={city} />
+      <input type="hidden" name="venue_state" value={state} />
 
-      {/* ── Visible input ── */}
-      <div className="relative flex items-center">
-        <MapPin className="text-muted-foreground absolute left-3.5 h-4 w-4 shrink-0" />
+      {/* Venue Name */}
+      <div>
+        <label className="mb-1.5 block text-[13px] font-medium">
+          Venue Name
+        </label>
         <input
-          ref={inputRef}
           type="text"
-          role="combobox"
-          aria-expanded={open}
-          aria-autocomplete="list"
-          aria-label="Search for a venue"
-          placeholder={apiReady ? 'Search for a venue…' : 'Loading Maps…'}
-          disabled={!apiReady}
-          value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value)
-            if (selected) {
-              setSelected(null)
-              onSelect?.(null)
-            }
-          }}
-          onFocus={() => suggestions.length > 0 && setOpen(true)}
-          className={cn(
-            'border-border bg-surface w-full rounded-xl border py-2.5 pr-10 pl-10',
-            'text-foreground placeholder:text-muted-foreground text-[14px]',
-            'transition-colors outline-none',
-            'focus:border-brand-500 focus:ring-brand-500/20 focus:ring-2',
-            selected && 'border-emerald-500/50 bg-emerald-500/5',
-            !apiReady && 'cursor-wait opacity-60'
-          )}
+          placeholder="e.g. Eko Hotel & Suites"
+          value={name}
+          onChange={(e) => { setName(e.target.value); notify({ name: e.target.value }) }}
+          className={inputCls}
         />
-
-        {/* Right adornment */}
-        <div className="absolute right-3 flex items-center">
-          {loading && <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />}
-          {!loading && selected && (
-            <button
-              type="button"
-              onClick={handleClear}
-              aria-label="Clear venue"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
       </div>
 
-      {/* ── Confirmed venue chip ── */}
-      {selected && (
-        <p className="text-muted-foreground mt-1.5 flex items-center gap-1.5 text-[12px]">
-          <MapPin className="h-3 w-3 shrink-0 text-emerald-500" />
-          <span className="truncate">{selected.address}</span>
-        </p>
-      )}
+      {/* Address */}
+      <div>
+        <label className="mb-1.5 block text-[13px] font-medium">
+          Address
+        </label>
+        <input
+          type="text"
+          placeholder="e.g. Plot 1415, Ozumba Mbadiwe Ave"
+          value={address}
+          onChange={(e) => { setAddress(e.target.value); notify({ address: e.target.value }) }}
+          className={inputCls}
+        />
+      </div>
 
-      {/* ── Suggestions dropdown ── */}
-      {open && suggestions.length > 0 && (
-        <ul
-          role="listbox"
-          aria-label="Venue suggestions"
-          className="border-border bg-surface absolute top-full left-0 z-50 mt-1.5 w-full overflow-hidden rounded-xl border shadow-xl"
-        >
-          {suggestions.map((s, i) => {
-            const pred = s.placePrediction
-            if (!pred) return null
-            const main = pred.mainText?.toString() ?? ''
-            const secondary = pred.secondaryText?.toString() ?? ''
-            return (
-              <li key={i}>
-                <button
-                  type="button"
-                  role="option"
-                  className={cn(
-                    'flex w-full items-start gap-3 px-4 py-3 text-left',
-                    'hover:bg-muted/60 transition-colors',
-                    i < suggestions.length - 1 && 'border-border border-b'
-                  )}
-                  onMouseDown={(e) => {
-                    // Prevent blur before click fires
-                    e.preventDefault()
-                    handleSelectSuggestion(s)
-                  }}
-                >
-                  <MapPin className="text-muted-foreground mt-0.5 h-3.5 w-3.5 shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-[13.5px] leading-tight font-medium">{main}</p>
-                    {secondary && (
-                      <p className="text-muted-foreground mt-0.5 truncate text-[12px]">
-                        {secondary}
-                      </p>
-                    )}
-                  </div>
-                </button>
-              </li>
-            )
-          })}
-          <li className="border-border border-t px-4 py-2">
-            <p className="text-muted-foreground text-[10.5px]">Powered by Google Maps</p>
-          </li>
-        </ul>
-      )}
+      {/* City + State side by side */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className="mb-1.5 block text-[13px] font-medium">
+            City
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Lagos"
+            value={city}
+            onChange={(e) => { setCity(e.target.value); notify({ city: e.target.value }) }}
+            className={inputCls}
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-[13px] font-medium">
+            State
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Lagos State"
+            value={state}
+            onChange={(e) => { setState(e.target.value); notify({ state: e.target.value }) }}
+            className={inputCls}
+          />
+        </div>
+      </div>
     </div>
   )
 }

@@ -112,6 +112,11 @@ export type Event = Prisma.EventModel
  */
 export type EventSpeaker = Prisma.EventSpeakerModel
 /**
+ * Model EventScheduleItem
+ * 
+ */
+export type EventScheduleItem = Prisma.EventScheduleItemModel
+/**
  * Model EventImage
  * 
  */
@@ -136,6 +141,12 @@ export type Reservation = Prisma.ReservationModel
  * 
  */
 export type Ticket = Prisma.TicketModel
+/**
+ * Model Order
+ * An Order groups all tickets purchased in a single checkout session.
+ * One Order → one Paystack charge → one Payment → many Tickets.
+ */
+export type Order = Prisma.OrderModel
 /**
  * Model Payment
  * 
@@ -167,7 +178,63 @@ export type GroupOrder = Prisma.GroupOrderModel
  */
 export type GroupOrderSlot = Prisma.GroupOrderSlotModel
 /**
+ * Model UserCalendar
+ * 
+ */
+export type UserCalendar = Prisma.UserCalendarModel
+/**
+ * Model CalendarEvent
+ * 
+ */
+export type CalendarEvent = Prisma.CalendarEventModel
+/**
+ * Model CalendarShare
+ * 
+ */
+export type CalendarShare = Prisma.CalendarShareModel
+/**
  * Model PromoCode
  * 
  */
 export type PromoCode = Prisma.PromoCodeModel
+/**
+ * Model WaitlistEntry
+ * 
+ */
+export type WaitlistEntry = Prisma.WaitlistEntryModel
+/**
+ * Model TimeSlot
+ * 
+ */
+export type TimeSlot = Prisma.TimeSlotModel
+/**
+ * Model TimeSlotCapacity
+ * Per-ticket-type capacity for a time slot.
+ * e.g. "26 Dec 4pm show" has 500 VIP spots and 500 Regular spots.
+ */
+export type TimeSlotCapacity = Prisma.TimeSlotCapacityModel
+/**
+ * Model TimeSlotTicket
+ * 
+ */
+export type TimeSlotTicket = Prisma.TimeSlotTicketModel
+/**
+ * Model EventSession
+ * 
+ */
+export type EventSession = Prisma.EventSessionModel
+/**
+ * Model SessionEnrolment
+ * 
+ */
+export type SessionEnrolment = Prisma.SessionEnrolmentModel
+/**
+ * Model TableSeatAssignment
+ * Per-seat name assignments for table reservations where requiresAssignedSeating = true
+ */
+export type TableSeatAssignment = Prisma.TableSeatAssignmentModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

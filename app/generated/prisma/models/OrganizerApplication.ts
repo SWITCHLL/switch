@@ -30,7 +30,6 @@ export type OrganizerApplicationMinAggregateOutputType = {
   organizerName: string | null
   bio: string | null
   nin: string | null
-  bvn: string | null
   idType: string | null
   idDocUrl: string | null
   instagramUrl: string | null
@@ -51,7 +50,6 @@ export type OrganizerApplicationMaxAggregateOutputType = {
   organizerName: string | null
   bio: string | null
   nin: string | null
-  bvn: string | null
   idType: string | null
   idDocUrl: string | null
   instagramUrl: string | null
@@ -72,7 +70,6 @@ export type OrganizerApplicationCountAggregateOutputType = {
   organizerName: number
   bio: number
   nin: number
-  bvn: number
   idType: number
   idDocUrl: number
   instagramUrl: number
@@ -95,7 +92,6 @@ export type OrganizerApplicationMinAggregateInputType = {
   organizerName?: true
   bio?: true
   nin?: true
-  bvn?: true
   idType?: true
   idDocUrl?: true
   instagramUrl?: true
@@ -116,7 +112,6 @@ export type OrganizerApplicationMaxAggregateInputType = {
   organizerName?: true
   bio?: true
   nin?: true
-  bvn?: true
   idType?: true
   idDocUrl?: true
   instagramUrl?: true
@@ -137,7 +132,6 @@ export type OrganizerApplicationCountAggregateInputType = {
   organizerName?: true
   bio?: true
   nin?: true
-  bvn?: true
   idType?: true
   idDocUrl?: true
   instagramUrl?: true
@@ -231,7 +225,6 @@ export type OrganizerApplicationGroupByOutputType = {
   organizerName: string
   bio: string | null
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   instagramUrl: string | null
@@ -273,7 +266,6 @@ export type OrganizerApplicationWhereInput = {
   organizerName?: Prisma.StringFilter<"OrganizerApplication"> | string
   bio?: Prisma.StringNullableFilter<"OrganizerApplication"> | string | null
   nin?: Prisma.StringFilter<"OrganizerApplication"> | string
-  bvn?: Prisma.StringFilter<"OrganizerApplication"> | string
   idType?: Prisma.StringFilter<"OrganizerApplication"> | string
   idDocUrl?: Prisma.StringFilter<"OrganizerApplication"> | string
   instagramUrl?: Prisma.StringNullableFilter<"OrganizerApplication"> | string | null
@@ -295,7 +287,6 @@ export type OrganizerApplicationOrderByWithRelationInput = {
   organizerName?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   nin?: Prisma.SortOrder
-  bvn?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idDocUrl?: Prisma.SortOrder
   instagramUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -320,7 +311,6 @@ export type OrganizerApplicationWhereUniqueInput = Prisma.AtLeast<{
   organizerName?: Prisma.StringFilter<"OrganizerApplication"> | string
   bio?: Prisma.StringNullableFilter<"OrganizerApplication"> | string | null
   nin?: Prisma.StringFilter<"OrganizerApplication"> | string
-  bvn?: Prisma.StringFilter<"OrganizerApplication"> | string
   idType?: Prisma.StringFilter<"OrganizerApplication"> | string
   idDocUrl?: Prisma.StringFilter<"OrganizerApplication"> | string
   instagramUrl?: Prisma.StringNullableFilter<"OrganizerApplication"> | string | null
@@ -342,7 +332,6 @@ export type OrganizerApplicationOrderByWithAggregationInput = {
   organizerName?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   nin?: Prisma.SortOrder
-  bvn?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idDocUrl?: Prisma.SortOrder
   instagramUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -369,7 +358,6 @@ export type OrganizerApplicationScalarWhereWithAggregatesInput = {
   organizerName?: Prisma.StringWithAggregatesFilter<"OrganizerApplication"> | string
   bio?: Prisma.StringNullableWithAggregatesFilter<"OrganizerApplication"> | string | null
   nin?: Prisma.StringWithAggregatesFilter<"OrganizerApplication"> | string
-  bvn?: Prisma.StringWithAggregatesFilter<"OrganizerApplication"> | string
   idType?: Prisma.StringWithAggregatesFilter<"OrganizerApplication"> | string
   idDocUrl?: Prisma.StringWithAggregatesFilter<"OrganizerApplication"> | string
   instagramUrl?: Prisma.StringNullableWithAggregatesFilter<"OrganizerApplication"> | string | null
@@ -389,7 +377,6 @@ export type OrganizerApplicationCreateInput = {
   organizerName: string
   bio?: string | null
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   instagramUrl?: string | null
@@ -411,7 +398,6 @@ export type OrganizerApplicationUncheckedCreateInput = {
   organizerName: string
   bio?: string | null
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   instagramUrl?: string | null
@@ -431,7 +417,6 @@ export type OrganizerApplicationUpdateInput = {
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nin?: Prisma.StringFieldUpdateOperationsInput | string
-  bvn?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idDocUrl?: Prisma.StringFieldUpdateOperationsInput | string
   instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -453,7 +438,6 @@ export type OrganizerApplicationUncheckedUpdateInput = {
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nin?: Prisma.StringFieldUpdateOperationsInput | string
-  bvn?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idDocUrl?: Prisma.StringFieldUpdateOperationsInput | string
   instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -474,7 +458,6 @@ export type OrganizerApplicationCreateManyInput = {
   organizerName: string
   bio?: string | null
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   instagramUrl?: string | null
@@ -494,7 +477,6 @@ export type OrganizerApplicationUpdateManyMutationInput = {
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nin?: Prisma.StringFieldUpdateOperationsInput | string
-  bvn?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idDocUrl?: Prisma.StringFieldUpdateOperationsInput | string
   instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -515,7 +497,6 @@ export type OrganizerApplicationUncheckedUpdateManyInput = {
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nin?: Prisma.StringFieldUpdateOperationsInput | string
-  bvn?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idDocUrl?: Prisma.StringFieldUpdateOperationsInput | string
   instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -541,7 +522,6 @@ export type OrganizerApplicationCountOrderByAggregateInput = {
   organizerName?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   nin?: Prisma.SortOrder
-  bvn?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idDocUrl?: Prisma.SortOrder
   instagramUrl?: Prisma.SortOrder
@@ -562,7 +542,6 @@ export type OrganizerApplicationMaxOrderByAggregateInput = {
   organizerName?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   nin?: Prisma.SortOrder
-  bvn?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idDocUrl?: Prisma.SortOrder
   instagramUrl?: Prisma.SortOrder
@@ -583,7 +562,6 @@ export type OrganizerApplicationMinOrderByAggregateInput = {
   organizerName?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   nin?: Prisma.SortOrder
-  bvn?: Prisma.SortOrder
   idType?: Prisma.SortOrder
   idDocUrl?: Prisma.SortOrder
   instagramUrl?: Prisma.SortOrder
@@ -639,7 +617,6 @@ export type OrganizerApplicationCreateWithoutUserInput = {
   organizerName: string
   bio?: string | null
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   instagramUrl?: string | null
@@ -659,7 +636,6 @@ export type OrganizerApplicationUncheckedCreateWithoutUserInput = {
   organizerName: string
   bio?: string | null
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   instagramUrl?: string | null
@@ -695,7 +671,6 @@ export type OrganizerApplicationUpdateWithoutUserInput = {
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nin?: Prisma.StringFieldUpdateOperationsInput | string
-  bvn?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idDocUrl?: Prisma.StringFieldUpdateOperationsInput | string
   instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -715,7 +690,6 @@ export type OrganizerApplicationUncheckedUpdateWithoutUserInput = {
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nin?: Prisma.StringFieldUpdateOperationsInput | string
-  bvn?: Prisma.StringFieldUpdateOperationsInput | string
   idType?: Prisma.StringFieldUpdateOperationsInput | string
   idDocUrl?: Prisma.StringFieldUpdateOperationsInput | string
   instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -738,7 +712,6 @@ export type OrganizerApplicationSelect<ExtArgs extends runtime.Types.Extensions.
   organizerName?: boolean
   bio?: boolean
   nin?: boolean
-  bvn?: boolean
   idType?: boolean
   idDocUrl?: boolean
   instagramUrl?: boolean
@@ -760,7 +733,6 @@ export type OrganizerApplicationSelectCreateManyAndReturn<ExtArgs extends runtim
   organizerName?: boolean
   bio?: boolean
   nin?: boolean
-  bvn?: boolean
   idType?: boolean
   idDocUrl?: boolean
   instagramUrl?: boolean
@@ -782,7 +754,6 @@ export type OrganizerApplicationSelectUpdateManyAndReturn<ExtArgs extends runtim
   organizerName?: boolean
   bio?: boolean
   nin?: boolean
-  bvn?: boolean
   idType?: boolean
   idDocUrl?: boolean
   instagramUrl?: boolean
@@ -804,7 +775,6 @@ export type OrganizerApplicationSelectScalar = {
   organizerName?: boolean
   bio?: boolean
   nin?: boolean
-  bvn?: boolean
   idType?: boolean
   idDocUrl?: boolean
   instagramUrl?: boolean
@@ -819,7 +789,7 @@ export type OrganizerApplicationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrganizerApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizerName" | "bio" | "nin" | "bvn" | "idType" | "idDocUrl" | "instagramUrl" | "twitterUrl" | "facebookUrl" | "websiteUrl" | "kycStatus" | "reviewNote" | "reviewedAt" | "reviewedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["organizerApplication"]>
+export type OrganizerApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizerName" | "bio" | "nin" | "idType" | "idDocUrl" | "instagramUrl" | "twitterUrl" | "facebookUrl" | "websiteUrl" | "kycStatus" | "reviewNote" | "reviewedAt" | "reviewedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["organizerApplication"]>
 export type OrganizerApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -850,10 +820,6 @@ export type $OrganizerApplicationPayload<ExtArgs extends runtime.Types.Extension
      * National Identification Number
      */
     nin: string
-    /**
-     * Bank Verification Number
-     */
-    bvn: string
     /**
      * Means of ID type submitted (e.g. "NATIONAL_ID", "DRIVERS_LICENSE", "INTL_PASSPORT", "VOTERS_CARD")
      */
@@ -1307,7 +1273,6 @@ export interface OrganizerApplicationFieldRefs {
   readonly organizerName: Prisma.FieldRef<"OrganizerApplication", 'String'>
   readonly bio: Prisma.FieldRef<"OrganizerApplication", 'String'>
   readonly nin: Prisma.FieldRef<"OrganizerApplication", 'String'>
-  readonly bvn: Prisma.FieldRef<"OrganizerApplication", 'String'>
   readonly idType: Prisma.FieldRef<"OrganizerApplication", 'String'>
   readonly idDocUrl: Prisma.FieldRef<"OrganizerApplication", 'String'>
   readonly instagramUrl: Prisma.FieldRef<"OrganizerApplication", 'String'>

@@ -294,3 +294,397 @@ export async function sendGroupCompleteEmail(params: {
     throw new Error(`Failed to send group complete email: ${error.message}`)
   }
 }
+
+// ─── Waitlist emails ──────────────────────────────────────────────────────────
+
+/**
+ * Notify a user that they have joined the waitlist.
+ * Stub — full React Email template implemented in Task 15.
+ */
+export async function sendWaitlistJoined(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+  position: number
+  requestedQty: number
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const waitlistUrl = `${appUrl}/dashboard/waitlist`
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `You're on the waitlist for ${params.eventTitle} — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Waitlist Confirmation</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">You're on the waitlist for</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0;">
+            You are <strong style="color:#fafafa;">#${params.position}</strong> on the waitlist
+            for ${params.requestedQty} ticket${params.requestedQty !== 1 ? 's' : ''}.
+            We'll notify you if a spot opens up.
+          </p>
+        </div>
+        <a href="${waitlistUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          View my waitlist →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send waitlist-joined email: ${error.message}`)
+  }
+}
+
+/**
+ * Notify a user that they have been offered a spot from the waitlist.
+ * Stub — full React Email template implemented in Task 15.
+ */
+export async function sendWaitlistOffered(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+  requestedQty: number
+  offerExpiresAt: Date
+  reservationId: string
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const checkoutUrl = `${appUrl}/events/${params.eventSlug}/checkout?reservationId=${params.reservationId}`
+
+  const expiresStr = params.offerExpiresAt.toLocaleString('en-NG', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Your spot is ready for ${params.eventTitle} — act fast! — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Waitlist Offer</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#4ade80;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Great news! A spot opened up</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0 0 8px;">
+            ${params.requestedQty} ticket${params.requestedQty !== 1 ? 's have' : ' has'} been reserved for you.
+          </p>
+          <p style="color:#f87171;font-size:13px;margin:0;">
+            This offer expires on <strong style="color:#fca5a5;">${expiresStr}</strong>.
+          </p>
+        </div>
+        <a href="${checkoutUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;margin-bottom:16px;">
+          Complete my purchase →
+        </a>
+        <p style="color:#52525b;font-size:12px;text-align:center;margin:0;">
+          If you don't complete your purchase in time, the spot will be offered to the next person on the waitlist.
+        </p>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send waitlist-offered email: ${error.message}`)
+  }
+}
+
+// ─── Reservation expired notification ────────────────────────────────────────
+
+/**
+ * Notify a user that their reservation has expired and seats have been released.
+ * Stub — full React Email template implemented in Task 15.
+ */
+export async function sendReservationExpired(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const eventUrl = `${appUrl}/events/${params.eventSlug}`
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Your reservation for ${params.eventTitle} has expired — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Reservation Expired</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#f87171;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Reservation expired</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0;">
+            Your held seats have been released back to the general pool.
+            If tickets are still available, you can start a new reservation.
+          </p>
+        </div>
+        <a href="${eventUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          Back to event →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send reservation-expired email: ${error.message}`)
+  }
+}
+
+// ─── Waitlist offer expired notification ──────────────────────────────────────
+
+/**
+ * Notify a user that their waitlist offer window has passed.
+ * Stub — full React Email template implemented in Task 15.
+ */
+export async function sendWaitlistOfferExpired(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const eventUrl = `${appUrl}/events/${params.eventSlug}`
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Your waitlist offer for ${params.eventTitle} has expired — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Waitlist Offer Expired</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#f87171;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Offer window closed</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0;">
+            Unfortunately your waitlist offer expired before payment was completed.
+            The spot has been offered to the next person in line.
+            You can rejoin the waitlist if it's still open.
+          </p>
+        </div>
+        <a href="${eventUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          Back to event →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send waitlist-offer-expired email: ${error.message}`)
+  }
+}
+
+// ─── Event reminder notification ──────────────────────────────────────────────
+
+/**
+ * Send a 24-hour-before reminder for an upcoming event.
+ * Stub — full React Email template implemented in Task 15.
+ */
+export async function sendEventReminder(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+  eventStartsAt: Date
+  venueName: string | null
+  venueAddress: string | null
+  venueCity: string | null
+  ticketNumber: string
+  qrCode: string
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const ticketsUrl = `${appUrl}/dashboard/tickets`
+
+  const dateStr = params.eventStartsAt.toLocaleString('en-NG', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  const locationParts = [params.venueName, params.venueAddress, params.venueCity].filter(Boolean)
+  const locationStr = locationParts.length > 0 ? locationParts.join(', ') : 'See event page for details'
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Reminder: ${params.eventTitle} is tomorrow — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Event Reminder</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#4ade80;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Your event is tomorrow!</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0 0 4px;">${dateStr}</p>
+          <p style="color:#71717a;font-size:13px;margin:0;">${locationStr}</p>
+        </div>
+        <div style="background:#18181b;border-radius:10px;padding:16px;margin-bottom:24px;">
+          <p style="color:#71717a;font-size:12px;margin:0 0 4px;">Ticket</p>
+          <p style="font-family:monospace;font-size:13px;color:#a1a1aa;margin:0;">${params.ticketNumber}</p>
+        </div>
+        <a href="${ticketsUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          View my tickets →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send event-reminder email: ${error.message}`)
+  }
+}
+
+// ─── Ticket cancelled notification ───────────────────────────────────────────
+
+/**
+ * Notify a user that their ticket has been cancelled by the organizer.
+ * Stub — full React Email template implemented in Task 15.
+ */
+export async function sendTicketCancelled(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+  ticketNumber: string
+  reason?: string
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const eventUrl = `${appUrl}/events/${params.eventSlug}`
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Your ticket for ${params.eventTitle} has been cancelled — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Ticket Cancellation</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#f87171;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Ticket cancelled</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="font-family:monospace;font-size:13px;color:#71717a;margin:0 0 8px;">${params.ticketNumber}</p>
+          ${params.reason ? `<p style="color:#a1a1aa;font-size:14px;margin:0;">Reason: ${params.reason}</p>` : ''}
+        </div>
+        <a href="${eventUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          Back to event →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send ticket-cancelled email: ${error.message}`)
+  }
+}
+
+// ─── Waitlist closed notification ─────────────────────────────────────────────
+
+/**
+ * Notify a user that their waitlist position closed without receiving an offer
+ * (event ended without restocked inventory).
+ */
+export async function sendWaitlistClosed(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  eventSlug: string
+}): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://useswitch.net'
+  const eventUrl = `${appUrl}/events/${params.eventSlug}`
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Waitlist update for ${params.eventTitle} — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Waitlist Update</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Waitlist closed</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0;">
+            Unfortunately the event has ended and we were unable to offer you a spot from the waitlist.
+            Thank you for your patience — we hope to see you at a future event.
+          </p>
+        </div>
+        <a href="${eventUrl}"
+           style="display:block;text-align:center;background:#6366f1;color:#fff;font-weight:600;font-size:15px;padding:14px 24px;border-radius:10px;text-decoration:none;">
+          Browse events →
+        </a>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send waitlist-closed email: ${error.message}`)
+  }
+}
+
+// ─── Refund confirmed notification ───────────────────────────────────────────
+
+/**
+ * Notify a user that their refund has been processed.
+ */
+export async function sendRefundConfirmed(params: {
+  toEmail: string
+  toName: string | null
+  eventTitle: string
+  refundAmount: number
+  currency: string
+  processingTimeline?: string
+}): Promise<void> {
+  const amountStr = new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: params.currency,
+    minimumFractionDigits: 0,
+  }).format(params.refundAmount / 100)
+
+  const timeline = params.processingTimeline ?? '5–10 business days'
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: params.toEmail,
+    subject: `Refund confirmed for ${params.eventTitle} — ${APP_NAME}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#09090b;color:#fafafa;border-radius:12px;">
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">${APP_NAME}</h1>
+        <p style="color:#a1a1aa;font-size:13px;margin:0 0 32px;">Refund Confirmation</p>
+        <div style="background:#18181b;border-radius:10px;padding:24px;margin-bottom:24px;">
+          <p style="color:#4ade80;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Refund approved</p>
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">${params.eventTitle}</h2>
+          <p style="color:#a1a1aa;font-size:14px;margin:0 0 8px;">
+            Your refund of <strong style="color:#fafafa;">${amountStr}</strong> has been approved.
+          </p>
+          <p style="color:#71717a;font-size:13px;margin:0;">
+            Please allow <strong style="color:#a1a1aa;">${timeline}</strong> for the funds to appear in your account.
+          </p>
+        </div>
+      </div>
+    `,
+  })
+
+  if (error) {
+    throw new Error(`Failed to send refund-confirmed email: ${error.message}`)
+  }
+}

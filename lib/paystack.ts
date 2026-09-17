@@ -170,9 +170,12 @@ export const paystack = {
 
   /**
    * Verify webhook signature — call this before processing any webhook.
+   * Paystack signs webhooks with your secret key (PAYSTACK_SECRET_KEY).
+   * PAYSTACK_WEBHOOK_SECRET is supported as an override for environments
+   * that set a separate value, but falls back to PAYSTACK_SECRET_KEY.
    */
   verifyWebhookSignature(body: string, signature: string): Promise<boolean> {
-    const secret = process.env.PAYSTACK_WEBHOOK_SECRET
+    const secret = process.env.PAYSTACK_WEBHOOK_SECRET ?? process.env.PAYSTACK_SECRET_KEY
     if (!secret) return Promise.resolve(false)
 
     return import('crypto').then(({ createHmac }) => {

@@ -20,32 +20,32 @@ export function Calendar({
         months: 'flex flex-col sm:flex-row gap-4',
         month: 'flex flex-col gap-3',
         month_caption: 'flex justify-center pt-1 relative items-center',
-        caption_label: 'text-[13.5px] font-semibold',
+        caption_label: 'text-[13.5px] font-semibold text-foreground',
         nav: 'flex items-center gap-1',
         button_previous: cn(
           'absolute left-1 flex h-7 w-7 items-center justify-center rounded-lg border border-border',
-          'text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
+          'text-foreground transition-colors hover:bg-muted hover:text-foreground',
           'disabled:pointer-events-none disabled:opacity-40'
         ),
         button_next: cn(
           'absolute right-1 flex h-7 w-7 items-center justify-center rounded-lg border border-border',
-          'text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
+          'text-foreground transition-colors hover:bg-muted hover:text-foreground',
           'disabled:pointer-events-none disabled:opacity-40'
         ),
         month_grid: 'w-full border-collapse',
         weekdays: 'flex',
-        weekday: 'w-9 text-center text-[11px] font-medium text-muted-foreground pb-1',
+        weekday: 'w-9 text-center text-[11px] font-semibold text-foreground pb-1 opacity-80',
         week: 'flex w-full mt-1',
         day: 'h-9 w-9 p-0 text-center text-[13px] relative',
         day_button: cn(
-          'h-9 w-9 rounded-lg text-[13px] font-normal transition-colors',
+          'h-9 w-9 rounded-lg text-[13px] font-normal text-foreground transition-colors',
           'hover:bg-muted hover:text-foreground',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50'
         ),
         selected:
           '[&>button]:bg-brand-600 [&>button]:text-white [&>button]:hover:bg-brand-700 [&>button]:hover:text-white',
         today: '[&>button]:font-semibold [&>button]:text-brand-400',
-        outside: '[&>button]:text-muted-foreground [&>button]:opacity-40',
+        outside: '[&>button]:text-foreground [&>button]:opacity-50',
         disabled: '[&>button]:opacity-30 [&>button]:pointer-events-none',
         range_middle:
           '[&>button]:rounded-none [&>button]:bg-brand-600/15 [&>button]:text-foreground',

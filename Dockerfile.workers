@@ -1,0 +1,50 @@
+# ─── BullMQ Workers — standalone container ───────────────────────────────────
+#
+# This image runs ONLY the background worker processes (reservation expiry,
+# waitlist expiry, group expiry, event reminders). It does NOT serve the
+# Next.js app — deploy that to Vercel as normal.
+#
+# Build:
+#   docker build -f Dockerfile.workers -t switch-workers .
+#
+# Run:
+#   docker run --env-file .env switch-workers
+#
+# Required env vars (same as the Next.js app):
+#   DATABASE_URL / DIRECT_URL, WORKER_REDIS_URL (or REDIS_URL),
+#   RESEND_API_KEY, RESEND_FROM_EMAIL, NEXT_PUBLIC_APP_URL
+# ─────────────────────────────────────────────────────────────────────────────
+
+FROM node:20-alpine AS base
+WORKDIR /app
+
+# Install dependencies first (layer-cached separately from source)
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
+
+# Copy only what the workers need — skip Next.js public/app dirs to keep
+# the image small. The workers do NOT need the Next.js build output.
+COPY tsconfig.json ./
+COPY prisma ./prisma
+COPY app/generated ./app/generated
+COPY lib ./lib
+COPY config ./config
+COPY features ./features
+COPY workers ./workers
+COPY emails ./emails
+
+# Generate Prisma client (writes into app/generated/prisma)
+RUN npx prisma generate
+
+# Non-root user for security
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser  --system --uid 1001 worker
+USER worker
+
+ENV NODE_ENV=production
+
+# tsx resolves @/ aliases from tsconfig.json — no compile step needed.
+# --conditions react-server makes server-only imports resolve to the no-op
+# empty.js shim instead of the throwing index.js (workers are pure Node.js,
+# not a Next.js server environment).
+CMD ["npx", "tsx", "--conditions", "react-server", "workers/index.ts"]

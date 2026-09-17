@@ -38,3 +38,36 @@ export type ConfirmOrderResult =
   { success: true; ticketIds: string[] } | { success: false; error: string }
 
 export type ReleaseReservationResult = { success: true } | { success: false; error: string }
+
+export type SubmitRsvpResult =
+  | { success: true; ticketIds: string[] }
+  | { success: false; error: string }
+
+export type UnlockPasswordProtectedTicketResult =
+  | { success: true; sessionToken: string }
+  | { success: false; error: string }
+
+export type ValidateDirectLinkTokenResult =
+  | { success: true }
+  | { success: false; error: string }
+
+// ─── Public ticket type shape (for event pages) ────────────────────────────
+
+export type PublicTicketType = {
+  id: string
+  name: string
+  description: string | null
+  price: number
+  currency: string
+  quantity: number | null
+  sold: number
+  salesStart: Date | null
+  salesEnd: Date | null
+  status: string
+  visibility: string
+  /** Only present for PASSWORD_PROTECTED types; true = user has not unlocked yet */
+  locked?: boolean
+  minPerOrder: number | null
+  maxPerOrder: number | null
+  maxPerUser: number | null
+}

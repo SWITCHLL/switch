@@ -26,11 +26,13 @@ interface ScanResult {
 interface CheckinScannerProps {
   eventId: string
   eventTitle: string
+  /** Optional scan PIN for door-staff auth (no login required). */
+  scanPin?: string
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function CheckinScanner({ eventId, eventTitle }: CheckinScannerProps) {
+export function CheckinScanner({ eventId, eventTitle, scanPin }: CheckinScannerProps) {
   const [state, setState] = useState<ScanState>('idle')
   const [result, setResult] = useState<ScanResult | null>(null)
   const [scanning, setScanning] = useState(true)
@@ -44,7 +46,7 @@ export function CheckinScanner({ eventId, eventTitle }: CheckinScannerProps) {
         const res = await fetch('/api/checkin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ qrCode, eventId }),
+          body: JSON.stringify({ qrCode, eventId, ...(scanPin ? { scanPin } : {}) }),
         })
 
         const json = (await res.json()) as {

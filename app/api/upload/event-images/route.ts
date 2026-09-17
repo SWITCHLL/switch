@@ -15,13 +15,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { supabaseAdmin, EVENTS_BUCKET } from '@/lib/supabase'
+import { detectMimeType, ALLOWED_IMAGE_TYPES } from '@/lib/file-validation'
 import { randomBytes } from 'crypto'
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024 // 8 MB
 const MAX_FILES = 6
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
 
@@ -54,37 +54,45 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // 3. Validate each file
+  // 3. Validate each file — size first (cheap), then magic bytes (reads buffer)
+  const validatedFiles: { file: File; buffer: Buffer; mime: string }[] = []
+
   for (const file of files) {
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        { error: `File type "${file.type}" is not allowed. Use JPEG, PNG, WebP, or GIF.` },
-        { status: 400 }
-      )
-    }
     if (file.size > MAX_FILE_SIZE_BYTES) {
       return NextResponse.json(
         { error: `"${file.name}" exceeds the 8 MB size limit.` },
         { status: 400 }
       )
     }
+
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const detection = await detectMimeType(buffer, ALLOWED_IMAGE_TYPES)
+    if ('error' in detection) {
+      return NextResponse.json({ error: detection.error }, { status: 400 })
+    }
+
+    validatedFiles.push({ file, buffer, mime: detection.mime })
   }
 
   // 4. Upload to Supabase Storage
   const urls: string[] = []
 
-  for (const file of files) {
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
-    // Path: events/{userId}/{timestamp}-{random}.{ext}
+  for (const { file, buffer, mime } of validatedFiles) {
+    // Derive extension from detected MIME, not from user-supplied filename
+    const extMap: Record<string, string> = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/webp': 'webp',
+      'image/gif': 'gif',
+    }
+    const ext = extMap[mime] ?? 'jpg'
     const token = randomBytes(8).toString('hex')
     const path = `events/${session.userId}/${Date.now()}-${token}.${ext}`
-
-    const buffer = Buffer.from(await file.arrayBuffer())
 
     const { error: uploadError } = await supabaseAdmin.storage
       .from(EVENTS_BUCKET)
       .upload(path, buffer, {
-        contentType: file.type,
+        contentType: mime,
         upsert: false,
       })
 

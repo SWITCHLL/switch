@@ -52,3 +52,6 @@ next-env.d.ts
 .vscode
 .windsurf
 .claude
+
+# Local build artifacts
+build-output.txt

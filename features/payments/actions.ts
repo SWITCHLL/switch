@@ -6,12 +6,25 @@ import { getSession } from '@/lib/session'
 import { paystack } from '@/lib/paystack'
 import { PaymentStatus, PayoutStatus, RefundStatus } from '@/app/generated/prisma/client'
 import { z } from 'zod'
-import { randomBytes } from 'crypto'
+import { randomBytes } from 'node:crypto'
 
 type ActionResult<T = void> = { success: true; data: T } | { success: false; error: string }
 
 const PAYOUT_HOLD_HOURS = 48
 const REFUND_WINDOW_HOURS = 48
+
+// ─── List banks (for bank account form) ──────────────────────────────────────
+
+export async function getBanks(): Promise<
+  ActionResult<Array<{ name: string; code: string; id: number }>>
+> {
+  try {
+    const banks = await paystack.listBanks()
+    return { success: true, data: banks }
+  } catch {
+    return { success: false, error: 'Failed to load banks. Please try again.' }
+  }
+}
 
 // ─── Save organizer bank account ──────────────────────────────────────────────
 
@@ -437,8 +450,9 @@ export async function approveRefund(refundRequestId: string): Promise<ActionResu
       data: { status: PaymentStatus.REFUNDED },
     })
 
-    await tx.ticket.update({
-      where: { id: rr.payment.paystackReference ?? '' },
+    // Mark the linked ticket as refunded via orderId
+    await tx.ticket.updateMany({
+      where: { order: { payment: { id: rr.paymentId } } },
       data: { status: 'REFUNDED' },
     })
   })

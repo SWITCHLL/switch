@@ -17,11 +17,15 @@ const eventListSelect = {
   status: true,
   seatingType: true,
   capacity: true,
+  venueName: true,
+  venueAddress: true,
+  venueCity: true,
+  venueState: true,
   organizer: {
     select: { name: true, slug: true },
   },
   venue: {
-    select: { name: true, city: true, state: true },
+    select: { id: true, name: true, address: true, city: true, state: true },
   },
   category: {
     select: { name: true, slug: true, color: true },
@@ -102,7 +106,7 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | null> 
         select: { id: true, name: true, slug: true, logoUrl: true },
       },
       venue: {
-        select: { id: true, name: true, city: true, state: true, country: true },
+        select: { id: true, name: true, address: true, city: true, state: true, country: true },
       },
       category: {
         select: { id: true, name: true, slug: true, color: true },
@@ -163,7 +167,7 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | null> 
         select: { id: true, name: true, slug: true, logoUrl: true },
       },
       venue: {
-        select: { id: true, name: true, city: true, state: true, country: true },
+        select: { id: true, name: true, address: true, city: true, state: true, country: true },
       },
       category: {
         select: { id: true, name: true, slug: true, color: true },
@@ -210,6 +214,19 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | null> 
       _count: {
         select: { tickets: true, eventSeats: true },
       },
+      scheduleItems: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          hostName: true,
+          speakerId: true,
+          startsAt: true,
+          endsAt: true,
+          position: true,
+        },
+        orderBy: { position: 'asc' as const },
+      },
     },
   })
 
@@ -220,7 +237,23 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | null> 
 
 export async function getCategories() {
   return db.category.findMany({
-    select: { id: true, name: true, slug: true, color: true, imageUrl: true },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      color: true,
+      imageUrl: true,
+      _count: {
+        select: {
+          events: {
+            where: {
+              status: EventStatus.PUBLISHED,
+              startsAt: { gte: new Date() },
+            },
+          },
+        },
+      },
+    },
     orderBy: { name: 'asc' },
   })
 }

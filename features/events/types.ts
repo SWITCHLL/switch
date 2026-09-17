@@ -8,13 +8,14 @@ import type {
   SeatMap,
   EventSpeaker,
   EventImage,
+  EventScheduleItem,
 } from '@/app/generated/prisma/client'
 
 // ─── Rich event type used in listings and detail pages ────────────────────────
 
 export type EventWithRelations = Event & {
   organizer: Pick<Organizer, 'id' | 'name' | 'slug' | 'logoUrl'>
-  venue: Pick<Venue, 'id' | 'name' | 'city' | 'state' | 'country'> | null
+  venue: Pick<Venue, 'id' | 'name' | 'address' | 'city' | 'state' | 'country'> | null
   category: Pick<Category, 'id' | 'name' | 'slug' | 'color'> | null
   ticketTypes: TicketType[]
   _count: {
@@ -34,9 +35,13 @@ export type EventListItem = Pick<
   | 'status'
   | 'seatingType'
   | 'capacity'
+  | 'venueName'
+  | 'venueAddress'
+  | 'venueCity'
+  | 'venueState'
 > & {
   organizer: Pick<Organizer, 'name' | 'slug'>
-  venue: Pick<Venue, 'name' | 'city' | 'state'> | null
+  venue: Pick<Venue, 'id' | 'name' | 'address' | 'city' | 'state'> | null
   category: Pick<Category, 'name' | 'slug' | 'color'> | null
   ticketTypes: Pick<
     TicketType,
@@ -81,6 +86,7 @@ export type EventDetail = EventWithRelations & {
   seatMap: SeatMapData | null
   speakers: Pick<EventSpeaker, 'id' | 'name' | 'role' | 'avatarUrl' | 'position'>[]
   images: Pick<EventImage, 'id' | 'url' | 'position'>[]
+  scheduleItems: Pick<EventScheduleItem, 'id' | 'title' | 'description' | 'hostName' | 'speakerId' | 'startsAt' | 'endsAt' | 'position'>[]
 }
 
 // ─── Seat selection state (used across seat map UI) ───────────────────────────

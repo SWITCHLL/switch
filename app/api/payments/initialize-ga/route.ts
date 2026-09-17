@@ -18,6 +18,7 @@ import { db } from '@/lib/db'
 import { getSession } from '@/lib/session'
 import { paystack } from '@/lib/paystack'
 import { sendTicketConfirmationEmail } from '@/lib/email'
+import { rateLimit } from '@/lib/rate-limit'
 import { randomBytes } from 'crypto'
 import { z } from 'zod'
 import { ReservationStatus, TicketStatus } from '@/app/generated/prisma/client'
@@ -56,6 +57,18 @@ function calcDiscount(
 export async function POST(req: NextRequest) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  // Rate limit: 10 payment initializations per minute per user
+  const rl = await rateLimit(`pay-init:user:${session.userId}`, { limit: 10, windowMs: 60_000 })
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait before trying again.' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+      }
+    )
+  }
 
   const rawBody = await req.json().catch(() => null)
   const parsed = bodySchema.safeParse(rawBody)
@@ -214,27 +227,37 @@ export async function POST(req: NextRequest) {
   const { scheduleReservationExpiry } = await import('@/lib/queues')
   scheduleReservationExpiry(reservation.id, expiresAt).catch(console.error)
 
-  // 6. Free tickets — create tickets immediately and confirm reservation
+  // 6. Free tickets — create Order + tickets immediately and confirm reservation
   if (totalAmount === 0) {
     const totalTickets = selections.reduce((sum, s) => sum + s.quantity, 0)
+    const currency = ttMap[selections[0]?.ticketTypeId ?? '']?.currency ?? 'NGN'
+
+    const { createOrder: _createOrder, createTicket: _createTicket } = await import('@/lib/order-helpers')
 
     await db.$transaction(async (tx) => {
+      const order = await _createOrder(tx, {
+        userId,
+        eventId,
+        reservationId:  reservation.id,
+        totalAmount:    0,
+        currency,
+        discountAmount: discountAmount,
+        promoCodeId:    promoCodeId ?? null,
+      })
+
       for (const sel of selections) {
         for (let i = 0; i < sel.quantity; i++) {
-          const year = new Date().getFullYear()
+          const year         = new Date().getFullYear()
           const ticketNumber = `SWT-${year}-${randomBytes(3).toString('hex').toUpperCase()}`
-          const qrCode = randomBytes(16).toString('hex')
+          const qrCode       = randomBytes(32).toString('hex')
 
-          await tx.ticket.create({
-            data: {
-              eventId,
-              userId,
-              ticketTypeId: sel.ticketTypeId,
-              ticketNumber,
-              qrCode,
-              status: TicketStatus.ACTIVE,
-              issuedAt: new Date(),
-            },
+          await _createTicket(tx, {
+            eventId,
+            userId,
+            orderId:      order.id,
+            ticketTypeId: sel.ticketTypeId,
+            ticketNumber,
+            qrCode,
           })
         }
 
@@ -244,12 +267,13 @@ export async function POST(req: NextRequest) {
         })
       }
 
-      // Increment promo usage if applicable
       if (promoCodeId) {
-        await tx.promoCode.update({
-          where: { id: promoCodeId },
-          data: { usedCount: { increment: 1 } },
-        })
+        await tx.$executeRaw`
+          UPDATE "promo_codes"
+          SET "usedCount" = "usedCount" + 1
+          WHERE "id" = ${promoCodeId}
+            AND ("maxUses" IS NULL OR "usedCount" < "maxUses")
+        `
       }
 
       await tx.reservation.update({

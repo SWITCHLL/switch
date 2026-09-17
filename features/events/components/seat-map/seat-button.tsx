@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, forwardRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { formatPrice } from '../../utils'
@@ -39,23 +39,60 @@ interface SeatButtonProps {
   isSelected: boolean
   isDisabled: boolean
   onClick: () => void
+  /** Keyboard navigation callbacks — provided by SeatMapGrid */
+  onArrowLeft?: () => void
+  onArrowRight?: () => void
+  onArrowUp?: () => void
+  onArrowDown?: () => void
 }
 
-export function SeatButton({
-  seatId,
-  label,
-  status,
-  price,
-  seatType,
-  isSelected,
-  isDisabled,
-  onClick,
-}: SeatButtonProps) {
+export const SeatButton = forwardRef<HTMLButtonElement, SeatButtonProps>(function SeatButton(
+  {
+    seatId,
+    label,
+    status,
+    price,
+    seatType,
+    isSelected,
+    isDisabled,
+    onClick,
+    onArrowLeft,
+    onArrowRight,
+    onArrowUp,
+    onArrowDown,
+  },
+  ref
+) {
   const [showTooltip, setShowTooltip] = useState(false)
 
   const baseStyle = isSelected ? SELECTED_STYLE : (STATUS_STYLES[status] ?? STATUS_STYLES.AVAILABLE)
-
   const isInteractive = status === 'AVAILABLE' && !isDisabled
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    switch (e.key) {
+      case 'ArrowLeft':
+        e.preventDefault()
+        onArrowLeft?.()
+        break
+      case 'ArrowRight':
+        e.preventDefault()
+        onArrowRight?.()
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        onArrowUp?.()
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        onArrowDown?.()
+        break
+      case 'Enter':
+      case ' ':
+        e.preventDefault()
+        if (isInteractive || isSelected) onClick()
+        break
+    }
+  }
 
   return (
     <div
@@ -64,21 +101,27 @@ export function SeatButton({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <motion.button
+        ref={ref}
         type="button"
         whileHover={isInteractive || isSelected ? { scale: 1.12 } : undefined}
         whileTap={isInteractive || isSelected ? { scale: 0.95 } : undefined}
         transition={{ duration: 0.12 }}
         onClick={isInteractive || isSelected ? onClick : undefined}
+        onKeyDown={handleKeyDown}
         aria-label={`Seat ${label} — ${status === 'AVAILABLE' ? formatPrice(price) : status.toLowerCase()}`}
         aria-pressed={isSelected}
-        disabled={!isInteractive && !isSelected}
+        // Allow focus on available + selected seats for keyboard nav
+        tabIndex={isInteractive || isSelected ? 0 : -1}
+        disabled={false} // never set disabled so keyboard nav still works
+        data-seat-id={seatId}
         className={cn(
           'relative flex h-7 w-7 items-center justify-center rounded-md border text-[9.5px] font-semibold transition-colors duration-150',
+          'focus-visible:ring-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
           baseStyle,
           !isInteractive && !isSelected && DISABLED_STYLE
         )}
       >
-        {/* Seat type dot (top-left corner) */}
+        {/* Seat type dot (top-right corner) */}
         {SEAT_TYPE_DOT[seatType] && (
           <span
             className={cn(
@@ -122,4 +165,4 @@ export function SeatButton({
       </AnimatePresence>
     </div>
   )
-}
+})

@@ -1,0 +1,23 @@
+# Render.com deployment config for the BullMQ worker process.
+# The Next.js app is deployed separately (Vercel).
+#
+# Deploy steps:
+#   1. Create a new "Background Worker" service in Render
+#   2. Connect your GitHub repo
+#   3. Render auto-detects this file and configures the service
+#   4. Set all environment variables listed in .env.example in the Render dashboard
+
+services:
+  - type: worker
+    name: switch-workers
+    runtime: docker
+    dockerfilePath: ./Dockerfile.workers
+    dockerContext: .
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add these in the Render dashboard — do not hardcode secrets here:
+      # DATABASE_URL, DIRECT_URL, WORKER_REDIS_URL, RESEND_API_KEY,
+      # RESEND_FROM_EMAIL, NEXT_PUBLIC_APP_URL, NIN_ENCRYPTION_KEY
+    autoDeploy: true
+    plan: starter

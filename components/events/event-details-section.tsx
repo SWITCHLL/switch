@@ -49,16 +49,16 @@ export function EventDetailsSection({ event }: EventDetailsSectionProps) {
     <section aria-labelledby="details-heading">
       <h2
         id="details-heading"
-        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         Event Details
       </h2>
 
-      <dl className="divide-y divide-white/8 rounded-2xl border border-white/8 bg-white/[0.03]">
+      <dl className="border-border divide-border divide-y rounded-2xl border bg-surface">
         {rows.map(({ label, value }) => (
           <div key={label} className="flex items-start justify-between gap-4 px-5 py-3.5">
-            <dt className="w-24 shrink-0 text-[13px] text-white/40">{label}</dt>
-            <dd className="text-right text-[13px] font-medium text-white/80">{value}</dd>
+            <dt className="text-muted-foreground w-24 shrink-0 text-[13px]">{label}</dt>
+            <dd className="text-foreground text-right text-[13px] font-medium">{value}</dd>
           </div>
         ))}
       </dl>

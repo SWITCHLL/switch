@@ -34,7 +34,7 @@ export function MobileTicketBar({
       transition={{ delay: 0.6, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 lg:hidden',
-        'border-t border-white/10 bg-[#111110]/95 backdrop-blur-xl',
+        'border-t border-border bg-background/95 backdrop-blur-xl',
         'px-4 py-3'
       )}
       style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
@@ -43,20 +43,20 @@ export function MobileTicketBar({
         {/* Price */}
         <div className="flex-1">
           {soldOut ? (
-            <p className="text-[13px] font-semibold text-red-400">Sold out</p>
+            <p className="text-muted-foreground text-[13px] font-semibold line-through">Sold out</p>
           ) : salesEnded ? (
-            <p className="text-[13px] font-semibold text-white/50">Sales ended</p>
+            <p className="text-muted-foreground text-[13px] font-semibold">Sales ended</p>
           ) : salesNotStarted ? (
-            <p className="text-[13px] font-semibold text-white/50">Coming soon</p>
+            <p className="text-muted-foreground text-[13px] font-semibold">Coming soon</p>
           ) : minPrice !== null ? (
             <div>
-              <p className="text-[11px] text-white/40">From</p>
-              <p className="text-[16px] font-semibold tracking-tight text-white">
+              <p className="text-muted-foreground text-[11px]">From</p>
+              <p className="text-foreground text-[16px] font-semibold tracking-tight">
                 {minPrice === 0 ? 'Free' : formatPrice(minPrice)}
               </p>
             </div>
           ) : (
-            <p className="text-[13px] text-white/50">No tickets available</p>
+            <p className="text-muted-foreground text-[13px]">No tickets available</p>
           )}
         </div>
 
@@ -66,7 +66,7 @@ export function MobileTicketBar({
             disabled
             className={cn(
               'flex-shrink-0 rounded-xl px-6 py-3 text-[14px] font-semibold',
-              'cursor-not-allowed bg-white/10 text-white/30'
+              'border-border cursor-not-allowed border bg-transparent text-muted-foreground'
             )}
           >
             {soldOut ? 'Sold Out' : salesEnded ? 'Sales Ended' : 'Coming Soon'}
@@ -76,7 +76,7 @@ export function MobileTicketBar({
             href={`/login?redirect=/events/${eventSlug}`}
             className={cn(
               'flex flex-shrink-0 items-center gap-2 rounded-xl px-6 py-3',
-              'bg-white text-[14px] font-semibold text-black',
+              'bg-foreground text-[14px] font-semibold text-background',
               'transition-opacity active:opacity-80'
             )}
           >
@@ -88,7 +88,7 @@ export function MobileTicketBar({
             href={`/events/${eventSlug}/seats`}
             className={cn(
               'flex-shrink-0 rounded-xl px-6 py-3',
-              'bg-white text-[14px] font-semibold text-black',
+              'bg-foreground text-[14px] font-semibold text-background',
               'transition-opacity active:opacity-80'
             )}
           >
@@ -99,7 +99,7 @@ export function MobileTicketBar({
             href="#tickets"
             className={cn(
               'flex-shrink-0 rounded-xl px-6 py-3',
-              'bg-white text-[14px] font-semibold text-black',
+              'bg-foreground text-[14px] font-semibold text-background',
               'transition-opacity active:opacity-80'
             )}
           >

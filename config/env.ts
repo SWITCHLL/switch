@@ -41,6 +41,10 @@ const serverSchema = z.object({
   /// Default platform fee percentage, e.g. "4" for 4%
   PLATFORM_FEE_PERCENT: z.coerce.number().min(0).max(100).default(4),
 
+  // NIN encryption (KYC applications)
+  // Generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+  NIN_ENCRYPTION_KEY: z.string().length(64, 'NIN_ENCRYPTION_KEY must be 64 hex characters').optional(),
+
   // App
   NEXT_PUBLIC_APP_URL: z.string().url('NEXT_PUBLIC_APP_URL must be a valid URL').optional(),
 })
@@ -50,7 +54,6 @@ const serverSchema = z.object({
 const clientSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
   NEXT_PUBLIC_APP_NAME: z.string().default('SWITCH'),
-  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
   NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: z.string().startsWith('pk_').optional(),
 })
 
@@ -78,7 +81,6 @@ function validateEnv() {
   const parsed = clientSchema.safeParse({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
-    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   })
 
   return parsed.data ?? {}

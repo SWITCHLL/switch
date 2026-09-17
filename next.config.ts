@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // Tell Turbopack/webpack not to bundle these packages — let Node.js resolve
   // them at runtime. The Prisma generated client uses import.meta.url and
   // must run in Node.js, not inside the Next.js bundle.
-  serverExternalPackages: ['@prisma/client', '@prisma/adapter-pg'],
+  serverExternalPackages: ['@prisma/client', '@prisma/adapter-pg', 'bcryptjs'],
 
   // Image optimization: allow common CDN and hosting domains
   images: {
@@ -56,6 +56,30 @@ const nextConfig: NextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'camera=(self), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              // Scripts: self + inline (Next.js requires unsafe-inline for hydration) + Paystack
+              "script-src 'self' 'unsafe-inline' https://js.paystack.co",
+              // Styles: self + inline (Tailwind inlines critical CSS)
+              "style-src 'self' 'unsafe-inline'",
+              // Images: self, data URIs, and all configured CDN/storage domains
+              "img-src 'self' data: blob: https://res.cloudinary.com https://*.supabase.co https://images.unsplash.com https://avatars.githubusercontent.com https://*.s3.amazonaws.com https://*.cloudfront.net https://utfs.io",
+              // Fonts served from self
+              "font-src 'self'",
+              // API calls: self + Paystack
+              "connect-src 'self' https://api.paystack.co https://*.supabase.co",
+              // Paystack checkout iframe + Google Maps embed
+              "frame-src https://checkout.paystack.com https://maps.google.com https://www.google.com",
+              // Workers / service workers
+              "worker-src 'self' blob:",
+              // No plugins
+              "object-src 'none'",
+              // Upgrade insecure requests in production
+              ...(process.env.NODE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),
+            ].join('; '),
           },
         ],
       },

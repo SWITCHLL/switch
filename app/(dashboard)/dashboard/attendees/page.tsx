@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
-import { Users, Search, Download } from 'lucide-react'
+import { Users, Download } from 'lucide-react'
 import { getSession } from '@/lib/session'
 import { getOrganizerByUserId } from '@/features/organizer/queries'
+import { AttendeeEventFilter } from '@/features/organizer/components/attendee-event-filter'
+import { AttendeeSearch } from '@/features/organizer/components/attendee-search'
 import { db } from '@/lib/db'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
@@ -91,47 +93,18 @@ export default async function AttendeesPage({ searchParams }: PageProps) {
       {/* ── Filters ── */}
       <div className="flex flex-col gap-3 sm:flex-row">
         {/* Event filter */}
-        <form className="flex-1">
-          {search && <input type="hidden" name="q" value={search} />}
-          <select
-            name="event"
-            defaultValue={eventId ?? ''}
-            onChange={(e) => {
-              const form = e.currentTarget.form
-              if (form) form.requestSubmit()
-            }}
-            className={cn(
-              'border-border bg-surface w-full rounded-xl border px-3.5 py-2.5',
-              'text-foreground text-[13.5px] outline-none',
-              'focus:border-brand-500 focus:ring-brand-500/20 transition-colors focus:ring-2'
-            )}
-          >
-            <option value="">All events</option>
-            {events.map((ev) => (
-              <option key={ev.id} value={ev.id}>
-                {ev.title} — {format(ev.startsAt, 'MMM d, yyyy')}
-              </option>
-            ))}
-          </select>
-        </form>
+        <div className="flex-1">
+          <AttendeeEventFilter
+            events={events}
+            selectedEventId={eventId}
+            searchQuery={search}
+          />
+        </div>
 
         {/* Search */}
-        <form className="flex-1">
-          {eventId && <input type="hidden" name="event" value={eventId} />}
-          <div className="relative">
-            <Search className="text-muted-foreground absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
-            <input
-              name="q"
-              defaultValue={search ?? ''}
-              placeholder="Search name, email, ticket #…"
-              className={cn(
-                'border-border bg-surface w-full rounded-xl border py-2.5 pr-3.5 pl-10',
-                'text-foreground placeholder:text-muted-foreground text-[13.5px] outline-none',
-                'focus:border-brand-500 focus:ring-brand-500/20 transition-colors focus:ring-2'
-              )}
-            />
-          </div>
-        </form>
+        <div className="flex-1">
+          <AttendeeSearch searchQuery={search} selectedEventId={eventId} />
+        </div>
       </div>
 
       {/* ── List / Table ── */}

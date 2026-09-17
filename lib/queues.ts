@@ -10,6 +10,12 @@ import { redis } from './redis'
 import type { GroupExpiryJobData } from '@/workers/group-expiry.worker'
 import type { ReservationExpiryJobData } from '@/workers/reservation-expiry.worker'
 
+// ─── Waitlist Expiry Queue ────────────────────────────────────────────────────
+
+export interface WaitlistExpiryJobData {
+  waitlistEntryId: string
+}
+
 // ─── Group Order Expiry Queue ─────────────────────────────────────────────────
 
 const GROUP_EXPIRY_QUEUE = 'group-expiry'
@@ -89,4 +95,95 @@ export async function scheduleReservationExpiry(
     }
   )
   return job.id ?? reservationId
+}
+
+const WAITLIST_EXPIRY_QUEUE = 'waitlist-expiry'
+
+let _waitlistExpiryQueue: Queue<WaitlistExpiryJobData> | null = null
+
+export function getWaitlistExpiryQueue(): Queue<WaitlistExpiryJobData> {
+  if (!_waitlistExpiryQueue) {
+    _waitlistExpiryQueue = new Queue<WaitlistExpiryJobData>(WAITLIST_EXPIRY_QUEUE, {
+      connection: redis,
+      defaultJobOptions: {
+        removeOnComplete: 200,
+        removeOnFail: 50,
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 3000 },
+      },
+    })
+  }
+  return _waitlistExpiryQueue
+}
+
+/**
+ * Schedule a waitlist offer expiry job to fire when the offer window closes.
+ * Idempotent — uses job ID `waitlist-expiry-{waitlistEntryId}`.
+ */
+export async function scheduleWaitlistExpiry(
+  waitlistEntryId: string,
+  offerExpiresAt: Date
+): Promise<string> {
+  const queue = getWaitlistExpiryQueue()
+  const delay = Math.max(0, offerExpiresAt.getTime() - Date.now())
+  const job = await queue.add(
+    'expire',
+    { waitlistEntryId },
+    {
+      delay,
+      jobId: `waitlist-expiry-${waitlistEntryId}`,
+    }
+  )
+  return job.id ?? waitlistEntryId
+}
+
+// ─── Event Reminder Queue ─────────────────────────────────────────────────────
+
+const EVENT_REMINDER_QUEUE = 'event-reminder'
+
+interface EventReminderJobData {
+  eventId: string
+  userId: string
+  ticketId: string
+}
+
+let _eventReminderQueue: Queue<EventReminderJobData> | null = null
+
+function getEventReminderQueue(): Queue<EventReminderJobData> {
+  if (!_eventReminderQueue) {
+    _eventReminderQueue = new Queue<EventReminderJobData>(EVENT_REMINDER_QUEUE, {
+      connection: redis,
+      defaultJobOptions: {
+        removeOnComplete: 200,
+        removeOnFail: 50,
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 5000 },
+      },
+    })
+  }
+  return _eventReminderQueue
+}
+
+/**
+ * Schedule an event reminder job to fire 24 hours before the event starts.
+ * Idempotent — uses job ID `event-reminder-{eventId}-{userId}`.
+ * Processed by workers/event-reminder.worker.ts.
+ */
+export async function scheduleEventReminder(
+  eventId: string,
+  userId: string,
+  ticketId: string,
+  eventStartsAt: Date
+): Promise<void> {
+  const queue = getEventReminderQueue()
+  const reminderAt = new Date(eventStartsAt.getTime() - 24 * 60 * 60 * 1000)
+  const delay = Math.max(0, reminderAt.getTime() - Date.now())
+  await queue.add(
+    'remind',
+    { eventId, userId, ticketId },
+    {
+      delay,
+      jobId: `event-reminder-${eventId}-${userId}`,
+    }
+  )
 }

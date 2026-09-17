@@ -13,7 +13,7 @@ export function EventHosts({ speakers }: EventHostsProps) {
     <section aria-labelledby="hosts-heading">
       <h2
         id="hosts-heading"
-        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         {buildHeading(speakers)}
       </h2>
@@ -29,10 +29,10 @@ export function EventHosts({ speakers }: EventHostsProps) {
         {speakers.map((speaker) => (
           <li
             key={speaker.id}
-            className="flex items-center gap-4 rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 transition-colors hover:bg-white/[0.05]"
+            className="border-border bg-surface flex items-center gap-4 rounded-2xl border px-4 py-4"
           >
             {/* Avatar */}
-            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-white/10">
+            <div className="bg-muted relative h-12 w-12 shrink-0 overflow-hidden rounded-full">
               {speaker.avatarUrl ? (
                 <Image
                   src={speaker.avatarUrl}
@@ -44,16 +44,16 @@ export function EventHosts({ speakers }: EventHostsProps) {
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
-                  <User className="h-5 w-5 text-white/30" aria-hidden />
+                  <User className="text-muted-foreground h-5 w-5" aria-hidden />
                 </div>
               )}
             </div>
 
             {/* Info */}
             <div className="min-w-0">
-              <p className="truncate text-[14px] font-semibold text-white">{speaker.name}</p>
+              <p className="text-foreground truncate text-[14px] font-semibold">{speaker.name}</p>
               {speaker.role && (
-                <p className="mt-0.5 truncate text-[12px] text-white/50">{speaker.role}</p>
+                <p className="text-muted-foreground mt-0.5 truncate text-[12px]">{speaker.role}</p>
               )}
             </div>
           </li>

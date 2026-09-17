@@ -12,14 +12,14 @@ export function EventOrganizer({ organizer }: EventOrganizerProps) {
     <section aria-labelledby="organizer-heading">
       <h2
         id="organizer-heading"
-        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         Organiser
       </h2>
 
-      <div className="flex items-start gap-4 rounded-2xl border border-white/8 bg-white/[0.03] p-5">
+      <div className="flex items-start gap-4 rounded-2xl border border-border bg-surface p-5">
         {/* Avatar */}
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-white/10">
+        <div className="bg-muted relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
           {organizer.logoUrl ? (
             <Image
               src={organizer.logoUrl}
@@ -30,21 +30,21 @@ export function EventOrganizer({ organizer }: EventOrganizerProps) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <Building2 className="h-6 w-6 text-white/30" aria-hidden />
+              <Building2 className="text-muted-foreground h-6 w-6" aria-hidden />
             </div>
           )}
         </div>
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <p className="truncate text-[14px] font-semibold text-white">{organizer.name}</p>
-          <p className="mt-0.5 text-[12px] text-white/50">Event organiser</p>
+          <p className="text-foreground truncate text-[14px] font-semibold">{organizer.name}</p>
+          <p className="text-muted-foreground mt-0.5 text-[12px]">Event organiser</p>
         </div>
 
         {/* View profile link */}
         <Link
           href={`/organizers/${organizer.slug}`}
-          className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/15 px-3 py-2 text-[12.5px] font-medium text-white/70 transition-colors hover:border-white/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className="border-border text-muted-foreground hover:border-border/80 hover:text-foreground flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-[12.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           aria-label={`View ${organizer.name} organiser profile`}
         >
           View

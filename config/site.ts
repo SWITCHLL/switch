@@ -46,6 +46,7 @@ export const siteConfig = {
         { title: 'Privacy', href: '/privacy' },
         { title: 'Terms', href: '/terms' },
         { title: 'Cookies', href: '/cookies' },
+        { title: 'Refund Policy', href: '/refund-policy' },
       ],
     },
   ],

@@ -15,7 +15,6 @@ export const organizerProfileSchema = z.object({
 
 export const identitySchema = z.object({
   nin: z.string().regex(/^\d{11}$/, 'NIN must be exactly 11 digits'),
-  bvn: z.string().regex(/^\d{11}$/, 'BVN must be exactly 11 digits'),
   idType: z.enum(['NATIONAL_ID', 'DRIVERS_LICENSE', 'INTL_PASSPORT', 'VOTERS_CARD'], {
     errorMap: () => ({ message: 'Please select a valid ID type' }),
   }),

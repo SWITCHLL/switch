@@ -72,7 +72,7 @@ export function EventHero({ event }: EventHeroProps) {
           {/* Vignette */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(0,0,0,0.7)_100%)]" />
           {/* Bottom fade */}
-          <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+          <div className="from-background absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t to-transparent" />
           {/* Top fade */}
           <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/50 to-transparent" />
         </div>

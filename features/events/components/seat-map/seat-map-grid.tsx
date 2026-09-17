@@ -1,8 +1,7 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
 import { formatPrice } from '../../utils'
 import type { EventDetail, SectionData, SelectedSeat } from '../../types'
 import { SeatButton } from './seat-button'
@@ -22,8 +21,22 @@ export function SeatMapGrid({
   onToggleSeat,
   maxSeats,
 }: SeatMapGridProps) {
+  // refs[rowIndex][seatIndex] → button element
+  const buttonRefs = useRef<(HTMLButtonElement | null)[][]>([])
+
   const selectedIds = new Set(selectedSeats.map((s) => s.eventSeatId))
   const atMax = selectedSeats.length >= maxSeats
+
+  const focusSeat = useCallback((rowIdx: number, seatIdx: number) => {
+    const rows = buttonRefs.current
+    const row = rows[rowIdx]
+    if (!row) return
+    // Find next available button in that row (skip nulls)
+    const btn = row[seatIdx]
+    if (btn) {
+      btn.focus()
+    }
+  }, [])
 
   // For GA sections — show capacity info instead of individual seats
   if (section.type === 'GENERAL_ADMISSION') {
@@ -38,6 +51,10 @@ export function SeatMapGrid({
     )
   }
 
+  // Build a flat list of [rowIdx, seatIdx] for each visible seat (for up/down nav)
+  // rowSeats[rowIdx] = number of rendered seats in that row
+  const rowSeatCounts = section.rows.map((row) => row.seats.filter((s) => s.eventSeats[0]).length)
+
   return (
     <motion.div
       key={section.id}
@@ -45,6 +62,8 @@ export function SeatMapGrid({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       className="mb-8"
+      role="group"
+      aria-label={`${section.name} seating section`}
     >
       {/* Section header */}
       <div className="mb-4 flex items-center gap-3">
@@ -58,65 +77,108 @@ export function SeatMapGrid({
       {/* Scrollable grid container */}
       <div className="overflow-x-auto pb-2">
         <div className="inline-block min-w-full">
-          {section.rows.map((row) => (
-            <div key={row.id} className="mb-1.5 flex items-center gap-2">
-              {/* Row label */}
-              <span className="text-muted-foreground w-6 shrink-0 text-center text-[11px] font-semibold tabular-nums">
-                {row.label}
-              </span>
+          {section.rows.map((row, rowIdx) => {
+            // Ensure refs array is sized
+            if (!buttonRefs.current[rowIdx]) {
+              buttonRefs.current[rowIdx] = []
+            }
 
-              {/* Seats */}
-              <div className="flex flex-wrap gap-1">
-                {row.seats.map((seat) => {
-                  const eventSeat = seat.eventSeats[0]
-                  if (!eventSeat) return null
+            const visibleSeats = row.seats.filter((s) => s.eventSeats[0])
 
-                  const isSelected = selectedIds.has(eventSeat.id)
-                  const status = eventSeat.status as string
+            return (
+              <div
+                key={row.id}
+                className="mb-1.5 flex items-center gap-2"
+                role="row"
+                aria-label={`Row ${row.label}`}
+              >
+                {/* Row label */}
+                <span
+                  className="text-muted-foreground w-6 shrink-0 text-center text-[11px] font-semibold tabular-nums"
+                  aria-hidden="true"
+                >
+                  {row.label}
+                </span>
 
-                  // Find the matching ticket type for display
-                  const ticketType =
-                    event.ticketTypes.find(
-                      (tt) =>
-                        // EventSeat price matches ticket type price (or fallback to first)
-                        tt.price === eventSeat.price
-                    ) ?? event.ticketTypes[0]
+                {/* Seats */}
+                <div className="flex flex-wrap gap-1" role="group">
+                  {visibleSeats.map((seat, seatIdx) => {
+                    const eventSeat = seat.eventSeats[0]
+                    if (!eventSeat) return null
 
-                  return (
-                    <SeatButton
-                      key={seat.id}
-                      seatId={seat.id}
-                      label={seat.label}
-                      status={status}
-                      price={eventSeat.price}
-                      seatType={seat.type}
-                      isSelected={isSelected}
-                      isDisabled={(status !== 'AVAILABLE' && !isSelected) || (atMax && !isSelected)}
-                      onClick={() => {
-                        if (!ticketType) return
-                        onToggleSeat({
-                          eventSeatId: eventSeat.id,
-                          seatId: seat.id,
-                          seatLabel: seat.label,
-                          sectionName: section.name,
-                          rowLabel: row.label,
-                          ticketTypeId: ticketType.id,
-                          ticketTypeName: ticketType.name,
-                          price: eventSeat.price,
-                          currency: ticketType.currency,
-                        })
-                      }}
-                    />
-                  )
-                })}
+                    const isSelected = selectedIds.has(eventSeat.id)
+                    const status = eventSeat.status as string
+
+                    // Match ticket type by ticketTypeId on the EventSeat, then fall back to price match
+                    const ticketType =
+                      event.ticketTypes.find(
+                        (tt) => tt.price === eventSeat.price
+                      ) ?? event.ticketTypes[0]
+
+                    return (
+                      <SeatButton
+                        key={seat.id}
+                        ref={(el) => {
+                          if (!buttonRefs.current[rowIdx]) buttonRefs.current[rowIdx] = []
+                          buttonRefs.current[rowIdx]![seatIdx] = el
+                        }}
+                        seatId={seat.id}
+                        label={seat.label}
+                        status={status}
+                        price={eventSeat.price}
+                        seatType={seat.type}
+                        isSelected={isSelected}
+                        isDisabled={(status !== 'AVAILABLE' && !isSelected) || (atMax && !isSelected)}
+                        onClick={() => {
+                          if (!ticketType) return
+                          onToggleSeat({
+                            eventSeatId: eventSeat.id,
+                            seatId: seat.id,
+                            seatLabel: seat.label,
+                            sectionName: section.name,
+                            rowLabel: row.label,
+                            ticketTypeId: ticketType.id,
+                            ticketTypeName: ticketType.name,
+                            price: eventSeat.price,
+                            currency: ticketType.currency,
+                          })
+                        }}
+                        // ── Arrow key navigation ──
+                        onArrowLeft={() => {
+                          if (seatIdx > 0) focusSeat(rowIdx, seatIdx - 1)
+                        }}
+                        onArrowRight={() => {
+                          if (seatIdx < (rowSeatCounts[rowIdx] ?? 0) - 1)
+                            focusSeat(rowIdx, seatIdx + 1)
+                        }}
+                        onArrowUp={() => {
+                          if (rowIdx > 0) {
+                            // Try same seat index in previous row, clamp to last seat
+                            const prevCount = rowSeatCounts[rowIdx - 1] ?? 0
+                            focusSeat(rowIdx - 1, Math.min(seatIdx, prevCount - 1))
+                          }
+                        }}
+                        onArrowDown={() => {
+                          if (rowIdx < section.rows.length - 1) {
+                            const nextCount = rowSeatCounts[rowIdx + 1] ?? 0
+                            focusSeat(rowIdx + 1, Math.min(seatIdx, nextCount - 1))
+                          }
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+
+                {/* Row label (right side mirror) */}
+                <span
+                  className="text-muted-foreground w-6 shrink-0 text-center text-[11px] font-semibold tabular-nums"
+                  aria-hidden="true"
+                >
+                  {row.label}
+                </span>
               </div>
-
-              {/* Row label (right side mirror) */}
-              <span className="text-muted-foreground w-6 shrink-0 text-center text-[11px] font-semibold tabular-nums">
-                {row.label}
-              </span>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </motion.div>

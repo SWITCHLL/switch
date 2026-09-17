@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   CalendarDays,
+  CalendarRange,
   Ticket,
   Users,
   BarChart3,
@@ -23,15 +24,17 @@ interface NavItem {
 const USER_NAV: NavItem[] = [
   { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
   { href: '/dashboard/tickets', label: 'Tickets', icon: Ticket },
+  { href: '/dashboard/bookings', label: 'Bookings', icon: Users },
+  { href: '/dashboard/calendar', label: 'Calendar', icon: CalendarRange },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ]
 
 const ORGANIZER_NAV: NavItem[] = [
   { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
   { href: '/dashboard/events', label: 'Events', icon: CalendarDays },
+  { href: '/dashboard/calendar', label: 'Calendar', icon: CalendarRange },
   { href: '/dashboard/attendees', label: 'Attendees', icon: Users },
   { href: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/dashboard/tickets', label: 'Tickets', icon: Ticket },
 ]
 
 interface MobileBottomNavProps {

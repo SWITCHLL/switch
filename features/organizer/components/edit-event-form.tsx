@@ -4,10 +4,9 @@ import { useState, useTransition } from 'react'
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
-import { VenuePicker, type VenuePlace } from '@/components/ui/venue-picker'
-import { LocationPicker } from '@/components/ui/location-picker'
+import { VenuePicker } from '@/components/ui/venue-picker'
 import { updateEvent } from '../actions'
-import type { Category, Event, Venue } from '@/app/generated/prisma/client'
+import type { Category, Event } from '@/app/generated/prisma/client'
 
 interface EditEventFormProps {
   event: Pick<
@@ -25,9 +24,11 @@ interface EditEventFormProps {
     | 'isFree'
     | 'isVirtual'
     | 'virtualLink'
-  > & {
-    venue: Pick<Venue, 'id' | 'name' | 'city' | 'state' | 'country' | 'address'> | null
-  }
+    | 'venueName'
+    | 'venueAddress'
+    | 'venueCity'
+    | 'venueState'
+  >
   categories: Pick<Category, 'id' | 'name'>[]
 }
 
@@ -35,20 +36,6 @@ export function EditEventForm({ event, categories }: EditEventFormProps) {
   const [isPending, startTransition] = useTransition()
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
-
-  // Venue state
-  const [venue, setVenue] = useState<VenuePlace | null>(
-    event.venue
-      ? {
-          name: event.venue.name,
-          address: event.venue.address ?? '',
-          city: event.venue.city,
-          state: event.venue.state ?? '',
-          country: event.venue.country,
-          placeId: '',
-        }
-      : null
-  )
 
   // Date/time state
   const [startsAt, setStartsAt] = useState(event.startsAt ? toLocalISO(event.startsAt) : '')
@@ -133,7 +120,7 @@ export function EditEventForm({ event, categories }: EditEventFormProps) {
         {/* Category + Seating type */}
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Category">
-            <select name="categoryId" defaultValue={event.categoryId ?? ''} className={inputCls}>
+            <select name="categoryId" defaultValue={event.categoryId ?? ''} className={selectCls}>
               <option value="">No category</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -148,7 +135,7 @@ export function EditEventForm({ event, categories }: EditEventFormProps) {
               name="seatingType"
               required
               defaultValue={event.seatingType}
-              className={inputCls}
+              className={selectCls}
             >
               <option value="GENERAL_ADMISSION">General Admission</option>
               <option value="RESERVED">Reserved Seating</option>
@@ -186,33 +173,16 @@ export function EditEventForm({ event, categories }: EditEventFormProps) {
           </Field>
         )}
 
-        {/* Venue — only when not virtual */}
+        {/* Venue — Manual entry */}
         {!isVirtual && (
-          <>
-            <Field label="Venue Name" hint="Search on Google Maps or type a name">
-              <VenuePicker defaultValue={event.venue?.name} onSelect={setVenue} />
-            </Field>
-            <Field label="State & City / LGA" hint="Select the event location">
-              <LocationPicker
-                defaultState={venue?.state ?? event.venue?.state ?? ''}
-                defaultCity={venue?.city ?? event.venue?.city ?? ''}
-                onChange={(loc) => {
-                  setVenue((prev) =>
-                    prev
-                      ? { ...prev, state: loc.state, city: loc.city }
-                      : {
-                          name: event.venue?.name ?? '',
-                          address: event.venue?.address ?? '',
-                          city: loc.city,
-                          state: loc.state,
-                          country: 'Nigeria',
-                          placeId: '',
-                        }
-                  )
-                }}
-              />
-            </Field>
-          </>
+          <Field label="Venue">
+            <VenuePicker
+              defaultValue={event.venueName ?? ''}
+              defaultAddress={event.venueAddress ?? ''}
+              defaultCity={event.venueCity ?? ''}
+              defaultState={event.venueState ?? ''}
+            />
+          </Field>
         )}
 
         {/* Event dates */}
@@ -299,6 +269,8 @@ const inputCls = cn(
   'text-[14px] text-foreground placeholder:text-muted-foreground',
   'outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
 )
+
+const selectCls = cn(inputCls, '[color-scheme:light]')
 
 function Field({
   label,

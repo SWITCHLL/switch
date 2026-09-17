@@ -182,3 +182,57 @@ export const DiscountType = {
 } as const
 
 export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
+
+export const WaitlistStatus = {
+  PENDING: 'PENDING',
+  OFFERED: 'OFFERED',
+  FULFILLED: 'FULFILLED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type WaitlistStatus = (typeof WaitlistStatus)[keyof typeof WaitlistStatus]
+
+
+export const SessionInclusionMode = {
+  INCLUDED: 'INCLUDED',
+  OPTIONAL_FREE: 'OPTIONAL_FREE',
+  OPTIONAL_PAID: 'OPTIONAL_PAID',
+  CAPACITY_LIMITED: 'CAPACITY_LIMITED'
+} as const
+
+export type SessionInclusionMode = (typeof SessionInclusionMode)[keyof typeof SessionInclusionMode]
+
+
+export const TicketVisibility = {
+  PUBLIC: 'PUBLIC',
+  HIDDEN: 'HIDDEN',
+  PASSWORD_PROTECTED: 'PASSWORD_PROTECTED'
+} as const
+
+export type TicketVisibility = (typeof TicketVisibility)[keyof typeof TicketVisibility]
+
+
+export const AuditEntityType = {
+  RESERVATION: 'RESERVATION',
+  TICKET: 'TICKET',
+  WAITLIST_ENTRY: 'WAITLIST_ENTRY',
+  EVENT_SEAT: 'EVENT_SEAT'
+} as const
+
+export type AuditEntityType = (typeof AuditEntityType)[keyof typeof AuditEntityType]
+
+
+export const AuditAction = {
+  CREATED: 'CREATED',
+  STATUS_CHANGED: 'STATUS_CHANGED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED',
+  ISSUED: 'ISSUED',
+  EXPIRED: 'EXPIRED',
+  OFFERED: 'OFFERED',
+  FULFILLED: 'FULFILLED'
+} as const
+
+export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction]

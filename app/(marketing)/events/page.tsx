@@ -1,8 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
-import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
-import { getSession } from '@/lib/session'
+import { HeaderWithSession } from '@/components/layout/header-with-session'
 import { getEvents, getCategories } from '@/features/events'
 import { eventFiltersSchema } from '@/features/events'
 import { EventsGrid } from '@/features/events/components/events-grid'
@@ -41,13 +40,14 @@ interface PageProps {
 }
 
 export default async function EventsPage({ searchParams }: PageProps) {
-  const [session, rawParams] = await Promise.all([getSession(), searchParams])
+  const [rawParams, categories] = await Promise.all([searchParams, getCategories()])
   const filters = eventFiltersSchema.parse(rawParams)
-  const categories = await getCategories()
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader userEmail={session?.email} />
+      <Suspense>
+        <HeaderWithSession />
+      </Suspense>
 
       <main className="flex-1">
         {/* ── Hero ── */}

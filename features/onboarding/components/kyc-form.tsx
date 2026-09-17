@@ -27,7 +27,6 @@ interface FormState {
   bio: string
   // Step 2
   nin: string
-  bvn: string
   idType: string
   idDocUrl: string
   // Step 3
@@ -90,9 +89,6 @@ function validateStep(step: number, state: FormState): FieldError {
     if (!/^\d{11}$/.test(state.nin)) {
       errors.nin = 'NIN must be exactly 11 digits'
     }
-    if (!/^\d{11}$/.test(state.bvn)) {
-      errors.bvn = 'BVN must be exactly 11 digits'
-    }
     if (!state.idType) {
       errors.idType = 'Please select an ID type'
     }
@@ -136,7 +132,6 @@ export function KycForm() {
     organizerName: '',
     bio: '',
     nin: '',
-    bvn: '',
     idType: '',
     idDocUrl: '',
     instagramUrl: '',
@@ -397,29 +392,6 @@ function StepIdentity({
         ) : (
           <p className="text-muted-foreground text-[11.5px]">
             Found on your National ID card or NIN slip.
-          </p>
-        )}
-      </div>
-
-      {/* BVN */}
-      <div className="space-y-1.5">
-        <label className="block text-[13px] font-medium">
-          BVN (Bank Verification Number) <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          inputMode="numeric"
-          value={form.bvn}
-          onChange={(e) => set('bvn', e.target.value.replace(/\D/g, '').slice(0, 11))}
-          placeholder="11-digit BVN"
-          maxLength={11}
-          className={inputCls(!!errors.bvn)}
-        />
-        {errors.bvn ? (
-          <p className="text-[12px] text-red-500">{errors.bvn}</p>
-        ) : (
-          <p className="text-muted-foreground text-[11.5px]">
-            Dial *565*0# on your registered phone number to retrieve your BVN.
           </p>
         )}
       </div>

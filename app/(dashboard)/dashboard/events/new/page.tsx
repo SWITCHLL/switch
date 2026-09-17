@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { getSession } from '@/lib/session'
 import { getOrganizerByUserId } from '@/features/organizer/queries'
 import { db } from '@/lib/db'
-import { CreateEventForm } from '@/features/organizer/components/create-event-form'
+import { CreateEventWizard } from '@/features/organizer/components/create-event-wizard'
 
 export const metadata: Metadata = { title: 'Create Event' }
 
@@ -21,14 +21,8 @@ export default async function NewEventPage() {
   })
 
   return (
-    <div className="mx-auto max-w-[720px] space-y-6">
-      <div>
-        <h1 className="text-[22px] font-semibold tracking-tight">Create Event</h1>
-        <p className="text-muted-foreground mt-1 text-[14px]">
-          Fill in the details below. You can save as draft and publish later.
-        </p>
-      </div>
-      <CreateEventForm categories={categories} />
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 md:px-0">
+      <CreateEventWizard categories={categories} />
     </div>
   )
 }

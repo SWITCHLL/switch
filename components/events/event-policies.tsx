@@ -50,12 +50,12 @@ export function EventPolicies({ policies = DEFAULT_POLICIES }: EventPoliciesProp
     <section aria-labelledby="policies-heading">
       <h2
         id="policies-heading"
-        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         Event Policies
       </h2>
 
-      <dl className="divide-y divide-white/8 rounded-2xl border border-white/8">
+      <dl className="border-border divide-border divide-y rounded-2xl border">
         {policies.map((policy) => {
           const isOpen = openId === policy.id
           return (
@@ -67,13 +67,13 @@ export function EventPolicies({ policies = DEFAULT_POLICIES }: EventPoliciesProp
                   aria-controls={`policy-${policy.id}`}
                   className={cn(
                     'flex w-full items-center justify-between gap-4 px-5 py-4',
-                    'text-left text-[14px] font-medium text-white/80 transition-colors',
-                    'hover:text-white focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-white/20',
-                    isOpen && 'text-white'
+                    'text-left text-[14px] font-medium transition-colors',
+                    'text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-brand-500',
+                    isOpen && 'text-foreground'
                   )}
                 >
                   <span>{policy.title}</span>
-                  <span className="shrink-0 text-white/40" aria-hidden>
+                  <span className="text-muted-foreground shrink-0" aria-hidden>
                     {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   </span>
                 </button>
@@ -89,7 +89,7 @@ export function EventPolicies({ policies = DEFAULT_POLICIES }: EventPoliciesProp
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                     className="overflow-hidden"
                   >
-                    <p className="px-5 pb-5 text-[13.5px] leading-[1.75] text-white/55">
+                    <p className="text-muted-foreground px-5 pb-5 text-[13.5px] leading-[1.75]">
                       {policy.content}
                     </p>
                   </motion.dd>

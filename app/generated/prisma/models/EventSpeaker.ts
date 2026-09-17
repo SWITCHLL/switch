@@ -241,6 +241,7 @@ export type EventSpeakerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"EventSpeaker"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EventSpeaker"> | Date | string
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  scheduleItems?: Prisma.EventScheduleItemListRelationFilter
 }
 
 export type EventSpeakerOrderByWithRelationInput = {
@@ -253,6 +254,7 @@ export type EventSpeakerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   event?: Prisma.EventOrderByWithRelationInput
+  scheduleItems?: Prisma.EventScheduleItemOrderByRelationAggregateInput
 }
 
 export type EventSpeakerWhereUniqueInput = Prisma.AtLeast<{
@@ -268,6 +270,7 @@ export type EventSpeakerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"EventSpeaker"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EventSpeaker"> | Date | string
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  scheduleItems?: Prisma.EventScheduleItemListRelationFilter
 }, "id">
 
 export type EventSpeakerOrderByWithAggregationInput = {
@@ -309,6 +312,7 @@ export type EventSpeakerCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   event: Prisma.EventCreateNestedOneWithoutSpeakersInput
+  scheduleItems?: Prisma.EventScheduleItemCreateNestedManyWithoutSpeakerInput
 }
 
 export type EventSpeakerUncheckedCreateInput = {
@@ -320,6 +324,7 @@ export type EventSpeakerUncheckedCreateInput = {
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduleItems?: Prisma.EventScheduleItemUncheckedCreateNestedManyWithoutSpeakerInput
 }
 
 export type EventSpeakerUpdateInput = {
@@ -331,6 +336,7 @@ export type EventSpeakerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneRequiredWithoutSpeakersNestedInput
+  scheduleItems?: Prisma.EventScheduleItemUpdateManyWithoutSpeakerNestedInput
 }
 
 export type EventSpeakerUncheckedUpdateInput = {
@@ -342,6 +348,7 @@ export type EventSpeakerUncheckedUpdateInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduleItems?: Prisma.EventScheduleItemUncheckedUpdateManyWithoutSpeakerNestedInput
 }
 
 export type EventSpeakerCreateManyInput = {
@@ -427,6 +434,11 @@ export type EventSpeakerSumOrderByAggregateInput = {
   position?: Prisma.SortOrder
 }
 
+export type EventSpeakerNullableScalarRelationFilter = {
+  is?: Prisma.EventSpeakerWhereInput | null
+  isNot?: Prisma.EventSpeakerWhereInput | null
+}
+
 export type EventSpeakerCreateNestedManyWithoutEventInput = {
   create?: Prisma.XOR<Prisma.EventSpeakerCreateWithoutEventInput, Prisma.EventSpeakerUncheckedCreateWithoutEventInput> | Prisma.EventSpeakerCreateWithoutEventInput[] | Prisma.EventSpeakerUncheckedCreateWithoutEventInput[]
   connectOrCreate?: Prisma.EventSpeakerCreateOrConnectWithoutEventInput | Prisma.EventSpeakerCreateOrConnectWithoutEventInput[]
@@ -469,6 +481,22 @@ export type EventSpeakerUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.EventSpeakerScalarWhereInput | Prisma.EventSpeakerScalarWhereInput[]
 }
 
+export type EventSpeakerCreateNestedOneWithoutScheduleItemsInput = {
+  create?: Prisma.XOR<Prisma.EventSpeakerCreateWithoutScheduleItemsInput, Prisma.EventSpeakerUncheckedCreateWithoutScheduleItemsInput>
+  connectOrCreate?: Prisma.EventSpeakerCreateOrConnectWithoutScheduleItemsInput
+  connect?: Prisma.EventSpeakerWhereUniqueInput
+}
+
+export type EventSpeakerUpdateOneWithoutScheduleItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.EventSpeakerCreateWithoutScheduleItemsInput, Prisma.EventSpeakerUncheckedCreateWithoutScheduleItemsInput>
+  connectOrCreate?: Prisma.EventSpeakerCreateOrConnectWithoutScheduleItemsInput
+  upsert?: Prisma.EventSpeakerUpsertWithoutScheduleItemsInput
+  disconnect?: Prisma.EventSpeakerWhereInput | boolean
+  delete?: Prisma.EventSpeakerWhereInput | boolean
+  connect?: Prisma.EventSpeakerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventSpeakerUpdateToOneWithWhereWithoutScheduleItemsInput, Prisma.EventSpeakerUpdateWithoutScheduleItemsInput>, Prisma.EventSpeakerUncheckedUpdateWithoutScheduleItemsInput>
+}
+
 export type EventSpeakerCreateWithoutEventInput = {
   id?: string
   name: string
@@ -477,6 +505,7 @@ export type EventSpeakerCreateWithoutEventInput = {
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduleItems?: Prisma.EventScheduleItemCreateNestedManyWithoutSpeakerInput
 }
 
 export type EventSpeakerUncheckedCreateWithoutEventInput = {
@@ -487,6 +516,7 @@ export type EventSpeakerUncheckedCreateWithoutEventInput = {
   position?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  scheduleItems?: Prisma.EventScheduleItemUncheckedCreateNestedManyWithoutSpeakerInput
 }
 
 export type EventSpeakerCreateOrConnectWithoutEventInput = {
@@ -529,6 +559,66 @@ export type EventSpeakerScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"EventSpeaker"> | Date | string
 }
 
+export type EventSpeakerCreateWithoutScheduleItemsInput = {
+  id?: string
+  name: string
+  role?: string | null
+  avatarUrl?: string | null
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  event: Prisma.EventCreateNestedOneWithoutSpeakersInput
+}
+
+export type EventSpeakerUncheckedCreateWithoutScheduleItemsInput = {
+  id?: string
+  eventId: string
+  name: string
+  role?: string | null
+  avatarUrl?: string | null
+  position?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type EventSpeakerCreateOrConnectWithoutScheduleItemsInput = {
+  where: Prisma.EventSpeakerWhereUniqueInput
+  create: Prisma.XOR<Prisma.EventSpeakerCreateWithoutScheduleItemsInput, Prisma.EventSpeakerUncheckedCreateWithoutScheduleItemsInput>
+}
+
+export type EventSpeakerUpsertWithoutScheduleItemsInput = {
+  update: Prisma.XOR<Prisma.EventSpeakerUpdateWithoutScheduleItemsInput, Prisma.EventSpeakerUncheckedUpdateWithoutScheduleItemsInput>
+  create: Prisma.XOR<Prisma.EventSpeakerCreateWithoutScheduleItemsInput, Prisma.EventSpeakerUncheckedCreateWithoutScheduleItemsInput>
+  where?: Prisma.EventSpeakerWhereInput
+}
+
+export type EventSpeakerUpdateToOneWithWhereWithoutScheduleItemsInput = {
+  where?: Prisma.EventSpeakerWhereInput
+  data: Prisma.XOR<Prisma.EventSpeakerUpdateWithoutScheduleItemsInput, Prisma.EventSpeakerUncheckedUpdateWithoutScheduleItemsInput>
+}
+
+export type EventSpeakerUpdateWithoutScheduleItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  event?: Prisma.EventUpdateOneRequiredWithoutSpeakersNestedInput
+}
+
+export type EventSpeakerUncheckedUpdateWithoutScheduleItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type EventSpeakerCreateManyEventInput = {
   id?: string
   name: string
@@ -547,6 +637,7 @@ export type EventSpeakerUpdateWithoutEventInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduleItems?: Prisma.EventScheduleItemUpdateManyWithoutSpeakerNestedInput
 }
 
 export type EventSpeakerUncheckedUpdateWithoutEventInput = {
@@ -557,6 +648,7 @@ export type EventSpeakerUncheckedUpdateWithoutEventInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduleItems?: Prisma.EventScheduleItemUncheckedUpdateManyWithoutSpeakerNestedInput
 }
 
 export type EventSpeakerUncheckedUpdateManyWithoutEventInput = {
@@ -570,6 +662,35 @@ export type EventSpeakerUncheckedUpdateManyWithoutEventInput = {
 }
 
 
+/**
+ * Count Type EventSpeakerCountOutputType
+ */
+
+export type EventSpeakerCountOutputType = {
+  scheduleItems: number
+}
+
+export type EventSpeakerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  scheduleItems?: boolean | EventSpeakerCountOutputTypeCountScheduleItemsArgs
+}
+
+/**
+ * EventSpeakerCountOutputType without action
+ */
+export type EventSpeakerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EventSpeakerCountOutputType
+   */
+  select?: Prisma.EventSpeakerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * EventSpeakerCountOutputType without action
+ */
+export type EventSpeakerCountOutputTypeCountScheduleItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EventScheduleItemWhereInput
+}
+
 
 export type EventSpeakerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -581,6 +702,8 @@ export type EventSpeakerSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  scheduleItems?: boolean | Prisma.EventSpeaker$scheduleItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.EventSpeakerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["eventSpeaker"]>
 
 export type EventSpeakerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -621,6 +744,8 @@ export type EventSpeakerSelectScalar = {
 export type EventSpeakerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "name" | "role" | "avatarUrl" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["eventSpeaker"]>
 export type EventSpeakerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  scheduleItems?: boolean | Prisma.EventSpeaker$scheduleItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.EventSpeakerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EventSpeakerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
@@ -633,6 +758,7 @@ export type $EventSpeakerPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "EventSpeaker"
   objects: {
     event: Prisma.$EventPayload<ExtArgs>
+    scheduleItems: Prisma.$EventScheduleItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1044,6 +1170,7 @@ readonly fields: EventSpeakerFieldRefs;
 export interface Prisma__EventSpeakerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  scheduleItems<T extends Prisma.EventSpeaker$scheduleItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventSpeaker$scheduleItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventScheduleItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1479,6 +1606,30 @@ export type EventSpeakerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many EventSpeakers to delete.
    */
   limit?: number
+}
+
+/**
+ * EventSpeaker.scheduleItems
+ */
+export type EventSpeaker$scheduleItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EventScheduleItem
+   */
+  select?: Prisma.EventScheduleItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EventScheduleItem
+   */
+  omit?: Prisma.EventScheduleItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EventScheduleItemInclude<ExtArgs> | null
+  where?: Prisma.EventScheduleItemWhereInput
+  orderBy?: Prisma.EventScheduleItemOrderByWithRelationInput | Prisma.EventScheduleItemOrderByWithRelationInput[]
+  cursor?: Prisma.EventScheduleItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EventScheduleItemScalarFieldEnum | Prisma.EventScheduleItemScalarFieldEnum[]
 }
 
 /**

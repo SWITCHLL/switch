@@ -15,10 +15,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { supabaseAdmin, EVENTS_BUCKET } from '@/lib/supabase'
+import { detectMimeType, ALLOWED_IMAGE_TYPES } from '@/lib/file-validation'
 import { randomBytes } from 'crypto'
 
 const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024 // 4 MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
 export async function POST(req: NextRequest) {
   const session = await getSession()
@@ -41,25 +41,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 })
   }
 
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return NextResponse.json(
-      { error: `File type "${file.type}" is not allowed. Use JPEG, PNG, WebP, or GIF.` },
-      { status: 400 }
-    )
-  }
   if (file.size > MAX_FILE_SIZE_BYTES) {
     return NextResponse.json({ error: 'File exceeds the 4 MB size limit.' }, { status: 400 })
   }
 
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+  const buffer = Buffer.from(await file.arrayBuffer())
+
+  // Validate MIME type via magic bytes — not the client-supplied file.type
+  const detection = await detectMimeType(buffer, ALLOWED_IMAGE_TYPES)
+  if ('error' in detection) {
+    return NextResponse.json({ error: detection.error }, { status: 400 })
+  }
+
+  const extMap: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp',
+    'image/gif': 'gif',
+  }
+  const ext = extMap[detection.mime] ?? 'jpg'
   const token = randomBytes(8).toString('hex')
   const path = `speakers/${session.userId}/${Date.now()}-${token}.${ext}`
 
-  const buffer = Buffer.from(await file.arrayBuffer())
-
   const { error: uploadError } = await supabaseAdmin.storage
     .from(EVENTS_BUCKET)
-    .upload(path, buffer, { contentType: file.type, upsert: false })
+    .upload(path, buffer, { contentType: detection.mime, upsert: false })
 
   if (uploadError) {
     console.error('[upload/speaker-avatars] Supabase error:', uploadError)

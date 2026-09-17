@@ -24,7 +24,9 @@ export default async function CheckoutSuccessPage({ params, searchParams }: Page
   if (!session) redirect('/login')
   if (!reservationId) redirect(`/events/${slug}`)
 
-  const isGA = type === 'ga'
+  const isGA    = type === 'ga'
+  const isShows = type === 'shows'
+  const orderType = isGA ? 'ga' : isShows ? 'shows' : 'reserved'
 
   // Load reservation — accept ACTIVE (webhook not yet fired) and COMPLETED
   const reservation = await db.reservation.findUnique({
@@ -32,6 +34,7 @@ export default async function CheckoutSuccessPage({ params, searchParams }: Page
     select: {
       status: true,
       eventId: true,
+      createdAt: true,
       expiresAt: true,
       event: {
         select: {
@@ -69,44 +72,102 @@ export default async function CheckoutSuccessPage({ params, searchParams }: Page
 
   if (!isPending) {
     const event = {
-      title: reservation.event.title,
-      slug: reservation.event.slug,
+      title:    reservation.event.title,
+      slug:     reservation.event.slug,
       imageUrl: reservation.event.imageUrl,
       startsAt: reservation.event.startsAt.toISOString(),
-      endsAt: reservation.event.endsAt?.toISOString() ?? null,
-      venue: reservation.event.venue ?? null,
+      endsAt:   reservation.event.endsAt?.toISOString() ?? null,
+      venue:    reservation.event.venue ?? null,
     }
 
-    if (isGA) {
+    if (isShows) {
+      // Fetch show tickets via raw SQL (time_slot_tickets not in generated client)
+      interface ShowRow {
+        ticketId:       string
+        ticketNumber:   string
+        ticketTypeId:   string
+        ticketTypeName: string
+        price:          number
+        currency:       string
+        slotLabel:      string
+      }
+      const rows: ShowRow[] = await db.$queryRaw`
+        SELECT
+          t."id"          AS "ticketId",
+          t."ticketNumber",
+          tt."id"         AS "ticketTypeId",
+          tt."name"       AS "ticketTypeName",
+          tt."price",
+          tt."currency",
+          ts."label"      AS "slotLabel"
+        FROM "tickets" t
+        JOIN "ticket_types" tt ON tt."id" = t."ticketTypeId"
+        INNER JOIN "time_slot_tickets" tst ON tst."ticketId" = t."id"
+        LEFT JOIN "time_slots" ts ON ts."id" = tst."timeSlotId"
+        WHERE t."eventId"  = ${reservation.eventId}
+          AND t."userId"   = ${session.userId}
+          AND t."issuedAt" >= ${new Date(reservation.createdAt.getTime() - 60000)}
+          AND t."status"   = 'ACTIVE'
+        ORDER BY COALESCE(ts."startsAt", t."issuedAt"), tt."name"
+      `
+
+      const groupMap: Record<
+        string,
+        { ticketTypeId: string; name: string; price: number; currency: string; tickets: { id: string; ticketNumber: string }[] }
+      > = {}
+      for (const row of rows) {
+        const key         = `${row.slotLabel ?? ''}::${row.ticketTypeId}`
+        const displayName = row.slotLabel
+          ? `${row.slotLabel} — ${row.ticketTypeName}`
+          : row.ticketTypeName
+        if (!groupMap[key]) {
+          groupMap[key] = {
+            ticketTypeId: row.ticketTypeId,
+            name:         displayName,
+            price:        row.price,
+            currency:     row.currency,
+            tickets:      [],
+          }
+        }
+        groupMap[key]!.tickets.push({ id: row.ticketId, ticketNumber: row.ticketNumber })
+      }
+
+      initialData = {
+        event,
+        gaTicketGroups:   Object.values(groupMap),
+        reservedTickets:  [],
+        totalTicketCount: rows.length,
+        totalPaid:        rows.reduce((s, r) => s + r.price, 0),
+        currency:         rows[0]?.currency ?? 'NGN',
+      }
+    } else if (isGA) {
       const gaTickets = await db.ticket.findMany({
-        where: { eventId: reservation.eventId, userId: session.userId },
+        where: {
+          eventId:  reservation.eventId,
+          userId:   session.userId,
+          issuedAt: { gte: reservation.createdAt },
+        },
         select: {
-          id: true,
+          id:           true,
           ticketNumber: true,
-          ticketType: { select: { id: true, name: true, price: true, currency: true } },
+          ticketType:   { select: { id: true, name: true, price: true, currency: true } },
         },
         orderBy: { issuedAt: 'asc' },
       })
 
       const groupMap: Record<
         string,
-        {
-          ticketTypeId: string
-          name: string
-          price: number
-          currency: string
-          tickets: { id: string; ticketNumber: string }[]
-        }
+        { ticketTypeId: string; name: string; price: number; currency: string; tickets: { id: string; ticketNumber: string }[] }
       > = {}
       for (const t of gaTickets) {
         const key = t.ticketType.id
         if (!groupMap[key]) {
           groupMap[key] = {
             ticketTypeId: key,
-            name: t.ticketType.name,
-            price: t.ticketType.price,
-            currency: t.ticketType.currency,
-            tickets: [],
+            name:         t.ticketType.name,
+            price:        t.ticketType.price,
+            currency:     t.ticketType.currency,
+            tickets:      [],
           }
         }
         groupMap[key]!.tickets.push({ id: t.id, ticketNumber: t.ticketNumber })
@@ -114,29 +175,29 @@ export default async function CheckoutSuccessPage({ params, searchParams }: Page
 
       initialData = {
         event,
-        gaTicketGroups: Object.values(groupMap),
-        reservedTickets: [],
+        gaTicketGroups:   Object.values(groupMap),
+        reservedTickets:  [],
         totalTicketCount: gaTickets.length,
-        totalPaid: gaTickets.reduce((s, t) => s + t.ticketType.price, 0),
-        currency: gaTickets[0]?.ticketType.currency ?? 'NGN',
+        totalPaid:        gaTickets.reduce((s, t) => s + t.ticketType.price, 0),
+        currency:         gaTickets[0]?.ticketType.currency ?? 'NGN',
       }
     } else {
       const reservedTickets = reservation.eventSeats.map((es) => ({
-        id: es.tickets[0]?.id ?? es.id,
-        ticketNumber: es.tickets[0]?.ticketNumber ?? '—',
+        id:             es.tickets[0]?.id ?? es.id,
+        ticketNumber:   es.tickets[0]?.ticketNumber ?? '—',
         ticketTypeName: es.ticketType?.name ?? 'Ticket',
-        seatLabel: es.seat?.label ?? null,
-        price: es.price,
-        currency: es.ticketType?.currency ?? 'NGN',
+        seatLabel:      es.seat?.label ?? null,
+        price:          es.price,
+        currency:       es.ticketType?.currency ?? 'NGN',
       }))
 
       initialData = {
         event,
         reservedTickets,
-        gaTicketGroups: [],
+        gaTicketGroups:   [],
         totalTicketCount: reservedTickets.length,
-        totalPaid: reservedTickets.reduce((s, t) => s + t.price, 0),
-        currency: reservedTickets[0]?.currency ?? 'NGN',
+        totalPaid:        reservedTickets.reduce((s, t) => s + t.price, 0),
+        currency:         reservedTickets[0]?.currency ?? 'NGN',
       }
     }
   }
@@ -149,7 +210,7 @@ export default async function CheckoutSuccessPage({ params, searchParams }: Page
         <PaymentConfirmationPoller
           reservationId={reservationId}
           eventSlug={slug}
-          isGA={isGA}
+          orderType={orderType}
           initiallyConfirmed={!isPending}
           initialData={initialData}
         />

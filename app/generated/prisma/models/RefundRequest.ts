@@ -35,6 +35,7 @@ export type RefundRequestMinAggregateOutputType = {
   reviewedBy: string | null
   reviewedAt: Date | null
   paystackRefundId: string | null
+  ticketId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type RefundRequestMaxAggregateOutputType = {
   reviewedBy: string | null
   reviewedAt: Date | null
   paystackRefundId: string | null
+  ticketId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,6 +67,7 @@ export type RefundRequestCountAggregateOutputType = {
   reviewedBy: number
   reviewedAt: number
   paystackRefundId: number
+  ticketId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -82,6 +85,7 @@ export type RefundRequestMinAggregateInputType = {
   reviewedBy?: true
   reviewedAt?: true
   paystackRefundId?: true
+  ticketId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,6 +101,7 @@ export type RefundRequestMaxAggregateInputType = {
   reviewedBy?: true
   reviewedAt?: true
   paystackRefundId?: true
+  ticketId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +117,7 @@ export type RefundRequestCountAggregateInputType = {
   reviewedBy?: true
   reviewedAt?: true
   paystackRefundId?: true
+  ticketId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -200,6 +206,7 @@ export type RefundRequestGroupByOutputType = {
   reviewedBy: string | null
   reviewedAt: Date | null
   paystackRefundId: string | null
+  ticketId: string | null
   createdAt: Date
   updatedAt: Date
   _count: RefundRequestCountAggregateOutputType | null
@@ -236,6 +243,7 @@ export type RefundRequestWhereInput = {
   reviewedBy?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"RefundRequest"> | Date | string | null
   paystackRefundId?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
+  ticketId?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RefundRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RefundRequest"> | Date | string
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
@@ -254,6 +262,7 @@ export type RefundRequestOrderByWithRelationInput = {
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paystackRefundId?: Prisma.SortOrderInput | Prisma.SortOrder
+  ticketId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   payment?: Prisma.PaymentOrderByWithRelationInput
@@ -275,6 +284,7 @@ export type RefundRequestWhereUniqueInput = Prisma.AtLeast<{
   reviewedBy?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"RefundRequest"> | Date | string | null
   paystackRefundId?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
+  ticketId?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RefundRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RefundRequest"> | Date | string
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
@@ -293,6 +303,7 @@ export type RefundRequestOrderByWithAggregationInput = {
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paystackRefundId?: Prisma.SortOrderInput | Prisma.SortOrder
+  ticketId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RefundRequestCountOrderByAggregateInput
@@ -314,6 +325,7 @@ export type RefundRequestScalarWhereWithAggregatesInput = {
   reviewedBy?: Prisma.StringNullableWithAggregatesFilter<"RefundRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RefundRequest"> | Date | string | null
   paystackRefundId?: Prisma.StringNullableWithAggregatesFilter<"RefundRequest"> | string | null
+  ticketId?: Prisma.StringNullableWithAggregatesFilter<"RefundRequest"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RefundRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RefundRequest"> | Date | string
 }
@@ -326,6 +338,7 @@ export type RefundRequestCreateInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payment: Prisma.PaymentCreateNestedOneWithoutRefundRequestInput
@@ -344,6 +357,7 @@ export type RefundRequestUncheckedCreateInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -356,6 +370,7 @@ export type RefundRequestUpdateInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundRequestNestedInput
@@ -374,6 +389,7 @@ export type RefundRequestUncheckedUpdateInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -389,6 +405,7 @@ export type RefundRequestCreateManyInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -401,6 +418,7 @@ export type RefundRequestUpdateManyMutationInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -416,6 +434,7 @@ export type RefundRequestUncheckedUpdateManyInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -446,6 +465,7 @@ export type RefundRequestCountOrderByAggregateInput = {
   reviewedBy?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   paystackRefundId?: Prisma.SortOrder
+  ticketId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -461,6 +481,7 @@ export type RefundRequestMaxOrderByAggregateInput = {
   reviewedBy?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   paystackRefundId?: Prisma.SortOrder
+  ticketId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -476,6 +497,7 @@ export type RefundRequestMinOrderByAggregateInput = {
   reviewedBy?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   paystackRefundId?: Prisma.SortOrder
+  ticketId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -608,6 +630,7 @@ export type RefundRequestCreateWithoutUserInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payment: Prisma.PaymentCreateNestedOneWithoutRefundRequestInput
@@ -624,6 +647,7 @@ export type RefundRequestUncheckedCreateWithoutUserInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -668,6 +692,7 @@ export type RefundRequestScalarWhereInput = {
   reviewedBy?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"RefundRequest"> | Date | string | null
   paystackRefundId?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
+  ticketId?: Prisma.StringNullableFilter<"RefundRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"RefundRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RefundRequest"> | Date | string
 }
@@ -680,6 +705,7 @@ export type RefundRequestCreateWithoutEventInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payment: Prisma.PaymentCreateNestedOneWithoutRefundRequestInput
@@ -696,6 +722,7 @@ export type RefundRequestUncheckedCreateWithoutEventInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -734,6 +761,7 @@ export type RefundRequestCreateWithoutPaymentInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutRefundRequestsInput
@@ -750,6 +778,7 @@ export type RefundRequestUncheckedCreateWithoutPaymentInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -778,6 +807,7 @@ export type RefundRequestUpdateWithoutPaymentInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutRefundRequestsNestedInput
@@ -794,6 +824,7 @@ export type RefundRequestUncheckedUpdateWithoutPaymentInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -808,6 +839,7 @@ export type RefundRequestCreateManyUserInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -820,6 +852,7 @@ export type RefundRequestUpdateWithoutUserInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundRequestNestedInput
@@ -836,6 +869,7 @@ export type RefundRequestUncheckedUpdateWithoutUserInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -850,6 +884,7 @@ export type RefundRequestUncheckedUpdateManyWithoutUserInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -864,6 +899,7 @@ export type RefundRequestCreateManyEventInput = {
   reviewedBy?: string | null
   reviewedAt?: Date | string | null
   paystackRefundId?: string | null
+  ticketId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -876,6 +912,7 @@ export type RefundRequestUpdateWithoutEventInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundRequestNestedInput
@@ -892,6 +929,7 @@ export type RefundRequestUncheckedUpdateWithoutEventInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -906,6 +944,7 @@ export type RefundRequestUncheckedUpdateManyWithoutEventInput = {
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paystackRefundId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ticketId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -923,6 +962,7 @@ export type RefundRequestSelect<ExtArgs extends runtime.Types.Extensions.Interna
   reviewedBy?: boolean
   reviewedAt?: boolean
   paystackRefundId?: boolean
+  ticketId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -941,6 +981,7 @@ export type RefundRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   reviewedBy?: boolean
   reviewedAt?: boolean
   paystackRefundId?: boolean
+  ticketId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -959,6 +1000,7 @@ export type RefundRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   reviewedBy?: boolean
   reviewedAt?: boolean
   paystackRefundId?: boolean
+  ticketId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
@@ -977,11 +1019,12 @@ export type RefundRequestSelectScalar = {
   reviewedBy?: boolean
   reviewedAt?: boolean
   paystackRefundId?: boolean
+  ticketId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RefundRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "userId" | "eventId" | "reason" | "status" | "reviewNote" | "reviewedBy" | "reviewedAt" | "paystackRefundId" | "createdAt" | "updatedAt", ExtArgs["result"]["refundRequest"]>
+export type RefundRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "userId" | "eventId" | "reason" | "status" | "reviewNote" | "reviewedBy" | "reviewedAt" | "paystackRefundId" | "ticketId" | "createdAt" | "updatedAt", ExtArgs["result"]["refundRequest"]>
 export type RefundRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1007,6 +1050,9 @@ export type $RefundRequestPayload<ExtArgs extends runtime.Types.Extensions.Inter
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    /**
+     * FK to the Payment (via Order) — kept for backward compat
+     */
     paymentId: string
     userId: string
     eventId: string
@@ -1025,6 +1071,10 @@ export type $RefundRequestPayload<ExtArgs extends runtime.Types.Extensions.Inter
      * Paystack refund id (set when refund is processed)
      */
     paystackRefundId: string | null
+    /**
+     * For partial refunds: which specific ticket is being refunded
+     */
+    ticketId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["refundRequest"]>
@@ -1463,6 +1513,7 @@ export interface RefundRequestFieldRefs {
   readonly reviewedBy: Prisma.FieldRef<"RefundRequest", 'String'>
   readonly reviewedAt: Prisma.FieldRef<"RefundRequest", 'DateTime'>
   readonly paystackRefundId: Prisma.FieldRef<"RefundRequest", 'String'>
+  readonly ticketId: Prisma.FieldRef<"RefundRequest", 'String'>
   readonly createdAt: Prisma.FieldRef<"RefundRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"RefundRequest", 'DateTime'>
 }

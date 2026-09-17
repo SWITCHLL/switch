@@ -54,6 +54,11 @@ export async function createSession(payload: Omit<SessionPayload, 'expiresAt'>):
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',
+    // Set domain so the cookie is shared between www and bare domain in production.
+    // In development (localhost) no domain is needed.
+    ...(process.env.NODE_ENV === 'production' && process.env.COOKIE_DOMAIN
+      ? { domain: process.env.COOKIE_DOMAIN }
+      : {}),
   })
 }
 
@@ -66,7 +71,17 @@ export async function getSession(): Promise<SessionPayload | null> {
 
 export async function deleteSession(): Promise<void> {
   const cookieStore = await cookies()
-  cookieStore.delete(SESSION_COOKIE)
+  cookieStore.set(SESSION_COOKIE, '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    expires: new Date(0),
+    maxAge: 0,
+    sameSite: 'lax',
+    path: '/',
+    ...(process.env.NODE_ENV === 'production' && process.env.COOKIE_DOMAIN
+      ? { domain: process.env.COOKIE_DOMAIN }
+      : {}),
+  })
 }
 
 /** Refresh the session expiry (call from middleware on each request). */
@@ -87,5 +102,8 @@ export async function refreshSession(): Promise<void> {
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',
+    ...(process.env.NODE_ENV === 'production' && process.env.COOKIE_DOMAIN
+      ? { domain: process.env.COOKIE_DOMAIN }
+      : {}),
   })
 }

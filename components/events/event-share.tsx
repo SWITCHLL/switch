@@ -115,8 +115,8 @@ export function EventShare({ title, slug }: EventShareProps) {
         aria-expanded={open}
         className={cn(
           'inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-[13px] font-medium transition-all duration-200',
-          'border-white/20 text-white/80 hover:border-white/40 hover:text-white',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40'
+          'border-border text-muted-foreground hover:border-border/70 hover:text-foreground',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500'
         )}
       >
         <Share2 className="h-3.5 w-3.5" aria-hidden />
@@ -133,25 +133,25 @@ export function EventShare({ title, slug }: EventShareProps) {
             role="menu"
             aria-label="Share options"
             className={cn(
-              'absolute left-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-white/10',
-              'bg-[#1a1a18] shadow-[0_16px_48px_rgba(0,0,0,0.5)]'
+              'absolute left-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-border',
+              'bg-surface shadow-[0_8px_32px_rgba(0,0,0,0.12)]'
             )}
           >
             {/* Copy link */}
             <button
               onClick={handleCopy}
               role="menuitem"
-              className="flex w-full items-center gap-3 px-4 py-3 text-[13px] text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+              className="text-muted-foreground hover:text-foreground flex w-full items-center gap-3 px-4 py-3 text-[13px] transition-colors hover:bg-muted"
             >
               {copied ? (
-                <Check className="h-4 w-4 text-emerald-400" aria-hidden />
+                <Check className="h-4 w-4 text-emerald-600" aria-hidden />
               ) : (
                 <Copy className="h-4 w-4" aria-hidden />
               )}
               {copied ? 'Copied!' : 'Copy link'}
             </button>
 
-            <div className="h-px bg-white/10" role="separator" />
+            <div className="bg-border h-px" role="separator" />
 
             {/* Social links */}
             {shareLinks.map((link) => (
@@ -162,19 +162,19 @@ export function EventShare({ title, slug }: EventShareProps) {
                 rel="noopener noreferrer"
                 role="menuitem"
                 onClick={() => setOpen(false)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-[13px] text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+                className="text-muted-foreground hover:text-foreground flex w-full items-center gap-3 px-4 py-3 text-[13px] transition-colors hover:bg-muted"
               >
                 {link.icon}
                 {link.label}
               </a>
             ))}
 
-            <div className="h-px bg-white/10" role="separator" />
+            <div className="bg-border h-px" role="separator" />
 
             <button
               onClick={() => setOpen(false)}
               role="menuitem"
-              className="flex w-full items-center gap-3 px-4 py-3 text-[13px] text-white/50 transition-colors hover:bg-white/5 hover:text-white/80"
+              className="text-muted-foreground hover:text-foreground flex w-full items-center gap-3 px-4 py-3 text-[13px] transition-colors hover:bg-muted"
             >
               <X className="h-4 w-4" aria-hidden />
               Close

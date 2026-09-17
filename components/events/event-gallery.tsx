@@ -72,11 +72,11 @@ function GalleryInner({
     <section aria-labelledby="gallery-heading">
       <h2
         id="gallery-heading"
-        className="mb-5 flex items-center gap-2 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 flex items-center gap-2 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         <Images className="h-3.5 w-3.5" aria-hidden />
         Photos
-        <span className="text-white/25">({count})</span>
+      <span className="text-muted-foreground/50">({count})</span>
       </h2>
 
       {/* ── Grid ── */}

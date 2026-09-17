@@ -291,7 +291,7 @@ export type PromoCodeWhereInput = {
   organizer?: Prisma.XOR<Prisma.OrganizerScalarRelationFilter, Prisma.OrganizerWhereInput>
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   ticketType?: Prisma.XOR<Prisma.TicketTypeNullableScalarRelationFilter, Prisma.TicketTypeWhereInput> | null
-  payments?: Prisma.PaymentListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
 }
 
 export type PromoCodeOrderByWithRelationInput = {
@@ -311,7 +311,7 @@ export type PromoCodeOrderByWithRelationInput = {
   organizer?: Prisma.OrganizerOrderByWithRelationInput
   event?: Prisma.EventOrderByWithRelationInput
   ticketType?: Prisma.TicketTypeOrderByWithRelationInput
-  payments?: Prisma.PaymentOrderByRelationAggregateInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
 }
 
 export type PromoCodeWhereUniqueInput = Prisma.AtLeast<{
@@ -334,7 +334,7 @@ export type PromoCodeWhereUniqueInput = Prisma.AtLeast<{
   organizer?: Prisma.XOR<Prisma.OrganizerScalarRelationFilter, Prisma.OrganizerWhereInput>
   event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   ticketType?: Prisma.XOR<Prisma.TicketTypeNullableScalarRelationFilter, Prisma.TicketTypeWhereInput> | null
-  payments?: Prisma.PaymentListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
 }, "id" | "code">
 
 export type PromoCodeOrderByWithAggregationInput = {
@@ -391,7 +391,7 @@ export type PromoCodeCreateInput = {
   organizer: Prisma.OrganizerCreateNestedOneWithoutPromoCodesInput
   event?: Prisma.EventCreateNestedOneWithoutPromoCodesInput
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutPromoCodesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeUncheckedCreateInput = {
@@ -408,7 +408,7 @@ export type PromoCodeUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeUpdateInput = {
@@ -425,7 +425,7 @@ export type PromoCodeUpdateInput = {
   organizer?: Prisma.OrganizerUpdateOneRequiredWithoutPromoCodesNestedInput
   event?: Prisma.EventUpdateOneWithoutPromoCodesNestedInput
   ticketType?: Prisma.TicketTypeUpdateOneWithoutPromoCodesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateInput = {
@@ -442,7 +442,7 @@ export type PromoCodeUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeCreateManyInput = {
@@ -691,20 +691,20 @@ export type PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput = {
   deleteMany?: Prisma.PromoCodeScalarWhereInput | Prisma.PromoCodeScalarWhereInput[]
 }
 
-export type PromoCodeCreateNestedOneWithoutPaymentsInput = {
-  create?: Prisma.XOR<Prisma.PromoCodeCreateWithoutPaymentsInput, Prisma.PromoCodeUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.PromoCodeCreateOrConnectWithoutPaymentsInput
+export type PromoCodeCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.PromoCodeCreateWithoutOrdersInput, Prisma.PromoCodeUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.PromoCodeCreateOrConnectWithoutOrdersInput
   connect?: Prisma.PromoCodeWhereUniqueInput
 }
 
-export type PromoCodeUpdateOneWithoutPaymentsNestedInput = {
-  create?: Prisma.XOR<Prisma.PromoCodeCreateWithoutPaymentsInput, Prisma.PromoCodeUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.PromoCodeCreateOrConnectWithoutPaymentsInput
-  upsert?: Prisma.PromoCodeUpsertWithoutPaymentsInput
+export type PromoCodeUpdateOneWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.PromoCodeCreateWithoutOrdersInput, Prisma.PromoCodeUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.PromoCodeCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.PromoCodeUpsertWithoutOrdersInput
   disconnect?: Prisma.PromoCodeWhereInput | boolean
   delete?: Prisma.PromoCodeWhereInput | boolean
   connect?: Prisma.PromoCodeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PromoCodeUpdateToOneWithWhereWithoutPaymentsInput, Prisma.PromoCodeUpdateWithoutPaymentsInput>, Prisma.PromoCodeUncheckedUpdateWithoutPaymentsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PromoCodeUpdateToOneWithWhereWithoutOrdersInput, Prisma.PromoCodeUpdateWithoutOrdersInput>, Prisma.PromoCodeUncheckedUpdateWithoutOrdersInput>
 }
 
 export type EnumDiscountTypeFieldUpdateOperationsInput = {
@@ -724,7 +724,7 @@ export type PromoCodeCreateWithoutOrganizerInput = {
   updatedAt?: Date | string
   event?: Prisma.EventCreateNestedOneWithoutPromoCodesInput
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutPromoCodesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeUncheckedCreateWithoutOrganizerInput = {
@@ -740,7 +740,7 @@ export type PromoCodeUncheckedCreateWithoutOrganizerInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeCreateOrConnectWithoutOrganizerInput = {
@@ -801,7 +801,7 @@ export type PromoCodeCreateWithoutEventInput = {
   updatedAt?: Date | string
   organizer: Prisma.OrganizerCreateNestedOneWithoutPromoCodesInput
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutPromoCodesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeUncheckedCreateWithoutEventInput = {
@@ -817,7 +817,7 @@ export type PromoCodeUncheckedCreateWithoutEventInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeCreateOrConnectWithoutEventInput = {
@@ -859,7 +859,7 @@ export type PromoCodeCreateWithoutTicketTypeInput = {
   updatedAt?: Date | string
   organizer: Prisma.OrganizerCreateNestedOneWithoutPromoCodesInput
   event?: Prisma.EventCreateNestedOneWithoutPromoCodesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeUncheckedCreateWithoutTicketTypeInput = {
@@ -875,7 +875,7 @@ export type PromoCodeUncheckedCreateWithoutTicketTypeInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPromoCodeInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutPromoCodeInput
 }
 
 export type PromoCodeCreateOrConnectWithoutTicketTypeInput = {
@@ -904,7 +904,7 @@ export type PromoCodeUpdateManyWithWhereWithoutTicketTypeInput = {
   data: Prisma.XOR<Prisma.PromoCodeUpdateManyMutationInput, Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeInput>
 }
 
-export type PromoCodeCreateWithoutPaymentsInput = {
+export type PromoCodeCreateWithoutOrdersInput = {
   id?: string
   code: string
   discountType: $Enums.DiscountType
@@ -920,7 +920,7 @@ export type PromoCodeCreateWithoutPaymentsInput = {
   ticketType?: Prisma.TicketTypeCreateNestedOneWithoutPromoCodesInput
 }
 
-export type PromoCodeUncheckedCreateWithoutPaymentsInput = {
+export type PromoCodeUncheckedCreateWithoutOrdersInput = {
   id?: string
   organizerId: string
   eventId?: string | null
@@ -936,23 +936,23 @@ export type PromoCodeUncheckedCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
 }
 
-export type PromoCodeCreateOrConnectWithoutPaymentsInput = {
+export type PromoCodeCreateOrConnectWithoutOrdersInput = {
   where: Prisma.PromoCodeWhereUniqueInput
-  create: Prisma.XOR<Prisma.PromoCodeCreateWithoutPaymentsInput, Prisma.PromoCodeUncheckedCreateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.PromoCodeCreateWithoutOrdersInput, Prisma.PromoCodeUncheckedCreateWithoutOrdersInput>
 }
 
-export type PromoCodeUpsertWithoutPaymentsInput = {
-  update: Prisma.XOR<Prisma.PromoCodeUpdateWithoutPaymentsInput, Prisma.PromoCodeUncheckedUpdateWithoutPaymentsInput>
-  create: Prisma.XOR<Prisma.PromoCodeCreateWithoutPaymentsInput, Prisma.PromoCodeUncheckedCreateWithoutPaymentsInput>
+export type PromoCodeUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.PromoCodeUpdateWithoutOrdersInput, Prisma.PromoCodeUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.PromoCodeCreateWithoutOrdersInput, Prisma.PromoCodeUncheckedCreateWithoutOrdersInput>
   where?: Prisma.PromoCodeWhereInput
 }
 
-export type PromoCodeUpdateToOneWithWhereWithoutPaymentsInput = {
+export type PromoCodeUpdateToOneWithWhereWithoutOrdersInput = {
   where?: Prisma.PromoCodeWhereInput
-  data: Prisma.XOR<Prisma.PromoCodeUpdateWithoutPaymentsInput, Prisma.PromoCodeUncheckedUpdateWithoutPaymentsInput>
+  data: Prisma.XOR<Prisma.PromoCodeUpdateWithoutOrdersInput, Prisma.PromoCodeUncheckedUpdateWithoutOrdersInput>
 }
 
-export type PromoCodeUpdateWithoutPaymentsInput = {
+export type PromoCodeUpdateWithoutOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
@@ -968,7 +968,7 @@ export type PromoCodeUpdateWithoutPaymentsInput = {
   ticketType?: Prisma.TicketTypeUpdateOneWithoutPromoCodesNestedInput
 }
 
-export type PromoCodeUncheckedUpdateWithoutPaymentsInput = {
+export type PromoCodeUncheckedUpdateWithoutOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizerId?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1012,7 +1012,7 @@ export type PromoCodeUpdateWithoutOrganizerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneWithoutPromoCodesNestedInput
   ticketType?: Prisma.TicketTypeUpdateOneWithoutPromoCodesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateWithoutOrganizerInput = {
@@ -1028,7 +1028,7 @@ export type PromoCodeUncheckedUpdateWithoutOrganizerInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateManyWithoutOrganizerInput = {
@@ -1074,7 +1074,7 @@ export type PromoCodeUpdateWithoutEventInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organizer?: Prisma.OrganizerUpdateOneRequiredWithoutPromoCodesNestedInput
   ticketType?: Prisma.TicketTypeUpdateOneWithoutPromoCodesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateWithoutEventInput = {
@@ -1090,7 +1090,7 @@ export type PromoCodeUncheckedUpdateWithoutEventInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateManyWithoutEventInput = {
@@ -1136,7 +1136,7 @@ export type PromoCodeUpdateWithoutTicketTypeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organizer?: Prisma.OrganizerUpdateOneRequiredWithoutPromoCodesNestedInput
   event?: Prisma.EventUpdateOneWithoutPromoCodesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateWithoutTicketTypeInput = {
@@ -1152,7 +1152,7 @@ export type PromoCodeUncheckedUpdateWithoutTicketTypeInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPromoCodeNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
 }
 
 export type PromoCodeUncheckedUpdateManyWithoutTicketTypeInput = {
@@ -1176,11 +1176,11 @@ export type PromoCodeUncheckedUpdateManyWithoutTicketTypeInput = {
  */
 
 export type PromoCodeCountOutputType = {
-  payments: number
+  orders: number
 }
 
 export type PromoCodeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  payments?: boolean | PromoCodeCountOutputTypeCountPaymentsArgs
+  orders?: boolean | PromoCodeCountOutputTypeCountOrdersArgs
 }
 
 /**
@@ -1196,8 +1196,8 @@ export type PromoCodeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
 /**
  * PromoCodeCountOutputType without action
  */
-export type PromoCodeCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PaymentWhereInput
+export type PromoCodeCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
 }
 
 
@@ -1218,7 +1218,7 @@ export type PromoCodeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   organizer?: boolean | Prisma.OrganizerDefaultArgs<ExtArgs>
   event?: boolean | Prisma.PromoCode$eventArgs<ExtArgs>
   ticketType?: boolean | Prisma.PromoCode$ticketTypeArgs<ExtArgs>
-  payments?: boolean | Prisma.PromoCode$paymentsArgs<ExtArgs>
+  orders?: boolean | Prisma.PromoCode$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.PromoCodeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["promoCode"]>
 
@@ -1281,7 +1281,7 @@ export type PromoCodeInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   organizer?: boolean | Prisma.OrganizerDefaultArgs<ExtArgs>
   event?: boolean | Prisma.PromoCode$eventArgs<ExtArgs>
   ticketType?: boolean | Prisma.PromoCode$ticketTypeArgs<ExtArgs>
-  payments?: boolean | Prisma.PromoCode$paymentsArgs<ExtArgs>
+  orders?: boolean | Prisma.PromoCode$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.PromoCodeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PromoCodeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1301,7 +1301,7 @@ export type $PromoCodePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     organizer: Prisma.$OrganizerPayload<ExtArgs>
     event: Prisma.$EventPayload<ExtArgs> | null
     ticketType: Prisma.$TicketTypePayload<ExtArgs> | null
-    payments: Prisma.$PaymentPayload<ExtArgs>[]
+    orders: Prisma.$OrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1735,7 +1735,7 @@ export interface Prisma__PromoCodeClient<T, Null = never, ExtArgs extends runtim
   organizer<T extends Prisma.OrganizerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizerDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizerClient<runtime.Types.Result.GetResult<Prisma.$OrganizerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   event<T extends Prisma.PromoCode$eventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PromoCode$eventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ticketType<T extends Prisma.PromoCode$ticketTypeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PromoCode$ticketTypeArgs<ExtArgs>>): Prisma.Prisma__TicketTypeClient<runtime.Types.Result.GetResult<Prisma.$TicketTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  payments<T extends Prisma.PromoCode$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PromoCode$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orders<T extends Prisma.PromoCode$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PromoCode$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2217,27 +2217,27 @@ export type PromoCode$ticketTypeArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * PromoCode.payments
+ * PromoCode.orders
  */
-export type PromoCode$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PromoCode$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Payment
+   * Select specific fields to fetch from the Order
    */
-  select?: Prisma.PaymentSelect<ExtArgs> | null
+  select?: Prisma.OrderSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Payment
+   * Omit specific fields from the Order
    */
-  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  omit?: Prisma.OrderOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.PaymentInclude<ExtArgs> | null
-  where?: Prisma.PaymentWhereInput
-  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
-  cursor?: Prisma.PaymentWhereUniqueInput
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
 }
 
 /**

@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { SiteHeader } from '@/components/layout/site-header'
+import { Suspense } from 'react'
+import { HeaderWithSession } from '@/components/layout/header-with-session'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { getSession } from '@/lib/session'
 import { getEventBySlug, getRelatedEvents, isSoldOut, getMinPrice } from '@/features/events'
+import { getUserCalendars } from '@/features/calendar/queries'
 import { EventHero } from '@/components/events/event-hero'
 import { EventMeta } from '@/components/events/event-meta'
 import { EventAbout } from '@/components/events/event-about'
@@ -17,6 +19,9 @@ import { EventOrganizer } from '@/components/events/event-organizer'
 import { RelatedEvents } from '@/components/events/related-events'
 import { MobileTicketBar } from '@/components/events/mobile-ticket-bar'
 import { SectionReveal } from '@/components/events/section-reveal'
+import { EventProgramme } from '@/components/events/event-programme'
+import { EventReviewsSection } from '@/features/reviews/components/event-reviews-section'
+import { getEventReviews, getUserEventReviewStatus } from '@/features/reviews/actions'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -63,14 +68,23 @@ export default async function EventDetailPage({ params }: PageProps) {
   const isReserved = event.seatingType === 'RESERVED' || event.seatingType === 'MIXED'
   const isLoggedIn = Boolean(session)
 
-  // Fetch related events in parallel (non-blocking for page render)
-  const relatedEventsPromise = getRelatedEvents(event.id, event.category?.id ?? null, 6)
+  // Fetch related events + user calendars + reviews in parallel
+  const [relatedEvents, userCalendars, reviews, reviewStatus] = await Promise.all([
+    getRelatedEvents(event.id, event.category?.id ?? null, 6),
+    session ? getUserCalendars(session.userId) : Promise.resolve([]),
+    event.status === 'COMPLETED' ? getEventReviews(event.id) : Promise.resolve([]),
+    session && event.status === 'COMPLETED'
+      ? getUserEventReviewStatus(event.id)
+      : Promise.resolve({ canReview: false, hasReviewed: false, ticketId: null }),
+  ])
 
-  const relatedEvents = await relatedEventsPromise
+  const hasPassed = event.status === 'COMPLETED'
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-[#0a0a0a]">
-      <SiteHeader userEmail={session?.email} />
+    <div className="relative flex min-h-screen flex-col bg-background">
+      <Suspense>
+        <HeaderWithSession />
+      </Suspense>
 
       <main className="flex-1">
         {/* ── Cinematic Hero ─────────────────────────────────────────── */}
@@ -81,8 +95,8 @@ export default async function EventDetailPage({ params }: PageProps) {
           <div
             className={`w-full py-3 text-center text-[13px] font-semibold ${
               event.status === 'CANCELLED'
-                ? 'bg-red-500/10 text-red-400'
-                : 'bg-white/5 text-white/60'
+                ? 'bg-red-500/10 text-red-600 dark:text-red-400'
+                : 'bg-muted text-muted-foreground'
             }`}
             role="alert"
           >
@@ -93,9 +107,23 @@ export default async function EventDetailPage({ params }: PageProps) {
         )}
 
         {/* ── Meta strip ─────────────────────────────────────────────── */}
-        <div className="border-b border-white/8 bg-[#0a0a0a]">
+        <div className="border-border/60 border-b bg-background">
           <div className="mx-auto max-w-[1120px] px-5 py-8 sm:px-8">
-            <EventMeta event={event} />
+            <EventMeta
+              event={event}
+              calendarProps={
+                isLoggedIn
+                  ? {
+                      switchEventId: event.id,
+                      calendars: userCalendars.map((c) => ({
+                        id: c.id,
+                        title: c.title,
+                        color: c.color,
+                      })),
+                    }
+                  : undefined
+              }
+            />
           </div>
         </div>
 
@@ -108,6 +136,13 @@ export default async function EventDetailPage({ params }: PageProps) {
               {event.description && (
                 <SectionReveal>
                   <EventAbout description={event.description} />
+                </SectionReveal>
+              )}
+
+              {/* Programme / Agenda */}
+              {event.scheduleItems && event.scheduleItems.length > 0 && (
+                <SectionReveal>
+                  <EventProgramme items={event.scheduleItems} />
                 </SectionReveal>
               )}
 
@@ -133,9 +168,15 @@ export default async function EventDetailPage({ params }: PageProps) {
               )}
 
               {/* Location */}
-              {event.venue && (
+              {(event.venueName || event.venue) && (
                 <SectionReveal>
-                  <EventLocation venue={event.venue} />
+                  <EventLocation
+                    venueName={event.venueName}
+                    venueAddress={event.venueAddress}
+                    venueCity={event.venueCity}
+                    venueState={event.venueState}
+                    venue={event.venue}
+                  />
                 </SectionReveal>
               )}
 
@@ -153,6 +194,17 @@ export default async function EventDetailPage({ params }: PageProps) {
               <SectionReveal>
                 <EventOrganizer organizer={event.organizer} />
               </SectionReveal>
+
+              {/* Reviews — only shown when the event has completed */}
+              {hasPassed && (
+                <SectionReveal>
+                  <EventReviewsSection
+                    reviews={reviews}
+                    pendingTicketId={reviewStatus.canReview ? reviewStatus.ticketId : null}
+                    eventTitle={event.title}
+                  />
+                </SectionReveal>
+              )}
             </div>
 
             {/* ── Right column (desktop sticky ticket panel) ─────────── */}
@@ -163,7 +215,7 @@ export default async function EventDetailPage({ params }: PageProps) {
 
           {/* ── Related Events ─────────────────────────────────────── */}
           {relatedEvents.length > 0 && (
-            <div className="mt-20 border-t border-white/8 pt-16 sm:mt-24 sm:pt-20">
+            <div className="mt-20 border-t border-border/60 pt-16 sm:mt-24 sm:pt-20">
               <SectionReveal>
                 <RelatedEvents events={relatedEvents} currentEventId={event.id} />
               </SectionReveal>

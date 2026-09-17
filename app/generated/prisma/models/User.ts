@@ -211,12 +211,16 @@ export type UserWhereInput = {
   organizer?: Prisma.XOR<Prisma.OrganizerNullableScalarRelationFilter, Prisma.OrganizerWhereInput> | null
   reservations?: Prisma.ReservationListRelationFilter
   tickets?: Prisma.TicketListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
   organizerApplication?: Prisma.XOR<Prisma.OrganizerApplicationNullableScalarRelationFilter, Prisma.OrganizerApplicationWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
   reviews?: Prisma.EventReviewListRelationFilter
   refundRequests?: Prisma.RefundRequestListRelationFilter
   initiatedGroups?: Prisma.GroupOrderListRelationFilter
   claimedSlots?: Prisma.GroupOrderSlotListRelationFilter
+  calendars?: Prisma.UserCalendarListRelationFilter
+  sharedCalendars?: Prisma.CalendarShareListRelationFilter
+  waitlistEntries?: Prisma.WaitlistEntryListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -233,12 +237,16 @@ export type UserOrderByWithRelationInput = {
   organizer?: Prisma.OrganizerOrderByWithRelationInput
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
   tickets?: Prisma.TicketOrderByRelationAggregateInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
   organizerApplication?: Prisma.OrganizerApplicationOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   reviews?: Prisma.EventReviewOrderByRelationAggregateInput
   refundRequests?: Prisma.RefundRequestOrderByRelationAggregateInput
   initiatedGroups?: Prisma.GroupOrderOrderByRelationAggregateInput
   claimedSlots?: Prisma.GroupOrderSlotOrderByRelationAggregateInput
+  calendars?: Prisma.UserCalendarOrderByRelationAggregateInput
+  sharedCalendars?: Prisma.CalendarShareOrderByRelationAggregateInput
+  waitlistEntries?: Prisma.WaitlistEntryOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -258,12 +266,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   organizer?: Prisma.XOR<Prisma.OrganizerNullableScalarRelationFilter, Prisma.OrganizerWhereInput> | null
   reservations?: Prisma.ReservationListRelationFilter
   tickets?: Prisma.TicketListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
   organizerApplication?: Prisma.XOR<Prisma.OrganizerApplicationNullableScalarRelationFilter, Prisma.OrganizerApplicationWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
   reviews?: Prisma.EventReviewListRelationFilter
   refundRequests?: Prisma.RefundRequestListRelationFilter
   initiatedGroups?: Prisma.GroupOrderListRelationFilter
   claimedSlots?: Prisma.GroupOrderSlotListRelationFilter
+  calendars?: Prisma.UserCalendarListRelationFilter
+  sharedCalendars?: Prisma.CalendarShareListRelationFilter
+  waitlistEntries?: Prisma.WaitlistEntryListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -308,12 +320,16 @@ export type UserCreateInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -330,12 +346,16 @@ export type UserUncheckedCreateInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -352,12 +372,16 @@ export type UserUpdateInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -374,12 +398,16 @@ export type UserUncheckedUpdateInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -562,6 +590,20 @@ export type UserUpdateOneRequiredWithoutTicketsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTicketsInput, Prisma.UserUpdateWithoutTicketsInput>, Prisma.UserUncheckedUpdateWithoutTicketsInput>
 }
 
+export type UserCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOrdersInput, Prisma.UserUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOrdersInput, Prisma.UserUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.UserUpsertWithoutOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
+}
+
 export type UserCreateNestedOneWithoutPaymentsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentsInput, Prisma.UserUncheckedCreateWithoutPaymentsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentsInput
@@ -634,6 +676,48 @@ export type UserUpdateOneWithoutClaimedSlotsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClaimedSlotsInput, Prisma.UserUpdateWithoutClaimedSlotsInput>, Prisma.UserUncheckedUpdateWithoutClaimedSlotsInput>
 }
 
+export type UserCreateNestedOneWithoutCalendarsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCalendarsInput, Prisma.UserUncheckedCreateWithoutCalendarsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCalendarsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCalendarsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCalendarsInput, Prisma.UserUncheckedCreateWithoutCalendarsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCalendarsInput
+  upsert?: Prisma.UserUpsertWithoutCalendarsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCalendarsInput, Prisma.UserUpdateWithoutCalendarsInput>, Prisma.UserUncheckedUpdateWithoutCalendarsInput>
+}
+
+export type UserCreateNestedOneWithoutSharedCalendarsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedCalendarsInput, Prisma.UserUncheckedCreateWithoutSharedCalendarsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedCalendarsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSharedCalendarsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSharedCalendarsInput, Prisma.UserUncheckedCreateWithoutSharedCalendarsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSharedCalendarsInput
+  upsert?: Prisma.UserUpsertWithoutSharedCalendarsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSharedCalendarsInput, Prisma.UserUpdateWithoutSharedCalendarsInput>, Prisma.UserUncheckedUpdateWithoutSharedCalendarsInput>
+}
+
+export type UserCreateNestedOneWithoutWaitlistEntriesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWaitlistEntriesInput, Prisma.UserUncheckedCreateWithoutWaitlistEntriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWaitlistEntriesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWaitlistEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWaitlistEntriesInput, Prisma.UserUncheckedCreateWithoutWaitlistEntriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWaitlistEntriesInput
+  upsert?: Prisma.UserUpsertWithoutWaitlistEntriesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWaitlistEntriesInput, Prisma.UserUpdateWithoutWaitlistEntriesInput>, Prisma.UserUncheckedUpdateWithoutWaitlistEntriesInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -647,12 +731,16 @@ export type UserCreateWithoutAccountsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -668,12 +756,16 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -705,12 +797,16 @@ export type UserUpdateWithoutAccountsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -726,12 +822,16 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -747,12 +847,16 @@ export type UserCreateWithoutSessionsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -768,12 +872,16 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -805,12 +913,16 @@ export type UserUpdateWithoutSessionsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -826,12 +938,16 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizerInput = {
@@ -847,12 +963,16 @@ export type UserCreateWithoutOrganizerInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizerInput = {
@@ -868,12 +988,16 @@ export type UserUncheckedCreateWithoutOrganizerInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizerInput = {
@@ -905,12 +1029,16 @@ export type UserUpdateWithoutOrganizerInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizerInput = {
@@ -926,12 +1054,16 @@ export type UserUncheckedUpdateWithoutOrganizerInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizerApplicationInput = {
@@ -948,11 +1080,15 @@ export type UserCreateWithoutOrganizerApplicationInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizerApplicationInput = {
@@ -969,11 +1105,15 @@ export type UserUncheckedCreateWithoutOrganizerApplicationInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizerApplicationInput = {
@@ -1006,11 +1146,15 @@ export type UserUpdateWithoutOrganizerApplicationInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizerApplicationInput = {
@@ -1027,11 +1171,15 @@ export type UserUncheckedUpdateWithoutOrganizerApplicationInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReservationsInput = {
@@ -1047,12 +1195,16 @@ export type UserCreateWithoutReservationsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReservationsInput = {
@@ -1068,12 +1220,16 @@ export type UserUncheckedCreateWithoutReservationsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReservationsInput = {
@@ -1105,12 +1261,16 @@ export type UserUpdateWithoutReservationsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReservationsInput = {
@@ -1126,12 +1286,16 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTicketsInput = {
@@ -1147,12 +1311,16 @@ export type UserCreateWithoutTicketsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTicketsInput = {
@@ -1168,12 +1336,16 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTicketsInput = {
@@ -1205,12 +1377,16 @@ export type UserUpdateWithoutTicketsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketsInput = {
@@ -1226,12 +1402,132 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutOrdersInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutOrdersInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutOrdersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOrdersInput, Prisma.UserUncheckedCreateWithoutOrdersInput>
+}
+
+export type UserUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOrdersInput, Prisma.UserUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOrdersInput, Prisma.UserUncheckedCreateWithoutOrdersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOrdersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOrdersInput, Prisma.UserUncheckedUpdateWithoutOrdersInput>
+}
+
+export type UserUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1248,11 +1544,15 @@ export type UserCreateWithoutPaymentsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1269,11 +1569,15 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1306,11 +1610,15 @@ export type UserUpdateWithoutPaymentsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1327,11 +1635,15 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsInput = {
@@ -1348,11 +1660,15 @@ export type UserCreateWithoutReviewsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
@@ -1369,11 +1685,15 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -1406,11 +1726,15 @@ export type UserUpdateWithoutReviewsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -1427,11 +1751,15 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRefundRequestsInput = {
@@ -1448,11 +1776,15 @@ export type UserCreateWithoutRefundRequestsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRefundRequestsInput = {
@@ -1469,11 +1801,15 @@ export type UserUncheckedCreateWithoutRefundRequestsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRefundRequestsInput = {
@@ -1506,11 +1842,15 @@ export type UserUpdateWithoutRefundRequestsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefundRequestsInput = {
@@ -1527,11 +1867,15 @@ export type UserUncheckedUpdateWithoutRefundRequestsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInitiatedGroupsInput = {
@@ -1548,11 +1892,15 @@ export type UserCreateWithoutInitiatedGroupsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInitiatedGroupsInput = {
@@ -1569,11 +1917,15 @@ export type UserUncheckedCreateWithoutInitiatedGroupsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInitiatedGroupsInput = {
@@ -1606,11 +1958,15 @@ export type UserUpdateWithoutInitiatedGroupsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInitiatedGroupsInput = {
@@ -1627,11 +1983,15 @@ export type UserUncheckedUpdateWithoutInitiatedGroupsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutClaimedSlotsInput = {
@@ -1648,11 +2008,15 @@ export type UserCreateWithoutClaimedSlotsInput = {
   organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutClaimedSlotsInput = {
@@ -1669,11 +2033,15 @@ export type UserUncheckedCreateWithoutClaimedSlotsInput = {
   organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
   refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
   initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutClaimedSlotsInput = {
@@ -1706,11 +2074,15 @@ export type UserUpdateWithoutClaimedSlotsInput = {
   organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClaimedSlotsInput = {
@@ -1727,11 +2099,363 @@ export type UserUncheckedUpdateWithoutClaimedSlotsInput = {
   organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
   refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
   initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCalendarsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCalendarsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCalendarsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCalendarsInput, Prisma.UserUncheckedCreateWithoutCalendarsInput>
+}
+
+export type UserUpsertWithoutCalendarsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCalendarsInput, Prisma.UserUncheckedUpdateWithoutCalendarsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCalendarsInput, Prisma.UserUncheckedCreateWithoutCalendarsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCalendarsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCalendarsInput, Prisma.UserUncheckedUpdateWithoutCalendarsInput>
+}
+
+export type UserUpdateWithoutCalendarsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCalendarsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSharedCalendarsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSharedCalendarsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSharedCalendarsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedCalendarsInput, Prisma.UserUncheckedCreateWithoutSharedCalendarsInput>
+}
+
+export type UserUpsertWithoutSharedCalendarsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSharedCalendarsInput, Prisma.UserUncheckedUpdateWithoutSharedCalendarsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSharedCalendarsInput, Prisma.UserUncheckedCreateWithoutSharedCalendarsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSharedCalendarsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSharedCalendarsInput, Prisma.UserUncheckedUpdateWithoutSharedCalendarsInput>
+}
+
+export type UserUpdateWithoutSharedCalendarsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSharedCalendarsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWaitlistEntriesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareCreateNestedManyWithoutSharedWithInput
+}
+
+export type UserUncheckedCreateWithoutWaitlistEntriesInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  organizer?: Prisma.OrganizerUncheckedCreateNestedOneWithoutUserInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedCreateNestedOneWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.EventReviewUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutUserInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedCreateNestedManyWithoutInitiatorInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutClaimerInput
+  calendars?: Prisma.UserCalendarUncheckedCreateNestedManyWithoutUserInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedCreateNestedManyWithoutSharedWithInput
+}
+
+export type UserCreateOrConnectWithoutWaitlistEntriesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWaitlistEntriesInput, Prisma.UserUncheckedCreateWithoutWaitlistEntriesInput>
+}
+
+export type UserUpsertWithoutWaitlistEntriesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWaitlistEntriesInput, Prisma.UserUncheckedUpdateWithoutWaitlistEntriesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWaitlistEntriesInput, Prisma.UserUncheckedCreateWithoutWaitlistEntriesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWaitlistEntriesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWaitlistEntriesInput, Prisma.UserUncheckedUpdateWithoutWaitlistEntriesInput>
+}
+
+export type UserUpdateWithoutWaitlistEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUpdateManyWithoutSharedWithNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWaitlistEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  organizer?: Prisma.OrganizerUncheckedUpdateOneWithoutUserNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  organizerApplication?: Prisma.OrganizerApplicationUncheckedUpdateOneWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.EventReviewUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestUncheckedUpdateManyWithoutUserNestedInput
+  initiatedGroups?: Prisma.GroupOrderUncheckedUpdateManyWithoutInitiatorNestedInput
+  claimedSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutClaimerNestedInput
+  calendars?: Prisma.UserCalendarUncheckedUpdateManyWithoutUserNestedInput
+  sharedCalendars?: Prisma.CalendarShareUncheckedUpdateManyWithoutSharedWithNestedInput
 }
 
 
@@ -1744,11 +2468,15 @@ export type UserCountOutputType = {
   sessions: number
   reservations: number
   tickets: number
+  orders: number
   payments: number
   reviews: number
   refundRequests: number
   initiatedGroups: number
   claimedSlots: number
+  calendars: number
+  sharedCalendars: number
+  waitlistEntries: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1756,11 +2484,15 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   reservations?: boolean | UserCountOutputTypeCountReservationsArgs
   tickets?: boolean | UserCountOutputTypeCountTicketsArgs
+  orders?: boolean | UserCountOutputTypeCountOrdersArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
   reviews?: boolean | UserCountOutputTypeCountReviewsArgs
   refundRequests?: boolean | UserCountOutputTypeCountRefundRequestsArgs
   initiatedGroups?: boolean | UserCountOutputTypeCountInitiatedGroupsArgs
   claimedSlots?: boolean | UserCountOutputTypeCountClaimedSlotsArgs
+  calendars?: boolean | UserCountOutputTypeCountCalendarsArgs
+  sharedCalendars?: boolean | UserCountOutputTypeCountSharedCalendarsArgs
+  waitlistEntries?: boolean | UserCountOutputTypeCountWaitlistEntriesArgs
 }
 
 /**
@@ -1804,6 +2536,13 @@ export type UserCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PaymentWhereInput
 }
@@ -1836,6 +2575,27 @@ export type UserCountOutputTypeCountClaimedSlotsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.GroupOrderSlotWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCalendarsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserCalendarWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSharedCalendarsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarShareWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWaitlistEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WaitlistEntryWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1851,12 +2611,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   organizer?: boolean | Prisma.User$organizerArgs<ExtArgs>
   reservations?: boolean | Prisma.User$reservationsArgs<ExtArgs>
   tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
+  orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   organizerApplication?: boolean | Prisma.User$organizerApplicationArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   refundRequests?: boolean | Prisma.User$refundRequestsArgs<ExtArgs>
   initiatedGroups?: boolean | Prisma.User$initiatedGroupsArgs<ExtArgs>
   claimedSlots?: boolean | Prisma.User$claimedSlotsArgs<ExtArgs>
+  calendars?: boolean | Prisma.User$calendarsArgs<ExtArgs>
+  sharedCalendars?: boolean | Prisma.User$sharedCalendarsArgs<ExtArgs>
+  waitlistEntries?: boolean | Prisma.User$waitlistEntriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1900,12 +2664,16 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   organizer?: boolean | Prisma.User$organizerArgs<ExtArgs>
   reservations?: boolean | Prisma.User$reservationsArgs<ExtArgs>
   tickets?: boolean | Prisma.User$ticketsArgs<ExtArgs>
+  orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   organizerApplication?: boolean | Prisma.User$organizerApplicationArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   refundRequests?: boolean | Prisma.User$refundRequestsArgs<ExtArgs>
   initiatedGroups?: boolean | Prisma.User$initiatedGroupsArgs<ExtArgs>
   claimedSlots?: boolean | Prisma.User$claimedSlotsArgs<ExtArgs>
+  calendars?: boolean | Prisma.User$calendarsArgs<ExtArgs>
+  sharedCalendars?: boolean | Prisma.User$sharedCalendarsArgs<ExtArgs>
+  waitlistEntries?: boolean | Prisma.User$waitlistEntriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1919,12 +2687,16 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     organizer: Prisma.$OrganizerPayload<ExtArgs> | null
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
     tickets: Prisma.$TicketPayload<ExtArgs>[]
+    orders: Prisma.$OrderPayload<ExtArgs>[]
     organizerApplication: Prisma.$OrganizerApplicationPayload<ExtArgs> | null
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     reviews: Prisma.$EventReviewPayload<ExtArgs>[]
     refundRequests: Prisma.$RefundRequestPayload<ExtArgs>[]
     initiatedGroups: Prisma.$GroupOrderPayload<ExtArgs>[]
     claimedSlots: Prisma.$GroupOrderSlotPayload<ExtArgs>[]
+    calendars: Prisma.$UserCalendarPayload<ExtArgs>[]
+    sharedCalendars: Prisma.$CalendarSharePayload<ExtArgs>[]
+    waitlistEntries: Prisma.$WaitlistEntryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2334,12 +3106,16 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   organizer<T extends Prisma.User$organizerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizerArgs<ExtArgs>>): Prisma.Prisma__OrganizerClient<runtime.Types.Result.GetResult<Prisma.$OrganizerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reservations<T extends Prisma.User$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tickets<T extends Prisma.User$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organizerApplication<T extends Prisma.User$organizerApplicationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizerApplicationArgs<ExtArgs>>): Prisma.Prisma__OrganizerApplicationClient<runtime.Types.Result.GetResult<Prisma.$OrganizerApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refundRequests<T extends Prisma.User$refundRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refundRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   initiatedGroups<T extends Prisma.User$initiatedGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$initiatedGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   claimedSlots<T extends Prisma.User$claimedSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$claimedSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  calendars<T extends Prisma.User$calendarsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$calendarsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserCalendarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sharedCalendars<T extends Prisma.User$sharedCalendarsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharedCalendarsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  waitlistEntries<T extends Prisma.User$waitlistEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$waitlistEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WaitlistEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2885,6 +3661,30 @@ export type User$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
+ * User.orders
+ */
+export type User$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
  * User.organizerApplication
  */
 export type User$organizerApplicationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3021,6 +3821,78 @@ export type User$claimedSlotsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.GroupOrderSlotScalarFieldEnum | Prisma.GroupOrderSlotScalarFieldEnum[]
+}
+
+/**
+ * User.calendars
+ */
+export type User$calendarsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserCalendar
+   */
+  select?: Prisma.UserCalendarSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserCalendar
+   */
+  omit?: Prisma.UserCalendarOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserCalendarInclude<ExtArgs> | null
+  where?: Prisma.UserCalendarWhereInput
+  orderBy?: Prisma.UserCalendarOrderByWithRelationInput | Prisma.UserCalendarOrderByWithRelationInput[]
+  cursor?: Prisma.UserCalendarWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserCalendarScalarFieldEnum | Prisma.UserCalendarScalarFieldEnum[]
+}
+
+/**
+ * User.sharedCalendars
+ */
+export type User$sharedCalendarsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarShare
+   */
+  select?: Prisma.CalendarShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarShare
+   */
+  omit?: Prisma.CalendarShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarShareInclude<ExtArgs> | null
+  where?: Prisma.CalendarShareWhereInput
+  orderBy?: Prisma.CalendarShareOrderByWithRelationInput | Prisma.CalendarShareOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarShareScalarFieldEnum | Prisma.CalendarShareScalarFieldEnum[]
+}
+
+/**
+ * User.waitlistEntries
+ */
+export type User$waitlistEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WaitlistEntry
+   */
+  select?: Prisma.WaitlistEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WaitlistEntry
+   */
+  omit?: Prisma.WaitlistEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WaitlistEntryInclude<ExtArgs> | null
+  where?: Prisma.WaitlistEntryWhereInput
+  orderBy?: Prisma.WaitlistEntryOrderByWithRelationInput | Prisma.WaitlistEntryOrderByWithRelationInput[]
+  cursor?: Prisma.WaitlistEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WaitlistEntryScalarFieldEnum | Prisma.WaitlistEntryScalarFieldEnum[]
 }
 
 /**

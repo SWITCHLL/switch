@@ -35,3 +35,37 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export const EVENTS_BUCKET = process.env.SUPABASE_EVENTS_BUCKET ?? 'event-images'
+
+// ─── Storage helpers ──────────────────────────────────────────────────────────
+
+/**
+ * Extract the storage path from a full Supabase public URL.
+ * e.g. "https://xxx.supabase.co/storage/v1/object/public/event-images/events/uid/file.jpg"
+ * → "events/uid/file.jpg"
+ *
+ * Returns null if the URL doesn't belong to this bucket.
+ */
+export function storagePathFromUrl(url: string): string | null {
+  try {
+    const marker = `/object/public/${EVENTS_BUCKET}/`
+    const idx = url.indexOf(marker)
+    if (idx === -1) return null
+    return decodeURIComponent(url.slice(idx + marker.length))
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Delete one or more files from Supabase Storage by their public URLs.
+ * Failures are logged but never thrown — storage cleanup is best-effort.
+ */
+export async function deleteStorageFiles(urls: string[]): Promise<void> {
+  const paths = urls.map(storagePathFromUrl).filter((p): p is string => p !== null)
+  if (paths.length === 0) return
+
+  const { error } = await supabaseAdmin.storage.from(EVENTS_BUCKET).remove(paths)
+  if (error) {
+    console.error('[storage] Failed to delete files:', paths, error.message)
+  }
+}

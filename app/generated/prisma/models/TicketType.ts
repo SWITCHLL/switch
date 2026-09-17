@@ -30,12 +30,20 @@ export type TicketTypeAvgAggregateOutputType = {
   price: number | null
   quantity: number | null
   sold: number | null
+  minPerOrder: number | null
+  maxPerOrder: number | null
+  maxPerUser: number | null
+  tableCapacity: number | null
 }
 
 export type TicketTypeSumAggregateOutputType = {
   price: number | null
   quantity: number | null
   sold: number | null
+  minPerOrder: number | null
+  maxPerOrder: number | null
+  maxPerUser: number | null
+  tableCapacity: number | null
 }
 
 export type TicketTypeMinAggregateOutputType = {
@@ -52,6 +60,15 @@ export type TicketTypeMinAggregateOutputType = {
   status: $Enums.TicketTypeStatus | null
   createdAt: Date | null
   updatedAt: Date | null
+  minPerOrder: number | null
+  maxPerOrder: number | null
+  maxPerUser: number | null
+  visibility: $Enums.TicketVisibility | null
+  accessPasswordHash: string | null
+  directLinkToken: string | null
+  isTableType: boolean | null
+  tableCapacity: number | null
+  requiresAssignedSeating: boolean | null
 }
 
 export type TicketTypeMaxAggregateOutputType = {
@@ -68,6 +85,15 @@ export type TicketTypeMaxAggregateOutputType = {
   status: $Enums.TicketTypeStatus | null
   createdAt: Date | null
   updatedAt: Date | null
+  minPerOrder: number | null
+  maxPerOrder: number | null
+  maxPerUser: number | null
+  visibility: $Enums.TicketVisibility | null
+  accessPasswordHash: string | null
+  directLinkToken: string | null
+  isTableType: boolean | null
+  tableCapacity: number | null
+  requiresAssignedSeating: boolean | null
 }
 
 export type TicketTypeCountAggregateOutputType = {
@@ -84,6 +110,15 @@ export type TicketTypeCountAggregateOutputType = {
   status: number
   createdAt: number
   updatedAt: number
+  minPerOrder: number
+  maxPerOrder: number
+  maxPerUser: number
+  visibility: number
+  accessPasswordHash: number
+  directLinkToken: number
+  isTableType: number
+  tableCapacity: number
+  requiresAssignedSeating: number
   _all: number
 }
 
@@ -92,12 +127,20 @@ export type TicketTypeAvgAggregateInputType = {
   price?: true
   quantity?: true
   sold?: true
+  minPerOrder?: true
+  maxPerOrder?: true
+  maxPerUser?: true
+  tableCapacity?: true
 }
 
 export type TicketTypeSumAggregateInputType = {
   price?: true
   quantity?: true
   sold?: true
+  minPerOrder?: true
+  maxPerOrder?: true
+  maxPerUser?: true
+  tableCapacity?: true
 }
 
 export type TicketTypeMinAggregateInputType = {
@@ -114,6 +157,15 @@ export type TicketTypeMinAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  minPerOrder?: true
+  maxPerOrder?: true
+  maxPerUser?: true
+  visibility?: true
+  accessPasswordHash?: true
+  directLinkToken?: true
+  isTableType?: true
+  tableCapacity?: true
+  requiresAssignedSeating?: true
 }
 
 export type TicketTypeMaxAggregateInputType = {
@@ -130,6 +182,15 @@ export type TicketTypeMaxAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  minPerOrder?: true
+  maxPerOrder?: true
+  maxPerUser?: true
+  visibility?: true
+  accessPasswordHash?: true
+  directLinkToken?: true
+  isTableType?: true
+  tableCapacity?: true
+  requiresAssignedSeating?: true
 }
 
 export type TicketTypeCountAggregateInputType = {
@@ -146,6 +207,15 @@ export type TicketTypeCountAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  minPerOrder?: true
+  maxPerOrder?: true
+  maxPerUser?: true
+  visibility?: true
+  accessPasswordHash?: true
+  directLinkToken?: true
+  isTableType?: true
+  tableCapacity?: true
+  requiresAssignedSeating?: true
   _all?: true
 }
 
@@ -249,6 +319,15 @@ export type TicketTypeGroupByOutputType = {
   status: $Enums.TicketTypeStatus
   createdAt: Date
   updatedAt: Date
+  minPerOrder: number | null
+  maxPerOrder: number | null
+  maxPerUser: number | null
+  visibility: $Enums.TicketVisibility
+  accessPasswordHash: string | null
+  directLinkToken: string | null
+  isTableType: boolean
+  tableCapacity: number | null
+  requiresAssignedSeating: boolean
   _count: TicketTypeCountAggregateOutputType | null
   _avg: TicketTypeAvgAggregateOutputType | null
   _sum: TicketTypeSumAggregateOutputType | null
@@ -288,11 +367,24 @@ export type TicketTypeWhereInput = {
   status?: Prisma.EnumTicketTypeStatusFilter<"TicketType"> | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFilter<"TicketType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TicketType"> | Date | string
+  minPerOrder?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  maxPerOrder?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  maxPerUser?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  visibility?: Prisma.EnumTicketVisibilityFilter<"TicketType"> | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.StringNullableFilter<"TicketType"> | string | null
+  directLinkToken?: Prisma.StringNullableFilter<"TicketType"> | string | null
+  isTableType?: Prisma.BoolFilter<"TicketType"> | boolean
+  tableCapacity?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  requiresAssignedSeating?: Prisma.BoolFilter<"TicketType"> | boolean
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   eventSeats?: Prisma.EventSeatListRelationFilter
   tickets?: Prisma.TicketListRelationFilter
   groupSlots?: Prisma.GroupOrderSlotListRelationFilter
   promoCodes?: Prisma.PromoCodeListRelationFilter
+  waitlistEntries?: Prisma.WaitlistEntryListRelationFilter
+  tableAssignments?: Prisma.TableSeatAssignmentListRelationFilter
+  timeSlotCapacities?: Prisma.TimeSlotCapacityListRelationFilter
+  timeSlotTickets?: Prisma.TimeSlotTicketListRelationFilter
 }
 
 export type TicketTypeOrderByWithRelationInput = {
@@ -309,15 +401,29 @@ export type TicketTypeOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrderInput | Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  accessPasswordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  directLinkToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  isTableType?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrderInput | Prisma.SortOrder
+  requiresAssignedSeating?: Prisma.SortOrder
   event?: Prisma.EventOrderByWithRelationInput
   eventSeats?: Prisma.EventSeatOrderByRelationAggregateInput
   tickets?: Prisma.TicketOrderByRelationAggregateInput
   groupSlots?: Prisma.GroupOrderSlotOrderByRelationAggregateInput
   promoCodes?: Prisma.PromoCodeOrderByRelationAggregateInput
+  waitlistEntries?: Prisma.WaitlistEntryOrderByRelationAggregateInput
+  tableAssignments?: Prisma.TableSeatAssignmentOrderByRelationAggregateInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityOrderByRelationAggregateInput
+  timeSlotTickets?: Prisma.TimeSlotTicketOrderByRelationAggregateInput
 }
 
 export type TicketTypeWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  directLinkToken?: string
   AND?: Prisma.TicketTypeWhereInput | Prisma.TicketTypeWhereInput[]
   OR?: Prisma.TicketTypeWhereInput[]
   NOT?: Prisma.TicketTypeWhereInput | Prisma.TicketTypeWhereInput[]
@@ -333,12 +439,24 @@ export type TicketTypeWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumTicketTypeStatusFilter<"TicketType"> | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFilter<"TicketType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TicketType"> | Date | string
+  minPerOrder?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  maxPerOrder?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  maxPerUser?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  visibility?: Prisma.EnumTicketVisibilityFilter<"TicketType"> | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.StringNullableFilter<"TicketType"> | string | null
+  isTableType?: Prisma.BoolFilter<"TicketType"> | boolean
+  tableCapacity?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  requiresAssignedSeating?: Prisma.BoolFilter<"TicketType"> | boolean
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   eventSeats?: Prisma.EventSeatListRelationFilter
   tickets?: Prisma.TicketListRelationFilter
   groupSlots?: Prisma.GroupOrderSlotListRelationFilter
   promoCodes?: Prisma.PromoCodeListRelationFilter
-}, "id">
+  waitlistEntries?: Prisma.WaitlistEntryListRelationFilter
+  tableAssignments?: Prisma.TableSeatAssignmentListRelationFilter
+  timeSlotCapacities?: Prisma.TimeSlotCapacityListRelationFilter
+  timeSlotTickets?: Prisma.TimeSlotTicketListRelationFilter
+}, "id" | "directLinkToken">
 
 export type TicketTypeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -354,6 +472,15 @@ export type TicketTypeOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrderInput | Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  accessPasswordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  directLinkToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  isTableType?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrderInput | Prisma.SortOrder
+  requiresAssignedSeating?: Prisma.SortOrder
   _count?: Prisma.TicketTypeCountOrderByAggregateInput
   _avg?: Prisma.TicketTypeAvgOrderByAggregateInput
   _max?: Prisma.TicketTypeMaxOrderByAggregateInput
@@ -378,6 +505,15 @@ export type TicketTypeScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumTicketTypeStatusWithAggregatesFilter<"TicketType"> | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TicketType"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TicketType"> | Date | string
+  minPerOrder?: Prisma.IntNullableWithAggregatesFilter<"TicketType"> | number | null
+  maxPerOrder?: Prisma.IntNullableWithAggregatesFilter<"TicketType"> | number | null
+  maxPerUser?: Prisma.IntNullableWithAggregatesFilter<"TicketType"> | number | null
+  visibility?: Prisma.EnumTicketVisibilityWithAggregatesFilter<"TicketType"> | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.StringNullableWithAggregatesFilter<"TicketType"> | string | null
+  directLinkToken?: Prisma.StringNullableWithAggregatesFilter<"TicketType"> | string | null
+  isTableType?: Prisma.BoolWithAggregatesFilter<"TicketType"> | boolean
+  tableCapacity?: Prisma.IntNullableWithAggregatesFilter<"TicketType"> | number | null
+  requiresAssignedSeating?: Prisma.BoolWithAggregatesFilter<"TicketType"> | boolean
 }
 
 export type TicketTypeCreateInput = {
@@ -393,11 +529,24 @@ export type TicketTypeCreateInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
   eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUncheckedCreateInput = {
@@ -414,10 +563,23 @@ export type TicketTypeUncheckedCreateInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUpdateInput = {
@@ -433,11 +595,24 @@ export type TicketTypeUpdateInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
   eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateInput = {
@@ -454,10 +629,23 @@ export type TicketTypeUncheckedUpdateInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeCreateManyInput = {
@@ -474,6 +662,15 @@ export type TicketTypeCreateManyInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
 }
 
 export type TicketTypeUpdateManyMutationInput = {
@@ -489,6 +686,15 @@ export type TicketTypeUpdateManyMutationInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TicketTypeUncheckedUpdateManyInput = {
@@ -505,6 +711,15 @@ export type TicketTypeUncheckedUpdateManyInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TicketTypeListRelationFilter = {
@@ -531,12 +746,25 @@ export type TicketTypeCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  accessPasswordHash?: Prisma.SortOrder
+  directLinkToken?: Prisma.SortOrder
+  isTableType?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrder
+  requiresAssignedSeating?: Prisma.SortOrder
 }
 
 export type TicketTypeAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   sold?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrder
 }
 
 export type TicketTypeMaxOrderByAggregateInput = {
@@ -553,6 +781,15 @@ export type TicketTypeMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  accessPasswordHash?: Prisma.SortOrder
+  directLinkToken?: Prisma.SortOrder
+  isTableType?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrder
+  requiresAssignedSeating?: Prisma.SortOrder
 }
 
 export type TicketTypeMinOrderByAggregateInput = {
@@ -569,12 +806,25 @@ export type TicketTypeMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  accessPasswordHash?: Prisma.SortOrder
+  directLinkToken?: Prisma.SortOrder
+  isTableType?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrder
+  requiresAssignedSeating?: Prisma.SortOrder
 }
 
 export type TicketTypeSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   sold?: Prisma.SortOrder
+  minPerOrder?: Prisma.SortOrder
+  maxPerOrder?: Prisma.SortOrder
+  maxPerUser?: Prisma.SortOrder
+  tableCapacity?: Prisma.SortOrder
 }
 
 export type TicketTypeNullableScalarRelationFilter = {
@@ -631,6 +881,10 @@ export type TicketTypeUncheckedUpdateManyWithoutEventNestedInput = {
 
 export type EnumTicketTypeStatusFieldUpdateOperationsInput = {
   set?: $Enums.TicketTypeStatus
+}
+
+export type EnumTicketVisibilityFieldUpdateOperationsInput = {
+  set?: $Enums.TicketVisibility
 }
 
 export type TicketTypeCreateNestedOneWithoutEventSeatsInput = {
@@ -695,6 +949,62 @@ export type TicketTypeUpdateOneWithoutPromoCodesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TicketTypeUpdateToOneWithWhereWithoutPromoCodesInput, Prisma.TicketTypeUpdateWithoutPromoCodesInput>, Prisma.TicketTypeUncheckedUpdateWithoutPromoCodesInput>
 }
 
+export type TicketTypeCreateNestedOneWithoutWaitlistEntriesInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutWaitlistEntriesInput, Prisma.TicketTypeUncheckedCreateWithoutWaitlistEntriesInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutWaitlistEntriesInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+}
+
+export type TicketTypeUpdateOneRequiredWithoutWaitlistEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutWaitlistEntriesInput, Prisma.TicketTypeUncheckedCreateWithoutWaitlistEntriesInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutWaitlistEntriesInput
+  upsert?: Prisma.TicketTypeUpsertWithoutWaitlistEntriesInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TicketTypeUpdateToOneWithWhereWithoutWaitlistEntriesInput, Prisma.TicketTypeUpdateWithoutWaitlistEntriesInput>, Prisma.TicketTypeUncheckedUpdateWithoutWaitlistEntriesInput>
+}
+
+export type TicketTypeCreateNestedOneWithoutTimeSlotCapacitiesInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotCapacitiesInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutTimeSlotCapacitiesInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+}
+
+export type TicketTypeUpdateOneRequiredWithoutTimeSlotCapacitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotCapacitiesInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutTimeSlotCapacitiesInput
+  upsert?: Prisma.TicketTypeUpsertWithoutTimeSlotCapacitiesInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TicketTypeUpdateToOneWithWhereWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUpdateWithoutTimeSlotCapacitiesInput>, Prisma.TicketTypeUncheckedUpdateWithoutTimeSlotCapacitiesInput>
+}
+
+export type TicketTypeCreateNestedOneWithoutTimeSlotTicketsInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotTicketsInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotTicketsInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutTimeSlotTicketsInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+}
+
+export type TicketTypeUpdateOneRequiredWithoutTimeSlotTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotTicketsInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotTicketsInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutTimeSlotTicketsInput
+  upsert?: Prisma.TicketTypeUpsertWithoutTimeSlotTicketsInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TicketTypeUpdateToOneWithWhereWithoutTimeSlotTicketsInput, Prisma.TicketTypeUpdateWithoutTimeSlotTicketsInput>, Prisma.TicketTypeUncheckedUpdateWithoutTimeSlotTicketsInput>
+}
+
+export type TicketTypeCreateNestedOneWithoutTableAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutTableAssignmentsInput, Prisma.TicketTypeUncheckedCreateWithoutTableAssignmentsInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutTableAssignmentsInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+}
+
+export type TicketTypeUpdateOneRequiredWithoutTableAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.TicketTypeCreateWithoutTableAssignmentsInput, Prisma.TicketTypeUncheckedCreateWithoutTableAssignmentsInput>
+  connectOrCreate?: Prisma.TicketTypeCreateOrConnectWithoutTableAssignmentsInput
+  upsert?: Prisma.TicketTypeUpsertWithoutTableAssignmentsInput
+  connect?: Prisma.TicketTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TicketTypeUpdateToOneWithWhereWithoutTableAssignmentsInput, Prisma.TicketTypeUpdateWithoutTableAssignmentsInput>, Prisma.TicketTypeUncheckedUpdateWithoutTableAssignmentsInput>
+}
+
 export type TicketTypeCreateWithoutEventInput = {
   id?: string
   name: string
@@ -708,10 +1018,23 @@ export type TicketTypeCreateWithoutEventInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUncheckedCreateWithoutEventInput = {
@@ -727,10 +1050,23 @@ export type TicketTypeUncheckedCreateWithoutEventInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeCreateOrConnectWithoutEventInput = {
@@ -776,6 +1112,15 @@ export type TicketTypeScalarWhereInput = {
   status?: Prisma.EnumTicketTypeStatusFilter<"TicketType"> | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFilter<"TicketType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TicketType"> | Date | string
+  minPerOrder?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  maxPerOrder?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  maxPerUser?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  visibility?: Prisma.EnumTicketVisibilityFilter<"TicketType"> | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.StringNullableFilter<"TicketType"> | string | null
+  directLinkToken?: Prisma.StringNullableFilter<"TicketType"> | string | null
+  isTableType?: Prisma.BoolFilter<"TicketType"> | boolean
+  tableCapacity?: Prisma.IntNullableFilter<"TicketType"> | number | null
+  requiresAssignedSeating?: Prisma.BoolFilter<"TicketType"> | boolean
 }
 
 export type TicketTypeCreateWithoutEventSeatsInput = {
@@ -791,10 +1136,23 @@ export type TicketTypeCreateWithoutEventSeatsInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
   tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUncheckedCreateWithoutEventSeatsInput = {
@@ -811,9 +1169,22 @@ export type TicketTypeUncheckedCreateWithoutEventSeatsInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeCreateOrConnectWithoutEventSeatsInput = {
@@ -845,10 +1216,23 @@ export type TicketTypeUpdateWithoutEventSeatsInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateWithoutEventSeatsInput = {
@@ -865,9 +1249,22 @@ export type TicketTypeUncheckedUpdateWithoutEventSeatsInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeCreateWithoutTicketsInput = {
@@ -883,10 +1280,23 @@ export type TicketTypeCreateWithoutTicketsInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
   eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUncheckedCreateWithoutTicketsInput = {
@@ -903,9 +1313,22 @@ export type TicketTypeUncheckedCreateWithoutTicketsInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeCreateOrConnectWithoutTicketsInput = {
@@ -937,10 +1360,23 @@ export type TicketTypeUpdateWithoutTicketsInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
   eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateWithoutTicketsInput = {
@@ -957,9 +1393,22 @@ export type TicketTypeUncheckedUpdateWithoutTicketsInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeCreateWithoutGroupSlotsInput = {
@@ -975,10 +1424,23 @@ export type TicketTypeCreateWithoutGroupSlotsInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
   eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUncheckedCreateWithoutGroupSlotsInput = {
@@ -995,9 +1457,22 @@ export type TicketTypeUncheckedCreateWithoutGroupSlotsInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
   promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeCreateOrConnectWithoutGroupSlotsInput = {
@@ -1029,10 +1504,23 @@ export type TicketTypeUpdateWithoutGroupSlotsInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
   eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateWithoutGroupSlotsInput = {
@@ -1049,9 +1537,22 @@ export type TicketTypeUncheckedUpdateWithoutGroupSlotsInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeCreateWithoutPromoCodesInput = {
@@ -1067,10 +1568,23 @@ export type TicketTypeCreateWithoutPromoCodesInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
   eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeUncheckedCreateWithoutPromoCodesInput = {
@@ -1087,9 +1601,22 @@ export type TicketTypeUncheckedCreateWithoutPromoCodesInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
   eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
 }
 
 export type TicketTypeCreateOrConnectWithoutPromoCodesInput = {
@@ -1121,10 +1648,23 @@ export type TicketTypeUpdateWithoutPromoCodesInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
   eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateWithoutPromoCodesInput = {
@@ -1141,9 +1681,598 @@ export type TicketTypeUncheckedUpdateWithoutPromoCodesInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeCreateWithoutWaitlistEntriesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
+  eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeUncheckedCreateWithoutWaitlistEntriesInput = {
+  id?: string
+  eventId: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeCreateOrConnectWithoutWaitlistEntriesInput = {
+  where: Prisma.TicketTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutWaitlistEntriesInput, Prisma.TicketTypeUncheckedCreateWithoutWaitlistEntriesInput>
+}
+
+export type TicketTypeUpsertWithoutWaitlistEntriesInput = {
+  update: Prisma.XOR<Prisma.TicketTypeUpdateWithoutWaitlistEntriesInput, Prisma.TicketTypeUncheckedUpdateWithoutWaitlistEntriesInput>
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutWaitlistEntriesInput, Prisma.TicketTypeUncheckedCreateWithoutWaitlistEntriesInput>
+  where?: Prisma.TicketTypeWhereInput
+}
+
+export type TicketTypeUpdateToOneWithWhereWithoutWaitlistEntriesInput = {
+  where?: Prisma.TicketTypeWhereInput
+  data: Prisma.XOR<Prisma.TicketTypeUpdateWithoutWaitlistEntriesInput, Prisma.TicketTypeUncheckedUpdateWithoutWaitlistEntriesInput>
+}
+
+export type TicketTypeUpdateWithoutWaitlistEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
+  eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeUncheckedUpdateWithoutWaitlistEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeCreateWithoutTimeSlotCapacitiesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
+  eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeUncheckedCreateWithoutTimeSlotCapacitiesInput = {
+  id?: string
+  eventId: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeCreateOrConnectWithoutTimeSlotCapacitiesInput = {
+  where: Prisma.TicketTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotCapacitiesInput>
+}
+
+export type TicketTypeUpsertWithoutTimeSlotCapacitiesInput = {
+  update: Prisma.XOR<Prisma.TicketTypeUpdateWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUncheckedUpdateWithoutTimeSlotCapacitiesInput>
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotCapacitiesInput>
+  where?: Prisma.TicketTypeWhereInput
+}
+
+export type TicketTypeUpdateToOneWithWhereWithoutTimeSlotCapacitiesInput = {
+  where?: Prisma.TicketTypeWhereInput
+  data: Prisma.XOR<Prisma.TicketTypeUpdateWithoutTimeSlotCapacitiesInput, Prisma.TicketTypeUncheckedUpdateWithoutTimeSlotCapacitiesInput>
+}
+
+export type TicketTypeUpdateWithoutTimeSlotCapacitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
+  eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeUncheckedUpdateWithoutTimeSlotCapacitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeCreateWithoutTimeSlotTicketsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
+  eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeUncheckedCreateWithoutTimeSlotTicketsInput = {
+  id?: string
+  eventId: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeCreateOrConnectWithoutTimeSlotTicketsInput = {
+  where: Prisma.TicketTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotTicketsInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotTicketsInput>
+}
+
+export type TicketTypeUpsertWithoutTimeSlotTicketsInput = {
+  update: Prisma.XOR<Prisma.TicketTypeUpdateWithoutTimeSlotTicketsInput, Prisma.TicketTypeUncheckedUpdateWithoutTimeSlotTicketsInput>
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutTimeSlotTicketsInput, Prisma.TicketTypeUncheckedCreateWithoutTimeSlotTicketsInput>
+  where?: Prisma.TicketTypeWhereInput
+}
+
+export type TicketTypeUpdateToOneWithWhereWithoutTimeSlotTicketsInput = {
+  where?: Prisma.TicketTypeWhereInput
+  data: Prisma.XOR<Prisma.TicketTypeUpdateWithoutTimeSlotTicketsInput, Prisma.TicketTypeUncheckedUpdateWithoutTimeSlotTicketsInput>
+}
+
+export type TicketTypeUpdateWithoutTimeSlotTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
+  eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeUncheckedUpdateWithoutTimeSlotTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeCreateWithoutTableAssignmentsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  event: Prisma.EventCreateNestedOneWithoutTicketTypesInput
+  eventSeats?: Prisma.EventSeatCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeUncheckedCreateWithoutTableAssignmentsInput = {
+  id?: string
+  eventId: string
+  name: string
+  description?: string | null
+  price: number
+  currency?: string
+  quantity?: number | null
+  sold?: number
+  salesStart?: Date | string | null
+  salesEnd?: Date | string | null
+  status?: $Enums.TicketTypeStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
+  eventSeats?: Prisma.EventSeatUncheckedCreateNestedManyWithoutTicketTypeInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutTicketTypeInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedCreateNestedManyWithoutTicketTypeInput
+  promoCodes?: Prisma.PromoCodeUncheckedCreateNestedManyWithoutTicketTypeInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedCreateNestedManyWithoutTicketTypeInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedCreateNestedManyWithoutTicketTypeInput
+}
+
+export type TicketTypeCreateOrConnectWithoutTableAssignmentsInput = {
+  where: Prisma.TicketTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutTableAssignmentsInput, Prisma.TicketTypeUncheckedCreateWithoutTableAssignmentsInput>
+}
+
+export type TicketTypeUpsertWithoutTableAssignmentsInput = {
+  update: Prisma.XOR<Prisma.TicketTypeUpdateWithoutTableAssignmentsInput, Prisma.TicketTypeUncheckedUpdateWithoutTableAssignmentsInput>
+  create: Prisma.XOR<Prisma.TicketTypeCreateWithoutTableAssignmentsInput, Prisma.TicketTypeUncheckedCreateWithoutTableAssignmentsInput>
+  where?: Prisma.TicketTypeWhereInput
+}
+
+export type TicketTypeUpdateToOneWithWhereWithoutTableAssignmentsInput = {
+  where?: Prisma.TicketTypeWhereInput
+  data: Prisma.XOR<Prisma.TicketTypeUpdateWithoutTableAssignmentsInput, Prisma.TicketTypeUncheckedUpdateWithoutTableAssignmentsInput>
+}
+
+export type TicketTypeUpdateWithoutTableAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  event?: Prisma.EventUpdateOneRequiredWithoutTicketTypesNestedInput
+  eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
+}
+
+export type TicketTypeUncheckedUpdateWithoutTableAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sold?: Prisma.IntFieldUpdateOperationsInput | number
+  salesStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salesEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
+  groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
+  promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeCreateManyEventInput = {
@@ -1159,6 +2288,15 @@ export type TicketTypeCreateManyEventInput = {
   status?: $Enums.TicketTypeStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  minPerOrder?: number | null
+  maxPerOrder?: number | null
+  maxPerUser?: number | null
+  visibility?: $Enums.TicketVisibility
+  accessPasswordHash?: string | null
+  directLinkToken?: string | null
+  isTableType?: boolean
+  tableCapacity?: number | null
+  requiresAssignedSeating?: boolean
 }
 
 export type TicketTypeUpdateWithoutEventInput = {
@@ -1174,10 +2312,23 @@ export type TicketTypeUpdateWithoutEventInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventSeats?: Prisma.EventSeatUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateWithoutEventInput = {
@@ -1193,10 +2344,23 @@ export type TicketTypeUncheckedUpdateWithoutEventInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventSeats?: Prisma.EventSeatUncheckedUpdateManyWithoutTicketTypeNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutTicketTypeNestedInput
   groupSlots?: Prisma.GroupOrderSlotUncheckedUpdateManyWithoutTicketTypeNestedInput
   promoCodes?: Prisma.PromoCodeUncheckedUpdateManyWithoutTicketTypeNestedInput
+  waitlistEntries?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutTicketTypeNestedInput
+  tableAssignments?: Prisma.TableSeatAssignmentUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotCapacities?: Prisma.TimeSlotCapacityUncheckedUpdateManyWithoutTicketTypeNestedInput
+  timeSlotTickets?: Prisma.TimeSlotTicketUncheckedUpdateManyWithoutTicketTypeNestedInput
 }
 
 export type TicketTypeUncheckedUpdateManyWithoutEventInput = {
@@ -1212,6 +2376,15 @@ export type TicketTypeUncheckedUpdateManyWithoutEventInput = {
   status?: Prisma.EnumTicketTypeStatusFieldUpdateOperationsInput | $Enums.TicketTypeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  minPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxPerUser?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  visibility?: Prisma.EnumTicketVisibilityFieldUpdateOperationsInput | $Enums.TicketVisibility
+  accessPasswordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  directLinkToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTableType?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tableCapacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  requiresAssignedSeating?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -1224,6 +2397,10 @@ export type TicketTypeCountOutputType = {
   tickets: number
   groupSlots: number
   promoCodes: number
+  waitlistEntries: number
+  tableAssignments: number
+  timeSlotCapacities: number
+  timeSlotTickets: number
 }
 
 export type TicketTypeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1231,6 +2408,10 @@ export type TicketTypeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extens
   tickets?: boolean | TicketTypeCountOutputTypeCountTicketsArgs
   groupSlots?: boolean | TicketTypeCountOutputTypeCountGroupSlotsArgs
   promoCodes?: boolean | TicketTypeCountOutputTypeCountPromoCodesArgs
+  waitlistEntries?: boolean | TicketTypeCountOutputTypeCountWaitlistEntriesArgs
+  tableAssignments?: boolean | TicketTypeCountOutputTypeCountTableAssignmentsArgs
+  timeSlotCapacities?: boolean | TicketTypeCountOutputTypeCountTimeSlotCapacitiesArgs
+  timeSlotTickets?: boolean | TicketTypeCountOutputTypeCountTimeSlotTicketsArgs
 }
 
 /**
@@ -1271,6 +2452,34 @@ export type TicketTypeCountOutputTypeCountPromoCodesArgs<ExtArgs extends runtime
   where?: Prisma.PromoCodeWhereInput
 }
 
+/**
+ * TicketTypeCountOutputType without action
+ */
+export type TicketTypeCountOutputTypeCountWaitlistEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WaitlistEntryWhereInput
+}
+
+/**
+ * TicketTypeCountOutputType without action
+ */
+export type TicketTypeCountOutputTypeCountTableAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TableSeatAssignmentWhereInput
+}
+
+/**
+ * TicketTypeCountOutputType without action
+ */
+export type TicketTypeCountOutputTypeCountTimeSlotCapacitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimeSlotCapacityWhereInput
+}
+
+/**
+ * TicketTypeCountOutputType without action
+ */
+export type TicketTypeCountOutputTypeCountTimeSlotTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimeSlotTicketWhereInput
+}
+
 
 export type TicketTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1286,11 +2495,24 @@ export type TicketTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  minPerOrder?: boolean
+  maxPerOrder?: boolean
+  maxPerUser?: boolean
+  visibility?: boolean
+  accessPasswordHash?: boolean
+  directLinkToken?: boolean
+  isTableType?: boolean
+  tableCapacity?: boolean
+  requiresAssignedSeating?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   eventSeats?: boolean | Prisma.TicketType$eventSeatsArgs<ExtArgs>
   tickets?: boolean | Prisma.TicketType$ticketsArgs<ExtArgs>
   groupSlots?: boolean | Prisma.TicketType$groupSlotsArgs<ExtArgs>
   promoCodes?: boolean | Prisma.TicketType$promoCodesArgs<ExtArgs>
+  waitlistEntries?: boolean | Prisma.TicketType$waitlistEntriesArgs<ExtArgs>
+  tableAssignments?: boolean | Prisma.TicketType$tableAssignmentsArgs<ExtArgs>
+  timeSlotCapacities?: boolean | Prisma.TicketType$timeSlotCapacitiesArgs<ExtArgs>
+  timeSlotTickets?: boolean | Prisma.TicketType$timeSlotTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.TicketTypeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ticketType"]>
 
@@ -1308,6 +2530,15 @@ export type TicketTypeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  minPerOrder?: boolean
+  maxPerOrder?: boolean
+  maxPerUser?: boolean
+  visibility?: boolean
+  accessPasswordHash?: boolean
+  directLinkToken?: boolean
+  isTableType?: boolean
+  tableCapacity?: boolean
+  requiresAssignedSeating?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ticketType"]>
 
@@ -1325,6 +2556,15 @@ export type TicketTypeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  minPerOrder?: boolean
+  maxPerOrder?: boolean
+  maxPerUser?: boolean
+  visibility?: boolean
+  accessPasswordHash?: boolean
+  directLinkToken?: boolean
+  isTableType?: boolean
+  tableCapacity?: boolean
+  requiresAssignedSeating?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ticketType"]>
 
@@ -1342,15 +2582,28 @@ export type TicketTypeSelectScalar = {
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  minPerOrder?: boolean
+  maxPerOrder?: boolean
+  maxPerUser?: boolean
+  visibility?: boolean
+  accessPasswordHash?: boolean
+  directLinkToken?: boolean
+  isTableType?: boolean
+  tableCapacity?: boolean
+  requiresAssignedSeating?: boolean
 }
 
-export type TicketTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "name" | "description" | "price" | "currency" | "quantity" | "sold" | "salesStart" | "salesEnd" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketType"]>
+export type TicketTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "name" | "description" | "price" | "currency" | "quantity" | "sold" | "salesStart" | "salesEnd" | "status" | "createdAt" | "updatedAt" | "minPerOrder" | "maxPerOrder" | "maxPerUser" | "visibility" | "accessPasswordHash" | "directLinkToken" | "isTableType" | "tableCapacity" | "requiresAssignedSeating", ExtArgs["result"]["ticketType"]>
 export type TicketTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   eventSeats?: boolean | Prisma.TicketType$eventSeatsArgs<ExtArgs>
   tickets?: boolean | Prisma.TicketType$ticketsArgs<ExtArgs>
   groupSlots?: boolean | Prisma.TicketType$groupSlotsArgs<ExtArgs>
   promoCodes?: boolean | Prisma.TicketType$promoCodesArgs<ExtArgs>
+  waitlistEntries?: boolean | Prisma.TicketType$waitlistEntriesArgs<ExtArgs>
+  tableAssignments?: boolean | Prisma.TicketType$tableAssignmentsArgs<ExtArgs>
+  timeSlotCapacities?: boolean | Prisma.TicketType$timeSlotCapacitiesArgs<ExtArgs>
+  timeSlotTickets?: boolean | Prisma.TicketType$timeSlotTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.TicketTypeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TicketTypeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1368,6 +2621,10 @@ export type $TicketTypePayload<ExtArgs extends runtime.Types.Extensions.Internal
     tickets: Prisma.$TicketPayload<ExtArgs>[]
     groupSlots: Prisma.$GroupOrderSlotPayload<ExtArgs>[]
     promoCodes: Prisma.$PromoCodePayload<ExtArgs>[]
+    waitlistEntries: Prisma.$WaitlistEntryPayload<ExtArgs>[]
+    tableAssignments: Prisma.$TableSeatAssignmentPayload<ExtArgs>[]
+    timeSlotCapacities: Prisma.$TimeSlotCapacityPayload<ExtArgs>[]
+    timeSlotTickets: Prisma.$TimeSlotTicketPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1392,6 +2649,21 @@ export type $TicketTypePayload<ExtArgs extends runtime.Types.Extensions.Internal
     status: $Enums.TicketTypeStatus
     createdAt: Date
     updatedAt: Date
+    minPerOrder: number | null
+    maxPerOrder: number | null
+    maxPerUser: number | null
+    visibility: $Enums.TicketVisibility
+    /**
+     * bcrypt hash of the access password (only set when visibility = PASSWORD_PROTECTED)
+     */
+    accessPasswordHash: string | null
+    /**
+     * Opaque token for direct-link unlock (only set when visibility = HIDDEN)
+     */
+    directLinkToken: string | null
+    isTableType: boolean
+    tableCapacity: number | null
+    requiresAssignedSeating: boolean
   }, ExtArgs["result"]["ticketType"]>
   composites: {}
 }
@@ -1791,6 +3063,10 @@ export interface Prisma__TicketTypeClient<T, Null = never, ExtArgs extends runti
   tickets<T extends Prisma.TicketType$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groupSlots<T extends Prisma.TicketType$groupSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$groupSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupOrderSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   promoCodes<T extends Prisma.TicketType$promoCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$promoCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  waitlistEntries<T extends Prisma.TicketType$waitlistEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$waitlistEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WaitlistEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tableAssignments<T extends Prisma.TicketType$tableAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$tableAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TableSeatAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  timeSlotCapacities<T extends Prisma.TicketType$timeSlotCapacitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$timeSlotCapacitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSlotCapacityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  timeSlotTickets<T extends Prisma.TicketType$timeSlotTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketType$timeSlotTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSlotTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1833,6 +3109,15 @@ export interface TicketTypeFieldRefs {
   readonly status: Prisma.FieldRef<"TicketType", 'TicketTypeStatus'>
   readonly createdAt: Prisma.FieldRef<"TicketType", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TicketType", 'DateTime'>
+  readonly minPerOrder: Prisma.FieldRef<"TicketType", 'Int'>
+  readonly maxPerOrder: Prisma.FieldRef<"TicketType", 'Int'>
+  readonly maxPerUser: Prisma.FieldRef<"TicketType", 'Int'>
+  readonly visibility: Prisma.FieldRef<"TicketType", 'TicketVisibility'>
+  readonly accessPasswordHash: Prisma.FieldRef<"TicketType", 'String'>
+  readonly directLinkToken: Prisma.FieldRef<"TicketType", 'String'>
+  readonly isTableType: Prisma.FieldRef<"TicketType", 'Boolean'>
+  readonly tableCapacity: Prisma.FieldRef<"TicketType", 'Int'>
+  readonly requiresAssignedSeating: Prisma.FieldRef<"TicketType", 'Boolean'>
 }
     
 
@@ -2327,6 +3612,102 @@ export type TicketType$promoCodesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.PromoCodeScalarFieldEnum | Prisma.PromoCodeScalarFieldEnum[]
+}
+
+/**
+ * TicketType.waitlistEntries
+ */
+export type TicketType$waitlistEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WaitlistEntry
+   */
+  select?: Prisma.WaitlistEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WaitlistEntry
+   */
+  omit?: Prisma.WaitlistEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WaitlistEntryInclude<ExtArgs> | null
+  where?: Prisma.WaitlistEntryWhereInput
+  orderBy?: Prisma.WaitlistEntryOrderByWithRelationInput | Prisma.WaitlistEntryOrderByWithRelationInput[]
+  cursor?: Prisma.WaitlistEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WaitlistEntryScalarFieldEnum | Prisma.WaitlistEntryScalarFieldEnum[]
+}
+
+/**
+ * TicketType.tableAssignments
+ */
+export type TicketType$tableAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TableSeatAssignment
+   */
+  select?: Prisma.TableSeatAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TableSeatAssignment
+   */
+  omit?: Prisma.TableSeatAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TableSeatAssignmentInclude<ExtArgs> | null
+  where?: Prisma.TableSeatAssignmentWhereInput
+  orderBy?: Prisma.TableSeatAssignmentOrderByWithRelationInput | Prisma.TableSeatAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.TableSeatAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TableSeatAssignmentScalarFieldEnum | Prisma.TableSeatAssignmentScalarFieldEnum[]
+}
+
+/**
+ * TicketType.timeSlotCapacities
+ */
+export type TicketType$timeSlotCapacitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimeSlotCapacity
+   */
+  select?: Prisma.TimeSlotCapacitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimeSlotCapacity
+   */
+  omit?: Prisma.TimeSlotCapacityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimeSlotCapacityInclude<ExtArgs> | null
+  where?: Prisma.TimeSlotCapacityWhereInput
+  orderBy?: Prisma.TimeSlotCapacityOrderByWithRelationInput | Prisma.TimeSlotCapacityOrderByWithRelationInput[]
+  cursor?: Prisma.TimeSlotCapacityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimeSlotCapacityScalarFieldEnum | Prisma.TimeSlotCapacityScalarFieldEnum[]
+}
+
+/**
+ * TicketType.timeSlotTickets
+ */
+export type TicketType$timeSlotTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimeSlotTicket
+   */
+  select?: Prisma.TimeSlotTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimeSlotTicket
+   */
+  omit?: Prisma.TimeSlotTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimeSlotTicketInclude<ExtArgs> | null
+  where?: Prisma.TimeSlotTicketWhereInput
+  orderBy?: Prisma.TimeSlotTicketOrderByWithRelationInput | Prisma.TimeSlotTicketOrderByWithRelationInput[]
+  cursor?: Prisma.TimeSlotTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimeSlotTicketScalarFieldEnum | Prisma.TimeSlotTicketScalarFieldEnum[]
 }
 
 /**

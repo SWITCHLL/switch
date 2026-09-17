@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { getSession } from '@/lib/session'
 import { db } from '@/lib/db'
 import { AccountSettingsForm } from '@/features/account/components/account-settings-form'
+import { BankAccountForm } from '@/features/payments/components/bank-account-form'
 
 export const metadata: Metadata = { title: 'Settings' }
 
@@ -16,6 +17,15 @@ export default async function SettingsPage() {
   })
   if (!user) redirect('/login')
 
+  // Fetch organizer bank details for organizers/admins
+  const organizer =
+    user.role === 'ORGANIZER' || user.role === 'ADMIN'
+      ? await db.organizer.findUnique({
+          where: { userId: session.userId },
+          select: { bankCode: true, bankAccountNumber: true, bankAccountName: true },
+        })
+      : null
+
   return (
     <div className="mx-auto max-w-[640px] space-y-8">
       <div>
@@ -26,6 +36,20 @@ export default async function SettingsPage() {
       </div>
 
       <AccountSettingsForm user={user} />
+
+      {organizer !== null && (
+        <BankAccountForm
+          currentBank={
+            organizer
+              ? {
+                  bankCode: organizer.bankCode,
+                  bankAccountNumber: organizer.bankAccountNumber,
+                  bankAccountName: organizer.bankAccountName,
+                }
+              : null
+          }
+        />
+      )}
     </div>
   )
 }

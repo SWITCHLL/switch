@@ -1,27 +1,33 @@
 import { Suspense } from 'react'
-import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
-import { HeroSection } from '@/components/sections/hero-section'
-import { UpcomingEventsSection } from '@/components/sections/upcoming-events-section'
-import { BrowseByCategorySection } from '@/components/sections/browse-by-category-section'
-import { getSession } from '@/lib/session'
+import { HeaderWithSession } from '@/components/layout/header-with-session'
+import { HeroSectionWrapper } from '@/components/sections/hero-section-wrapper'
+import { CategoriesSection } from '@/components/sections/categories-section'
+import { EventsSection } from '@/components/sections/events-section'
+import { OrganizerCta } from '@/components/sections/organizer-cta'
 
-export default async function HomePage() {
-  const session = await getSession()
-
+export default function HomePage() {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SiteHeader userEmail={session?.email} />
+      {/* Header sits over the dark hero */}
+      <Suspense>
+        <HeaderWithSession />
+      </Suspense>
       <main className="flex-1">
+        {/* Dark cinematic hero with event artwork */}
         <Suspense>
-          <HeroSection />
+          <HeroSectionWrapper />
         </Suspense>
+        {/* Typographic category strip */}
         <Suspense>
-          <UpcomingEventsSection />
+          <CategoriesSection />
         </Suspense>
+        {/* Editorial event grid */}
         <Suspense>
-          <BrowseByCategorySection />
+          <EventsSection />
         </Suspense>
+        {/* Organizer CTA */}
+        <OrganizerCta />
       </main>
       <SiteFooter />
     </div>

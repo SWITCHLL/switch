@@ -9,6 +9,8 @@
  */
 import { createGroupExpiryWorker } from './group-expiry.worker'
 import { createReservationExpiryWorker } from './reservation-expiry.worker'
+import { createWaitlistExpiryWorker } from './waitlist-expiry.worker'
+import { createEventReminderWorker } from './event-reminder.worker'
 
 const redisUrl = process.env.WORKER_REDIS_URL ?? process.env.REDIS_URL
 if (!redisUrl) {
@@ -17,14 +19,23 @@ if (!redisUrl) {
 
 const groupExpiryWorker = createGroupExpiryWorker(redisUrl)
 const reservationExpiryWorker = createReservationExpiryWorker(redisUrl)
+const waitlistExpiryWorker = createWaitlistExpiryWorker(redisUrl)
+const eventReminderWorker = createEventReminderWorker(redisUrl)
 
 console.log('[Workers] Group expiry worker started.')
 console.log('[Workers] Reservation expiry worker started.')
+console.log('[Workers] Waitlist expiry worker started.')
+console.log('[Workers] Event reminder worker started.')
 
 // Graceful shutdown
 async function shutdown() {
   console.log('[Workers] Shutting down…')
-  await Promise.all([groupExpiryWorker.close(), reservationExpiryWorker.close()])
+  await Promise.all([
+    groupExpiryWorker.close(),
+    reservationExpiryWorker.close(),
+    waitlistExpiryWorker.close(),
+    eventReminderWorker.close(),
+  ])
   process.exit(0)
 }
 

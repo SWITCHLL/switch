@@ -6,8 +6,7 @@ import Link from 'next/link'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
-import { VenuePicker, type VenuePlace } from '@/components/ui/venue-picker'
-import { LocationPicker } from '@/components/ui/location-picker'
+import { VenuePicker } from '@/components/ui/venue-picker'
 import { EventImageUploader } from '@/components/ui/event-image-uploader'
 import { createEvent } from '../actions'
 interface CreateEventFormProps {
@@ -18,7 +17,6 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [venue, setVenue] = useState<VenuePlace | null>(null)
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [isFree, setIsFree] = useState(false)
   const [isVirtual, setIsVirtual] = useState(false)
@@ -95,7 +93,7 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
       {/* Category + Seating type */}
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Category">
-          <select name="categoryId" className={inputCls}>
+          <select name="categoryId" className={selectCls}>
             <option value="">Select category</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
@@ -106,7 +104,7 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
         </Field>
 
         <Field label="Seating Type" required>
-          <select name="seatingType" required className={inputCls}>
+          <select name="seatingType" required className={selectCls}>
             <option value="GENERAL_ADMISSION">General Admission</option>
             <option value="RESERVED">Reserved Seating</option>
             <option value="MIXED">Mixed</option>
@@ -142,22 +140,11 @@ export function CreateEventForm({ categories }: CreateEventFormProps) {
         </Field>
       )}
 
-      {/* Venue — Google Places Autocomplete */}
+      {/* Venue — Manual entry */}
       {!isVirtual && (
-        <>
-          <Field label="Venue Name" hint="Search on Google Maps or type a name">
-            <VenuePicker onSelect={setVenue} />
-          </Field>
-          <Field label="State & City / LGA" hint="Select the event location">
-            <LocationPicker
-              defaultState={venue?.state}
-              defaultCity={venue?.city}
-              onChange={(loc) => {
-                if (venue) setVenue({ ...venue, state: loc.state, city: loc.city })
-              }}
-            />
-          </Field>
-        </>
+        <Field label="Venue">
+          <VenuePicker />
+        </Field>
       )}
 
       {/* Event dates */}
@@ -244,6 +231,8 @@ const inputCls = cn(
   'text-[14px] text-foreground placeholder:text-muted-foreground',
   'outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20'
 )
+
+const selectCls = cn(inputCls, '[color-scheme:light]')
 
 function Field({
   label,

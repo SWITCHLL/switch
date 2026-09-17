@@ -37,7 +37,7 @@ export function FeaturedEvent({ event }: FeaturedEventProps) {
               sizes="(max-width: 640px) 100vw, 1120px"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a18] via-[#1e1a2e] to-[#111110]" />
+            <div className="bg-muted absolute inset-0" />
           )}
 
           {/* Gradient overlay — heavier at the bottom */}

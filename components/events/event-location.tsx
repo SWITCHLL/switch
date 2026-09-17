@@ -1,60 +1,79 @@
 'use client'
 
-import { MapPin, ExternalLink } from 'lucide-react'
-import type { EventDetail } from '@/features/events/types'
+import { ExternalLink } from 'lucide-react'
 
 interface EventLocationProps {
-  venue: EventDetail['venue']
+  venueName?: string | null
+  venueAddress?: string | null
+  venueCity?: string | null
+  venueState?: string | null
+  /** Fallback venue from FK relation (legacy) */
+  venue?: {
+    name: string
+    address?: string | null
+    city: string
+    state?: string | null
+    country: string
+  } | null
 }
 
-export function EventLocation({ venue }: EventLocationProps) {
-  if (!venue) return null
+export function EventLocation({
+  venueName,
+  venueAddress,
+  venueCity,
+  venueState,
+  venue,
+}: EventLocationProps) {
+  // Prefer inline fields, fall back to FK venue
+  const name = venueName || venue?.name
+  const address = venueAddress || venue?.address
+  const city = venueCity || venue?.city
+  const state = venueState || venue?.state
+  const country = venue?.country ?? 'Nigeria'
 
-  const address = [venue.name, venue.city, venue.state, venue.country].filter(Boolean).join(', ')
+  if (!name) return null
 
-  const mapsQuery = encodeURIComponent(address)
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`
+  // Build a search query for Google Maps embed
+  const parts = [name, address, city, state, country].filter(Boolean)
+  const query = encodeURIComponent(parts.join(', '))
 
-  // Static map image via a public embed-friendly API
-  const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${mapsQuery}&zoom=14&size=800x280&scale=2&style=element:geometry%7Ccolor:0x1a1a1a&style=element:labels.text.fill%7Ccolor:0x757575&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU3Kro`
+  // Directions link — opens Google Maps in a new tab
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${query}`
+
+  // Google Maps embed URL (no API key required for basic embeds)
+  const embedUrl = `https://maps.google.com/maps?q=${query}&z=15&output=embed`
 
   return (
     <section aria-labelledby="location-heading">
       <h2
         id="location-heading"
-        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-white/40"
+        className="mb-5 text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground"
       >
         Location
       </h2>
 
-      {/* Map placeholder — lazy loaded */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/[0.03]">
-        {/* Static map image with loading="lazy" */}
-        <div className="relative h-[180px] w-full bg-white/[0.03]">
-          {/* Fallback map grid pattern */}
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px)',
-              backgroundSize: '40px 40px',
-            }}
+      <div className="border-border overflow-hidden rounded-2xl border">
+        {/* Google Maps iframe */}
+        <div className="relative h-[200px] w-full">
+          <iframe
+            title={`Map of ${name}`}
+            src={embedUrl}
+            width="100%"
+            height="200"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0 h-full w-full"
           />
-          {/* Pin marker */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg">
-              <MapPin className="h-5 w-5 text-black" aria-hidden />
-            </div>
-          </div>
         </div>
 
-        {/* Venue info */}
-        <div className="flex items-start justify-between gap-4 px-5 py-4">
+        {/* Venue info bar */}
+        <div className="bg-surface flex items-start justify-between gap-4 px-5 py-4">
           <div>
-            <p className="text-[14px] font-semibold text-white">{venue.name}</p>
-            <p className="mt-0.5 text-[13px] text-white/50">
-              {[venue.city, venue.state, venue.country].filter(Boolean).join(', ')}
+            <p className="text-foreground text-[14px] font-semibold">{name}</p>
+            <p className="text-muted-foreground mt-0.5 text-[13px]">
+              {[address, city, state].filter(Boolean).join(', ')}
             </p>
           </div>
 
@@ -62,8 +81,8 @@ export function EventLocation({ venue }: EventLocationProps) {
             href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/15 px-3 py-2 text-[12.5px] font-medium text-white/70 transition-colors hover:border-white/30 hover:text-white"
-            aria-label={`Get directions to ${venue.name}`}
+            className="border-border text-muted-foreground hover:border-border/80 hover:text-foreground flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-[12.5px] font-medium transition-colors"
+            aria-label={`Get directions to ${name}`}
           >
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />
             Directions

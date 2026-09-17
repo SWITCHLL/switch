@@ -1,282 +1,104 @@
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
-import type { Metadata } from 'next'
-import { Ticket, Users, ArrowRight, CheckCircle2, Clock, XCircle } from 'lucide-react'
+import { Metadata } from 'next'
+import { Ticket, AlertCircle } from 'lucide-react'
 import { getSession } from '@/lib/session'
 import { getUserTickets } from '@/features/organizer/queries'
-import { getMyGroupOrders } from '@/features/group-booking/queries'
-import { format } from 'date-fns'
-import { formatPrice } from '@/features/events/utils'
-import { cn } from '@/lib/utils'
-import { TicketGrid } from '@/features/tickets/components/ticket-grid'
+import { TicketCard } from '@/features/tickets/components/ticket-card'
+import { TicketsFilter } from '@/features/tickets/components/tickets-filter'
 
-export const metadata: Metadata = { title: 'My Tickets' }
-
-interface PageProps {
-  searchParams: Promise<{ tab?: string }>
+export const metadata: Metadata = {
+  title: 'My Tickets',
+  description: 'View and manage your event tickets',
 }
 
-export default async function MyTicketsPage({ searchParams }: PageProps) {
+interface TicketsPageProps {
+  searchParams: Record<string, string | string[] | undefined>
+}
+
+export default async function TicketsPage({ searchParams }: TicketsPageProps) {
   const session = await getSession()
   if (!session) redirect('/login')
 
-  const { tab = 'tickets' } = await searchParams
-  const activeTab = tab === 'groups' ? 'groups' : 'tickets'
+  const statusFilter = typeof searchParams.status === 'string' ? searchParams.status : undefined
 
-  const [tickets, groupOrders] = await Promise.all([
-    getUserTickets(session.userId),
-    getMyGroupOrders(session.userId),
-  ])
+  // Fetch tickets with optional status filter
+  const tickets = await getUserTickets(session.userId, {
+    status: statusFilter,
+  })
 
-  const upcoming = tickets.filter((t) => new Date(t.event.startsAt) >= new Date())
-  const past = tickets.filter((t) => new Date(t.event.startsAt) < new Date())
+  const hasActiveFilters = Boolean(statusFilter)
+
+  // Count tickets by status
+  const ticketStats = {
+    total: tickets.length,
+    active: tickets.filter((t) => t.status === 'ACTIVE').length,
+    used: tickets.filter((t) => t.status === 'USED').length,
+    refunded: tickets.filter((t) => t.status === 'REFUNDED').length,
+  }
 
   return (
-    <div className="space-y-6">
-      {/* ── Header ── */}
+    <div className="space-y-8">
+      {/* ── Page header ── */}
       <div>
-        <h1 className="text-[22px] font-semibold tracking-tight">My Tickets</h1>
-        <p className="text-muted-foreground mt-1 text-[14px]">
-          {tickets.length} ticket{tickets.length !== 1 ? 's' : ''} total
-          {groupOrders.length > 0 &&
-            ` · ${groupOrders.length} group booking${groupOrders.length !== 1 ? 's' : ''}`}
-        </p>
-      </div>
-
-      {/* ── Tabs ── */}
-      <div className="border-border flex gap-1 border-b">
-        <TabLink href="/dashboard/tickets?tab=tickets" active={activeTab === 'tickets'}>
-          <Ticket className="h-3.5 w-3.5" />
-          My Tickets
-          {tickets.length > 0 && (
-            <span
-              className={cn(
-                'ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold',
-                activeTab === 'tickets'
-                  ? 'bg-brand-600 text-white'
-                  : 'bg-muted text-muted-foreground'
-              )}
-            >
-              {tickets.length}
-            </span>
-          )}
-        </TabLink>
-        <TabLink href="/dashboard/tickets?tab=groups" active={activeTab === 'groups'}>
-          <Users className="h-3.5 w-3.5" />
-          My Groups
-          {groupOrders.length > 0 && (
-            <span
-              className={cn(
-                'ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold',
-                activeTab === 'groups'
-                  ? 'bg-brand-600 text-white'
-                  : 'bg-muted text-muted-foreground'
-              )}
-            >
-              {groupOrders.length}
-            </span>
-          )}
-        </TabLink>
-      </div>
-
-      {/* ── Tickets tab ── */}
-      {activeTab === 'tickets' && (
-        <>
-          {tickets.length === 0 ? (
-            <EmptyState
-              icon={Ticket}
-              title="No tickets yet"
-              description="Book an event to see your tickets here."
-              actionHref="/events"
-              actionLabel="Browse Events"
-            />
-          ) : (
-            <div className="space-y-8">
-              {upcoming.length > 0 && (
-                <section>
-                  <h2 className="text-muted-foreground mb-3 text-[14px] font-semibold uppercase tracking-wide">
-                    Upcoming · {upcoming.length}
-                  </h2>
-                  <TicketGrid tickets={upcoming} />
-                </section>
-              )}
-              {past.length > 0 && (
-                <section>
-                  <h2 className="text-muted-foreground mb-3 text-[14px] font-semibold uppercase tracking-wide">
-                    Past · {past.length}
-                  </h2>
-                  <TicketGrid tickets={past} dimmed />
-                </section>
-              )}
-            </div>
-          )}
-        </>
-      )}
-
-      {/* ── Groups tab ── */}
-      {activeTab === 'groups' && (
-        <>
-          {groupOrders.length === 0 ? (
-            <EmptyState
-              icon={Users}
-              title="No group bookings yet"
-              description="Create a group booking on any event to coordinate with friends."
-              actionHref="/events"
-              actionLabel="Browse Events"
-            />
-          ) : (
-            <div className="space-y-3">
-              {groupOrders.map((order) => (
-                <GroupOrderCard key={order.id} order={order} />
-              ))}
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  )
-}
-
-// ─── Tab link ─────────────────────────────────────────────────────────────────
-
-function TabLink({
-  href,
-  active,
-  children,
-}: {
-  href: string
-  active: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'flex items-center gap-1.5 border-b-2 px-3 pb-3 text-[13.5px] font-semibold transition-colors',
-        active
-          ? 'border-brand-500 text-foreground'
-          : 'border-transparent text-muted-foreground hover:text-foreground'
-      )}
-    >
-      {children}
-    </Link>
-  )
-}
-
-// ─── Group order card ─────────────────────────────────────────────────────────
-
-type GroupOrder = Awaited<ReturnType<typeof getMyGroupOrders>>[number]
-
-const GROUP_STATUS_CONFIG = {
-  PENDING: { label: 'In progress', icon: Clock, className: 'bg-amber-500/10 text-amber-400' },
-  COMPLETE: {
-    label: 'Complete',
-    icon: CheckCircle2,
-    className: 'bg-emerald-500/10 text-emerald-400',
-  },
-  EXPIRED: { label: 'Expired', icon: XCircle, className: 'bg-zinc-500/10 text-zinc-400' },
-  CANCELLED: { label: 'Cancelled', icon: XCircle, className: 'bg-red-500/10 text-red-400' },
-}
-
-function GroupOrderCard({ order }: { order: GroupOrder }) {
-  const paidSlots = order.slots.filter((s) => s.status === 'PAID').length
-  const totalSlots = order.slots.length
-  const totalAmount = order.slots.reduce((sum, s) => sum + s.price, 0)
-  const config = GROUP_STATUS_CONFIG[order.status] ?? GROUP_STATUS_CONFIG.PENDING
-  const StatusIcon = config.icon
-  const percent = totalSlots === 0 ? 0 : Math.round((paidSlots / totalSlots) * 100)
-
-  return (
-    <Link
-      href={`/group/${order.code}`}
-      className="border-border bg-surface hover:border-border/80 block overflow-hidden rounded-2xl border transition-all hover:-translate-y-px"
-    >
-      <div className="flex items-center gap-4 p-4">
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
-          {order.event.imageUrl ? (
-            <Image
-              src={order.event.imageUrl}
-              alt={order.event.title}
-              fill
-              className="object-cover"
-              sizes="56px"
-            />
-          ) : (
-            <div className="from-brand-900/50 h-full w-full bg-gradient-to-br to-violet-900/30" />
-          )}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/10">
+            <Ticket className="h-5 w-5 text-brand-400" />
+          </div>
+          <div>
+            <h1 className="text-[22px] font-semibold tracking-tight">My Tickets</h1>
+            <p className="text-muted-foreground text-sm">
+              {ticketStats.total} {ticketStats.total === 1 ? 'ticket' : 'tickets'} •{' '}
+              {ticketStats.active} active
+            </p>
+          </div>
         </div>
+      </div>
 
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[13.5px] font-semibold">{order.event.title}</p>
-          <p className="text-muted-foreground mt-0.5 text-[12px]">
-            {format(order.event.startsAt, 'MMM d, yyyy')}
+      {/* ── Quick stats ── */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-3">
+          <div className="text-xs text-zinc-400">Total Tickets</div>
+          <div className="mt-1.5 text-2xl font-bold">{ticketStats.total}</div>
+        </div>
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-3">
+          <div className="text-xs text-zinc-400">Valid</div>
+          <div className="mt-1.5 text-2xl font-bold text-emerald-400">{ticketStats.active}</div>
+        </div>
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-3">
+          <div className="text-xs text-zinc-400">Used</div>
+          <div className="mt-1.5 text-2xl font-bold text-zinc-400">{ticketStats.used}</div>
+        </div>
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-3">
+          <div className="text-xs text-zinc-400">Refunded</div>
+          <div className="mt-1.5 text-2xl font-bold text-amber-400">{ticketStats.refunded}</div>
+        </div>
+      </div>
+
+      {/* ── Filter ── */}
+      <TicketsFilter hasActiveFilters={hasActiveFilters} />
+
+      {/* ── Tickets grid ── */}
+      {tickets.length > 0 ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {tickets.map((ticket) => (
+            <TicketCard key={ticket.id} ticket={ticket} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-8 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800">
+            <AlertCircle className="h-6 w-6 text-zinc-500" />
+          </div>
+          <h3 className="text-sm font-medium text-zinc-300">
+            {hasActiveFilters ? 'No tickets match your filter' : 'No tickets yet'}
+          </h3>
+          <p className="mt-1 text-xs text-zinc-500">
+            {hasActiveFilters
+              ? 'Try adjusting your filters to find what you are looking for.'
+              : 'Purchase tickets to events and they will appear here.'}
           </p>
-          <div className="mt-2 flex items-center gap-2">
-            <div className="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
-              <div
-                className={cn(
-                  'h-full rounded-full transition-all',
-                  percent === 100
-                    ? 'bg-emerald-500'
-                    : 'from-brand-500 bg-gradient-to-r to-violet-500'
-                )}
-                style={{ width: `${percent}%` }}
-              />
-            </div>
-            <span className="text-muted-foreground shrink-0 text-[11px]">
-              {paidSlots}/{totalSlots} paid
-            </span>
-          </div>
         </div>
-
-        <div className="shrink-0 text-right">
-          <div
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-semibold',
-              config.className
-            )}
-          >
-            <StatusIcon className="h-3 w-3" />
-            {config.label}
-          </div>
-          <p className="text-muted-foreground mt-1.5 text-[11.5px]">{formatPrice(totalAmount)}</p>
-        </div>
-
-        <ArrowRight className="text-muted-foreground h-4 w-4 shrink-0" />
-      </div>
-    </Link>
-  )
-}
-
-// ─── Empty state ──────────────────────────────────────────────────────────────
-
-function EmptyState({
-  icon: Icon,
-  title,
-  description,
-  actionHref,
-  actionLabel,
-}: {
-  icon: React.ElementType
-  title: string
-  description: string
-  actionHref: string
-  actionLabel: string
-}) {
-  return (
-    <div className="border-border bg-surface flex flex-col items-center justify-center rounded-2xl border py-20 text-center">
-      <div className="bg-muted mb-4 flex h-14 w-14 items-center justify-center rounded-2xl">
-        <Icon className="text-muted-foreground h-7 w-7" />
-      </div>
-      <p className="text-[16px] font-semibold">{title}</p>
-      <p className="text-muted-foreground mt-1.5 max-w-xs text-[14px]">{description}</p>
-      <Link
-        href={actionHref}
-        className="from-brand-600 mt-6 rounded-xl bg-gradient-to-r to-violet-600 px-5 py-2.5 text-[14px] font-semibold text-white transition-opacity hover:opacity-90"
-      >
-        {actionLabel}
-      </Link>
+      )}
     </div>
   )
 }

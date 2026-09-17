@@ -4,15 +4,22 @@ import { Calendar, Clock, MapPin, Users } from 'lucide-react'
 import { format, isSameDay } from 'date-fns'
 import type { EventDetail } from '@/features/events/types'
 import { EventShare } from './event-share'
+import { AddToCalendarButton } from '@/features/calendar/components/add-to-calendar-button'
+
+interface CalendarProps {
+  switchEventId: string
+  calendars: { id: string; title: string; color: string }[]
+}
 
 interface EventMetaProps {
   event: Pick<
     EventDetail,
     'title' | 'startsAt' | 'endsAt' | 'venue' | 'speakers' | '_count' | 'slug'
   >
+  calendarProps?: CalendarProps
 }
 
-export function EventMeta({ event }: EventMetaProps) {
+export function EventMeta({ event, calendarProps }: EventMetaProps) {
   const { startsAt, endsAt, venue, speakers, _count } = event
 
   // Build date/time display
@@ -75,8 +82,14 @@ export function EventMeta({ event }: EventMetaProps) {
       )}
 
       {/* Share */}
-      <div className="mt-1">
+      <div className="mt-1 flex items-center gap-2">
         <EventShare title={event.title} slug={event.slug} />
+        {calendarProps && (
+          <AddToCalendarButton
+            switchEventId={calendarProps.switchEventId}
+            calendars={calendarProps.calendars}
+          />
+        )}
       </div>
     </div>
   )
@@ -95,7 +108,7 @@ function MetaRow({
     <div className="flex items-start gap-3">
       <span className="text-muted-foreground mt-0.5 flex-shrink-0">{icon}</span>
       <span className="sr-only">{label}:</span>
-      <span className="text-[14px] leading-snug text-white/90">{children}</span>
+      <span className="text-[14px] leading-snug text-foreground">{children}</span>
     </div>
   )
 }

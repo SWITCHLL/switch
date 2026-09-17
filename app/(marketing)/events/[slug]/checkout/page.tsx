@@ -9,11 +9,12 @@ import { getEventBySlug } from '@/features/events'
 import { db } from '@/lib/db'
 import { CheckoutClient } from '@/features/checkout/components/checkout-client'
 import { GACheckoutClient } from '@/features/checkout/components/ga-checkout-client'
+import { ShowCheckoutClient } from '@/features/checkout/components/show-checkout-client'
 import { format } from 'date-fns'
 
 interface PageProps {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ seats?: string; tickets?: string; reservation?: string }>
+  searchParams: Promise<{ seats?: string; tickets?: string; reservation?: string; shows?: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -25,12 +26,129 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CheckoutPage({ params, searchParams }: PageProps) {
   const { slug } = await params
-  const { seats: seatsParam, tickets: ticketsParam } = await searchParams
+  const { seats: seatsParam, tickets: ticketsParam, shows: showsParam } = await searchParams
 
   const [session, event] = await Promise.all([getSession(), getEventBySlug(slug)])
 
   if (!event) notFound()
   if (!session) redirect(`/login?redirect=/events/${slug}/checkout`)
+
+  // ── Time-slot / show order: parse ?shows=slotId:ticketTypeId:qty,... ──────
+  if (showsParam) {
+    // Parse "slotId:ticketTypeId:qty" triplets
+    const rawSelections = showsParam
+      .split(',')
+      .filter(Boolean)
+      .map((chunk) => {
+        const parts = chunk.split(':')
+        if (parts.length < 3) return null
+        const [timeSlotId, ticketTypeId, qtyStr] = parts
+        const quantity = parseInt(qtyStr ?? '0', 10)
+        if (!timeSlotId || !ticketTypeId || quantity < 1) return null
+        return { timeSlotId, ticketTypeId, quantity }
+      })
+      .filter((s): s is { timeSlotId: string; ticketTypeId: string; quantity: number } => s !== null)
+
+    if (rawSelections.length === 0) redirect(`/events/${slug}`)
+
+    // Validate via raw SQL — resolve labels, prices, names
+    interface CapRow {
+      capacity:   number
+      price:      number
+      currency:   string
+      ttName:     string
+      slotLabel:  string
+    }
+    const resolvedSelections: Array<{
+      timeSlotId:    string
+      ticketTypeId:  string
+      slotLabel:     string
+      ticketTypeName: string
+      quantity:      number
+      price:         number
+      currency:      string
+    }> = []
+
+    for (const sel of rawSelections) {
+      const rows: CapRow[] = await db.$queryRaw`
+        SELECT
+          tsc."capacity",
+          tt."price",
+          tt."currency",
+          tt."name"    AS "ttName",
+          ts."label"   AS "slotLabel"
+        FROM "time_slot_capacities" tsc
+        JOIN "time_slots"   ts ON ts."id" = tsc."timeSlotId"
+        JOIN "ticket_types" tt ON tt."id" = tsc."ticketTypeId"
+        WHERE tsc."timeSlotId"   = ${sel.timeSlotId}
+          AND tsc."ticketTypeId" = ${sel.ticketTypeId}
+          AND ts."eventId"       = ${event.id}
+        LIMIT 1
+      `
+      if (rows[0]) {
+        resolvedSelections.push({
+          timeSlotId:    sel.timeSlotId,
+          ticketTypeId:  sel.ticketTypeId,
+          slotLabel:     rows[0].slotLabel,
+          ticketTypeName: rows[0].ttName,
+          quantity:      sel.quantity,
+          price:         rows[0].price,
+          currency:      rows[0].currency,
+        })
+      }
+    }
+
+    if (resolvedSelections.length === 0) redirect(`/events/${slug}`)
+
+    const subtotal = resolvedSelections.reduce((s, e) => s + e.price * e.quantity, 0)
+
+    return (
+      <div className="relative flex min-h-screen flex-col">
+        <SiteHeader userEmail={session.email} />
+
+        <main className="flex-1 pt-[60px]">
+          <div className="border-border/60 border-b">
+            <div className="mx-auto flex max-w-[1120px] items-center gap-4 px-5 py-3.5 sm:px-8">
+              <Link
+                href={`/events/${slug}`}
+                className="text-muted-foreground hover:text-foreground flex shrink-0 items-center gap-1.5 text-[13px] transition-colors"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                Back to event
+              </Link>
+
+              <div className="border-border hidden h-4 w-px sm:block" />
+
+              <div className="min-w-0 flex-1">
+                <p className="text-foreground truncate text-[13.5px] font-semibold">{event.title}</p>
+                <p className="text-muted-foreground text-[11.5px]">
+                  {resolvedSelections.length} show{resolvedSelections.length !== 1 ? 's' : ''} selected
+                </p>
+              </div>
+
+              <div className="hidden shrink-0 items-center gap-1.5 sm:flex">
+                <Step n={1} label="Select shows" active={false} done />
+                <div className="bg-border h-px w-6" />
+                <Step n={2} label="Checkout" active />
+                <div className="bg-border h-px w-6" />
+                <Step n={3} label="Confirmation" active={false} />
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-[1120px] px-5 py-8 sm:px-8 sm:py-10">
+            <ShowCheckoutClient
+              event={{ id: event.id, slug: event.slug, title: event.title }}
+              selections={resolvedSelections}
+              subtotal={subtotal}
+            />
+          </div>
+        </main>
+
+        <SiteFooter />
+      </div>
+    )
+  }
 
   // ── General Admission: parse ticket type selections from URL ─────────────
   // URL format: ?tickets=ticketTypeId1:qty1,ticketTypeId2:qty2
