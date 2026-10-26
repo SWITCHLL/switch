@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Minus, Plus, ShoppingCart, Lock, AlertCircle, Map, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatPrice, getMinPrice } from '../utils'
@@ -171,7 +171,7 @@ function ReservedTicketSummary({ event, isLoggedIn }: { event: EventDetail; isLo
             )}
           >
             <Lock className="h-4 w-4" />
-            Sign in to choose seats
+            Buy Tickets
           </Link>
         ) : (
           <Link
@@ -195,7 +195,22 @@ function ReservedTicketSummary({ event, isLoggedIn }: { event: EventDetail; isLo
 
 function GATicketSelector({ event, isLoggedIn }: { event: EventDetail; isLoggedIn: boolean }) {
   const router = useRouter()
-  const [selections, setSelections] = useState<Record<string, number>>({})
+  const searchParams = useSearchParams()
+
+  // Restore selection from ?tickets=id:qty,id:qty when returning after login
+  const initialSelections = useMemo(() => {
+    const raw = searchParams.get('tickets')
+    if (!raw) return {}
+    return Object.fromEntries(
+      raw.split(',').flatMap((pair) => {
+        const [id, qty] = pair.split(':')
+        const n = parseInt(qty ?? '', 10)
+        return id && n > 0 ? [[id, n]] : []
+      })
+    ) as Record<string, number>
+  }, [searchParams])
+
+  const [selections, setSelections] = useState<Record<string, number>>(initialSelections)
 
   const activeTypes = event.ticketTypes.filter(
     (t) =>
@@ -315,7 +330,16 @@ function GATicketSelector({ event, isLoggedIn }: { event: EventDetail; isLoggedI
       <div className="pt-1">
         {!isLoggedIn ? (
           <Link
-            href={`/login?redirect=/events/${event.slug}`}
+            href={(() => {
+              const ticketsParam = Object.entries(selections)
+                .filter(([, qty]) => qty > 0)
+                .map(([id, qty]) => `${id}:${qty}`)
+                .join(',')
+              const redirect = ticketsParam
+                ? `/events/${event.slug}?tickets=${encodeURIComponent(ticketsParam)}&_scroll=tickets`
+                : `/events/${event.slug}?_scroll=tickets`
+              return `/login?redirect=${encodeURIComponent(redirect)}`
+            })()}
             className={cn(
               'flex w-full items-center justify-center gap-2 rounded-xl py-3',
               'text-[14px] font-semibold text-white transition-opacity hover:opacity-90',
@@ -323,7 +347,7 @@ function GATicketSelector({ event, isLoggedIn }: { event: EventDetail; isLoggedI
             )}
           >
             <Lock className="h-4 w-4" />
-            Sign in to buy tickets
+            Buy Tickets
           </Link>
         ) : (
           <button

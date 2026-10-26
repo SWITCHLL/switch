@@ -16,9 +16,10 @@ interface Category {
 interface EventFiltersBarProps {
   categories: Category[]
   activeFilters: EventFiltersParsed
+  totalEvents: number
 }
 
-export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarProps) {
+export function EventFiltersBar({ categories, activeFilters, totalEvents }: EventFiltersBarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -63,7 +64,7 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
       )}
     >
       {/* ── Search ── */}
-      <div className="relative mb-6">
+      <div className="relative mb-5">
         <Search
           className="text-muted-foreground pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2"
           aria-hidden
@@ -71,7 +72,7 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
         <input
           ref={searchRef}
           type="search"
-          placeholder="Search events, venues, artists…"
+          placeholder="Search events…"
           defaultValue={activeFilters.search ?? ''}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -80,7 +81,7 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
           }}
           className={cn(
             'border-border bg-surface placeholder:text-muted-foreground text-foreground',
-            'h-12 w-full rounded-xl border pl-11 pr-4 text-[14px]',
+            'h-11 w-full rounded-xl border pl-11 pr-4 text-[14px]',
             'outline-none transition-colors',
             'focus:border-brand-500 focus:ring-brand-500/20 focus:ring-2'
           )}
@@ -121,21 +122,24 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
         <div
           role="group"
           aria-label="Filter by category"
-          className="flex items-center gap-2 overflow-x-auto px-5 pb-1 sm:px-8"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className="flex items-center gap-2 overflow-x-auto px-5 pb-2 sm:px-8"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
         >
           {/* All */}
           <button
             onClick={() => updateFilter('category', null)}
             aria-pressed={!activeFilters.category}
             className={cn(
-              'shrink-0 rounded-full border px-4 py-1.5 text-[12.5px] font-medium whitespace-nowrap transition-all duration-200',
+              'shrink-0 rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium whitespace-nowrap transition-all duration-200',
               !activeFilters.category
                 ? 'border-foreground bg-foreground text-background'
                 : 'border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground'
             )}
           >
             All
+            {!activeFilters.category && (
+              <span className="ml-1 text-[11px] opacity-60">{totalEvents}</span>
+            )}
           </button>
 
           {categories.map((cat) => {
@@ -146,7 +150,7 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
                 onClick={() => updateFilter('category', isActive ? null : cat.slug)}
                 aria-pressed={isActive}
                 className={cn(
-                  'shrink-0 rounded-full border px-4 py-1.5 text-[12.5px] font-medium whitespace-nowrap transition-all duration-200',
+                  'shrink-0 rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium whitespace-nowrap transition-all duration-200',
                   isActive
                     ? 'border-transparent text-white'
                     : 'border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground'
@@ -163,7 +167,7 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
             onClick={() => updateFilter('free', activeFilters.free ? null : 'true')}
             aria-pressed={!!activeFilters.free}
             className={cn(
-              'shrink-0 rounded-full border px-4 py-1.5 text-[12.5px] font-medium whitespace-nowrap transition-all duration-200',
+              'shrink-0 rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium whitespace-nowrap transition-all duration-200',
               activeFilters.free
                 ? 'border-emerald-500 bg-emerald-500 text-white'
                 : 'border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground'
@@ -176,10 +180,10 @@ export function EventFiltersBar({ categories, activeFilters }: EventFiltersBarPr
           {hasActiveFilters && (
             <button
               onClick={clearAll}
-              className="text-muted-foreground hover:text-foreground ml-2 flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] transition-colors"
+              className="text-muted-foreground hover:text-foreground ml-1 flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] transition-colors"
             >
               <X className="h-3 w-3" aria-hidden />
-              Clear all
+              Clear
             </button>
           )}
         </div>

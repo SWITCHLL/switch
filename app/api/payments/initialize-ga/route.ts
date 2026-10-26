@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   // Rate limit: 10 payment initializations per minute per user
-  const rl = await rateLimit(`pay-init:user:${session.userId}`, { limit: 10, windowMs: 60_000 })
+  const rl = await rateLimit(`pay-init:user:${session.userId}`, { limit: 10, windowMs: 60_000, failClosed: true })
   if (!rl.success) {
     return NextResponse.json(
       { error: 'Too many requests. Please wait before trying again.' },
@@ -282,17 +282,19 @@ export async function POST(req: NextRequest) {
       })
     })
 
-    // Fire confirmation email non-blocking
-    db.ticket.findMany({
-      where: { eventId, userId },
-      select: {
-        ticketNumber: true,
-        qrCode: true,
-        ticketType: { select: { name: true } },
-      },
-      orderBy: { issuedAt: 'asc' },
-    }).then((tickets) =>
-      sendTicketConfirmationEmail({
+    // Fire confirmation email (awaited for reliable delivery)
+    try {
+      const tickets = await db.ticket.findMany({
+        where: { eventId, userId },
+        select: {
+          ticketNumber: true,
+          qrCode: true,
+          ticketType: { select: { name: true } },
+        },
+        orderBy: { issuedAt: 'asc' },
+      })
+      
+      await sendTicketConfirmationEmail({
         userId,
         eventTitle: event.title,
         eventDate: event.startsAt,
@@ -306,7 +308,10 @@ export async function POST(req: NextRequest) {
           seatLabel: null,
         })),
       })
-    ).catch((err) => console.error('[initialize-ga] email error:', err))
+    } catch (err) {
+      console.error('[initialize-ga] email error:', err)
+      // Don't throw — reservation is already created; email failure shouldn't fail the operation
+    }
 
     return NextResponse.json({
       free: true,

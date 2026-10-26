@@ -8,8 +8,6 @@ import { ReservationTable } from '@/features/organizer/components/reservation-ta
 import { db } from '@/lib/db'
 import { TicketStatus } from '@/app/generated/prisma/client'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ id: string }>
   searchParams: Promise<Record<string, string>>

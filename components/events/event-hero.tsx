@@ -125,7 +125,7 @@ export function EventHero({ event }: EventHeroProps) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-[800px] text-center text-[clamp(32px,6vw,68px)] font-semibold leading-[1.05] tracking-[-0.04em] text-white"
+          className="max-w-[800px] text-center text-[clamp(22px,5vw,68px)] font-semibold leading-[1.1] tracking-[-0.03em] text-white sm:text-[clamp(28px,5vw,68px)] sm:leading-[1.05] sm:tracking-[-0.04em]"
         >
           {event.title}
         </motion.h1>

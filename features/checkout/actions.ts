@@ -390,7 +390,7 @@ export async function confirmOrder(input: unknown): Promise<ConfirmOrderResult> 
           seat: { select: { id: true } },
         },
       },
-      event: { select: { id: true, slug: true, title: true, startsAt: true, isFree: true } },
+      event: { select: { id: true, slug: true, title: true, startsAt: true, isFree: true, imageUrl: true, venue: { select: { name: true, city: true } }, venueName: true, venueCity: true } },
     },
   })
 
@@ -477,31 +477,51 @@ export async function confirmOrder(input: unknown): Promise<ConfirmOrderResult> 
       userId
     )
 
-    // Send confirmation email (non-blocking — don't fail the order if email fails)
-    db.ticket.findMany({
-      where: { id: { in: ticketIds } },
-      select: {
-        ticketNumber: true,
-        qrCode: true,
-        ticketType: { select: { name: true } },
-        eventSeat: { select: { seat: { select: { label: true } } } },
-      },
-    }).then((tickets) =>
-      sendTicketConfirmationEmail({
-        userId,
-        eventTitle: reservation.event.title,
-        eventDate: reservation.event.startsAt,
-        eventSlug: reservation.event.slug,
-        ticketCount: ticketIds.length,
-        reservationId,
-        tickets: tickets.map((t) => ({
-          ticketNumber: t.ticketNumber,
-          qrCode: t.qrCode,
-          ticketTypeName: t.ticketType.name,
-          seatLabel: t.eventSeat?.seat?.label ?? null,
-        })),
+    // Send confirmation email (awaited for reliable delivery)
+    try {
+      const tickets = await db.ticket.findMany({
+        where: { id: { in: ticketIds } },
+        select: {
+          ticketNumber: true,
+          qrCode: true,
+          ticketType: { select: { name: true } },
+          eventSeat: { select: { seat: { select: { label: true } } } },
+          timeSlotTickets: {
+            select: { timeSlot: { select: { label: true, startsAt: true } } },
+            take: 1,
+          },
+        },
       })
-    ).catch((err) => console.error('[confirmOrder] email error:', err))
+
+      await sendTicketConfirmationEmail({
+        userId,
+        eventTitle:    reservation.event.title,
+        eventDate:     reservation.event.startsAt,
+        eventSlug:     reservation.event.slug,
+        eventImageUrl: reservation.event.imageUrl ?? undefined,
+        eventVenue:    reservation.event.venue
+          ? `${reservation.event.venue.name}, ${reservation.event.venue.city}`
+          : reservation.event.venueName
+          ? [reservation.event.venueName, reservation.event.venueCity].filter(Boolean).join(', ')
+          : undefined,
+        ticketCount:   ticketIds.length,
+        reservationId,
+        tickets: tickets.map((t) => {
+          const slot = t.timeSlotTickets[0]?.timeSlot
+          return {
+            ticketNumber:   t.ticketNumber,
+            qrCode:         t.qrCode,
+            ticketTypeName: t.ticketType.name,
+            seatLabel:      t.eventSeat?.seat?.label ?? null,
+            showLabel:      slot?.label ?? null,
+            showDate:       slot?.startsAt ?? null,
+          }
+        }),
+      })
+    } catch (err) {
+      console.error('[confirmOrder] email error:', err)
+      // Don't throw — order is already confirmed; email failure shouldn't fail the operation
+    }
 
     return { success: true, ticketIds }
   } catch (err) {
@@ -710,9 +730,9 @@ export async function submitRsvp(input: unknown): Promise<SubmitRsvpResult> {
       return createdTicketIds
     })
 
-    // 5. Post-transaction: send confirmation email non-blocking
-    db.ticket
-      .findMany({
+    // 5. Post-transaction: send confirmation email (awaited for reliable delivery)
+    try {
+      const tickets = await db.ticket.findMany({
         where: { id: { in: ticketIds } },
         select: {
           ticketNumber: true,
@@ -720,29 +740,38 @@ export async function submitRsvp(input: unknown): Promise<SubmitRsvpResult> {
           ticketType: { select: { name: true } },
         },
       })
-      .then((tickets) =>
-        db.event.findUnique({
-          where: { id: eventId },
-          select: { title: true, startsAt: true, slug: true },
-        }).then((evt) => {
-          if (!evt) return
-          return sendTicketConfirmationEmail({
-            userId,
-            eventTitle: evt.title,
-            eventDate: evt.startsAt,
-            eventSlug: evt.slug,
-            ticketCount: ticketIds.length,
-            reservationId: `rsvp-${ticketIds[0]}`,
-            tickets: tickets.map((t) => ({
-              ticketNumber: t.ticketNumber,
-              qrCode: t.qrCode,
-              ticketTypeName: t.ticketType.name,
-              seatLabel: null,
-            })),
-          })
+      
+      const evt = await db.event.findUnique({
+        where: { id: eventId },
+        select: { title: true, startsAt: true, slug: true, imageUrl: true, venue: { select: { name: true, city: true } }, venueName: true, venueCity: true },
+      })
+      
+      if (evt) {
+        await sendTicketConfirmationEmail({
+          userId,
+          eventTitle:    evt.title,
+          eventDate:     evt.startsAt,
+          eventSlug:     evt.slug,
+          eventImageUrl: evt.imageUrl ?? undefined,
+          eventVenue:    evt.venue
+            ? `${evt.venue.name}, ${evt.venue.city}`
+            : evt.venueName
+            ? [evt.venueName, evt.venueCity].filter(Boolean).join(', ')
+            : undefined,
+          ticketCount:   ticketIds.length,
+          reservationId: `rsvp-${ticketIds[0]}`,
+          tickets: tickets.map((t) => ({
+            ticketNumber:   t.ticketNumber,
+            qrCode:         t.qrCode,
+            ticketTypeName: t.ticketType.name,
+            seatLabel:      null,
+          })),
         })
-      )
-      .catch(console.error)
+      }
+    } catch (err) {
+      console.error('[guestCheckout] email error:', err)
+      // Don't throw — order is already confirmed; email failure shouldn't fail the operation
+    }
 
     // 6. Schedule event reminder (non-blocking stub — worker implemented in Task 9)
     db.event

@@ -17,6 +17,13 @@ export interface RateLimitOptions {
   limit: number
   /** Window size in milliseconds */
   windowMs: number
+  /**
+   * When true, a Redis failure returns { success: false } instead of failing
+   * open. Use for security-sensitive endpoints (payments, check-in, auth).
+   * Defaults to false (fail open) to avoid blocking users during Redis hiccups
+   * on non-critical paths.
+   */
+  failClosed?: boolean
 }
 
 export interface RateLimitResult {
@@ -71,7 +78,7 @@ export async function rateLimit(
   key: string,
   options: RateLimitOptions
 ): Promise<RateLimitResult> {
-  const { limit, windowMs } = options
+  const { limit, windowMs, failClosed = false } = options
   const now = Date.now()
   const ttl = Math.ceil(windowMs / 1000) + 1
 
@@ -92,9 +99,13 @@ export async function rateLimit(
       resetAt: result[2],
     }
   } catch {
-    // If Redis is unavailable, fail open rather than blocking legitimate requests.
-    // Log the failure so ops can investigate.
-    console.error('[rateLimit] Redis error — failing open for key:', key)
+    console.error('[rateLimit] Redis error for key:', key)
+    if (failClosed) {
+      // Security-sensitive endpoint: deny the request so a Redis outage cannot
+      // be used to bypass rate limiting on payments, check-in, auth, etc.
+      return { success: false, remaining: 0, resetAt: now + windowMs }
+    }
+    // Non-critical path: fail open rather than blocking legitimate requests.
     return { success: true, remaining: 0, resetAt: now + windowMs }
   }
 }

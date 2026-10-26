@@ -1,11 +1,10 @@
-import { getUpcomingEvents, getCategories } from '@/features/events'
-import { HeroSection } from './hero-section'
+import type { EventListItem } from '@/features/events/types'
+import { HeroShell } from './hero-shell'
 
-export async function HeroSectionWrapper() {
-  // Fetch up to 9 events for poster artwork — more = richer composition
-  const [events, categories] = await Promise.all([
-    getUpcomingEvents(9),
-    getCategories(),
-  ])
-  return <HeroSection events={events} categories={categories} />
+interface HeroSectionWrapperProps {
+  events: EventListItem[]
+}
+
+export function HeroSectionWrapper({ events }: HeroSectionWrapperProps) {
+  return <HeroShell events={events} />
 }

@@ -7,8 +7,6 @@ import { getOrganizerByUserId, getEventInventory } from '@/features/organizer/qu
 import { InventoryDashboard } from '@/features/organizer/components/inventory-dashboard'
 import { db } from '@/lib/db'
 
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ id: string }>
 }

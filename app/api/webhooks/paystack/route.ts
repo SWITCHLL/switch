@@ -22,7 +22,6 @@ import {
   PaymentStatus,
   PayoutStatus,
   ReservationStatus,
-  TicketStatus,
 } from '@/app/generated/prisma/client'
 import { randomBytes } from 'crypto'
 
@@ -149,7 +148,9 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
       },
       event: {
         select: {
-          id: true, slug: true, title: true, startsAt: true,
+          id: true, slug: true, title: true, startsAt: true, imageUrl: true,
+          venue: { select: { name: true, city: true } },
+          venueName: true, venueCity: true,
           organizer: { select: { id: true, feePercent: true } },
         },
       },
@@ -215,32 +216,64 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
     })
   }
 
-  // ── Confirmation email (non-blocking) ─────────────────────────────────────
-  db.ticket.findMany({
-    where: { eventId: reservation.eventId, userId, status: TicketStatus.ACTIVE },
-    select: {
-      ticketNumber: true,
-      qrCode:       true,
-      ticketType:   { select: { name: true } },
-      eventSeat:    { select: { seat: { select: { label: true } } } },
-    },
-    orderBy: { issuedAt: 'asc' },
-  }).then((tickets) =>
-    sendTicketConfirmationEmail({
-      userId,
-      eventTitle:   reservation.event.title,
-      eventDate:    reservation.event.startsAt,
-      eventSlug:    reservation.event.slug,
-      ticketCount:  tickets.length,
-      reservationId,
-      tickets: tickets.map((t) => ({
-        ticketNumber:   t.ticketNumber,
-        qrCode:         t.qrCode,
-        ticketTypeName: t.ticketType.name,
-        seatLabel:      t.eventSeat?.seat?.label ?? null,
-      })),
+  // ── Confirmation email (awaited for reliable delivery) ──────────────────────
+  try {
+    // Scope to this transaction's order only — not all user tickets for the event
+    const order = await db.order.findFirst({
+      where: { reservationId, userId },
+      select: { id: true },
     })
-  ).catch((err) => console.error('[webhook/paystack] email error:', err))
+
+    const tickets = order
+      ? await db.ticket.findMany({
+          where: { orderId: order.id },
+          select: {
+            ticketNumber: true,
+            qrCode:       true,
+            ticketType:   { select: { name: true } },
+            eventSeat:    { select: { seat: { select: { label: true } } } },
+            timeSlotTickets: {
+              select: {
+                timeSlot: { select: { label: true, startsAt: true } },
+              },
+              take: 1,
+            },
+          },
+          orderBy: { issuedAt: 'asc' },
+        })
+      : []
+
+    if (tickets.length > 0) {
+      await sendTicketConfirmationEmail({
+        userId,
+        eventTitle:    reservation.event.title,
+        eventDate:     reservation.event.startsAt,
+        eventSlug:     reservation.event.slug,
+        eventImageUrl: reservation.event.imageUrl ?? undefined,
+        eventVenue:    reservation.event.venue
+          ? `${reservation.event.venue.name}, ${reservation.event.venue.city}`
+          : reservation.event.venueName
+          ? [reservation.event.venueName, reservation.event.venueCity].filter(Boolean).join(', ')
+          : undefined,
+        ticketCount:   tickets.length,
+        reservationId,
+        tickets: tickets.map((t) => {
+          const slot = t.timeSlotTickets[0]?.timeSlot
+          return {
+            ticketNumber:   t.ticketNumber,
+            qrCode:         t.qrCode,
+            ticketTypeName: t.ticketType.name,
+            seatLabel:      t.eventSeat?.seat?.label ?? null,
+            showLabel:      slot?.label ?? null,
+            showDate:       slot?.startsAt ?? null,
+          }
+        }),
+      })
+    }
+  } catch (err) {
+    console.error('[webhook/paystack] email error:', err)
+    // Don't throw — order is already confirmed; email failure shouldn't fail the payment
+  }
 }
 
 // ─── Time-slot order handler ──────────────────────────────────────────────────
@@ -522,19 +555,26 @@ async function handleReservedChargeSuccess({
         qrCode:       generateQrCode(),
         eventSeatId:  eventSeat.id as string,
       })
+    }
 
-      await tx.eventSeat.update({
-        where: { id: eventSeat.id as string },
-        data:  { status: EventSeatStatus.SOLD },
-      })
+    // Batch-update all sold seats in one query
+    await tx.eventSeat.updateMany({
+      where: { id: { in: reservation.eventSeats.map((s) => s.id as string) } },
+      data:  { status: EventSeatStatus.SOLD },
+    })
 
+    // Group sold-count increments by ticketTypeId then batch
+    const soldByType = new Map<string, number>()
+    for (const eventSeat of reservation.eventSeats) {
       if (eventSeat.ticketTypeId) {
-        await tx.ticketType.update({
-          where: { id: eventSeat.ticketTypeId },
-          data:  { sold: { increment: 1 } },
-        })
+        soldByType.set(eventSeat.ticketTypeId, (soldByType.get(eventSeat.ticketTypeId) ?? 0) + 1)
       }
     }
+    await Promise.all(
+      Array.from(soldByType).map(([id, count]) =>
+        tx.ticketType.update({ where: { id }, data: { sold: { increment: count } } })
+      )
+    )
 
     if (promoCodeId) {
       const updated = await tx.$executeRaw`

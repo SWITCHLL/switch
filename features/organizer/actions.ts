@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { z } from 'zod'
 import { db } from '@/lib/db'
 import { getSession } from '@/lib/session'
@@ -84,8 +84,12 @@ function slugify(title: string): string {
 async function uniqueSlug(base: string): Promise<string> {
   let slug = base
   let i = 0
+  const MAX_ATTEMPTS = 100
   while (await db.event.findUnique({ where: { slug } })) {
-    slug = `${base}-${++i}`
+    if (++i > MAX_ATTEMPTS) {
+      throw new Error(`Could not generate a unique slug for "${base}" after ${MAX_ATTEMPTS} attempts`)
+    }
+    slug = `${base}-${i}`
   }
   return slug
 }
@@ -253,6 +257,8 @@ export async function publishEvent(eventId: string): Promise<ActionResult> {
 
   revalidatePath('/dashboard/events')
   revalidatePath(`/events/${event.slug}`)
+  updateTag('upcoming-events')
+  updateTag('events')
   return { success: true, data: undefined }
 }
 
@@ -272,6 +278,8 @@ export async function unpublishEvent(eventId: string): Promise<ActionResult> {
   })
 
   revalidatePath('/dashboard/events')
+  updateTag('upcoming-events')
+  updateTag('events')
   return { success: true, data: undefined }
 }
 
@@ -496,15 +504,21 @@ export async function deleteSpeaker(speakerId: string, eventId: string): Promise
     deleteStorageFiles([speaker.avatarUrl]).catch(console.error)
   }
 
-  // Re-order remaining speakers
+  // Re-order remaining speakers inside a transaction — one query per position
+  // update is replaced with a single updateMany inside the delete transaction.
   const remaining = await db.eventSpeaker.findMany({
     where: { eventId },
     orderBy: { position: 'asc' },
     select: { id: true },
   })
-  await Promise.all(
-    remaining.map((s, i) => db.eventSpeaker.update({ where: { id: s.id }, data: { position: i } }))
-  )
+
+  if (remaining.length > 0) {
+    await db.$transaction(
+      remaining.map((s, i) =>
+        db.eventSpeaker.update({ where: { id: s.id }, data: { position: i } })
+      )
+    )
+  }
 
   revalidatePath(`/dashboard/events/${eventId}`)
   return { success: true, data: undefined }
@@ -539,6 +553,8 @@ export async function cancelEvent(eventId: string): Promise<ActionResult> {
   revalidatePath('/dashboard/events')
   revalidatePath(`/dashboard/events/${eventId}`)
   revalidatePath(`/events/${event.slug}`)
+  updateTag('upcoming-events')
+  updateTag('events')
   return { success: true, data: undefined }
 }
 
@@ -585,6 +601,8 @@ export async function deleteEvent(eventId: string): Promise<ActionResult> {
 
   revalidatePath('/dashboard/events')
   revalidatePath(`/events/${event.slug}`)
+  updateTag('upcoming-events')
+  updateTag('events')
   return { success: true, data: undefined }
 }
 
@@ -935,6 +953,13 @@ export async function cancelTicket(input: {
 
 // ─── Issue Complimentary Ticket ───────────────────────────────────────────────
 
+const issueComplimentaryTicketSchema = z.object({
+  eventId:        z.string().min(1),
+  ticketTypeId:   z.string().min(1),
+  recipientEmail: z.string().email('Invalid email address').max(254),
+  recipientName:  z.string().min(1, 'Recipient name is required').max(120),
+})
+
 export async function issueComplimentaryTicket(input: {
   eventId: string
   ticketTypeId: string
@@ -943,6 +968,13 @@ export async function issueComplimentaryTicket(input: {
 }): Promise<{ success: true; ticketId: string } | { success: false; error: string }> {
   const session = await getSession()
   if (!session) return { success: false, error: 'UNAUTHENTICATED' }
+
+  // Validate inputs before any DB access
+  const parsed = issueComplimentaryTicketSchema.safeParse(input)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  }
+  const validatedInput = parsed.data
 
   // Verify organizer
   const organizer = await db.organizer.findUnique({
@@ -953,14 +985,14 @@ export async function issueComplimentaryTicket(input: {
 
   // Verify event ownership
   const event = await db.event.findUnique({
-    where: { id: input.eventId, organizerId: organizer.id },
-    select: { id: true, title: true, slug: true, startsAt: true },
+    where: { id: validatedInput.eventId, organizerId: organizer.id },
+    select: { id: true, title: true, slug: true, startsAt: true, venue: { select: { name: true, city: true } }, venueName: true, venueCity: true },
   })
   if (!event) return { success: false, error: 'Event not found' }
 
   // Verify ticket type belongs to event
   const ticketType = await db.ticketType.findUnique({
-    where: { id: input.ticketTypeId, eventId: input.eventId },
+    where: { id: validatedInput.ticketTypeId, eventId: validatedInput.eventId },
     select: { id: true, name: true, price: true, currency: true },
   })
   if (!ticketType) return { success: false, error: 'Ticket type not found' }
@@ -968,8 +1000,8 @@ export async function issueComplimentaryTicket(input: {
   try {
     // Upsert user by email
     const recipient = await db.user.upsert({
-      where: { email: input.recipientEmail },
-      create: { email: input.recipientEmail, name: input.recipientName },
+      where: { email: validatedInput.recipientEmail },
+      create: { email: validatedInput.recipientEmail, name: validatedInput.recipientName },
       update: {},
       select: { id: true, email: true, name: true },
     })
@@ -981,9 +1013,9 @@ export async function issueComplimentaryTicket(input: {
     const ticket = await db.$transaction(async (tx) => {
       const newTicket = await tx.ticket.create({
         data: {
-          eventId: input.eventId,
+          eventId: validatedInput.eventId,
           userId: recipient.id,
-          ticketTypeId: input.ticketTypeId,
+          ticketTypeId: validatedInput.ticketTypeId,
           ticketNumber,
           qrCode,
           status: TicketStatus.ACTIVE,
@@ -1001,31 +1033,41 @@ export async function issueComplimentaryTicket(input: {
         actor: organizer.id,
         metadata: {
           isComplimentary: true,
-          recipientEmail: input.recipientEmail,
-          recipientName: input.recipientName,
+          recipientEmail: validatedInput.recipientEmail,
+          recipientName: validatedInput.recipientName,
         },
       })
 
       return newTicket
     })
 
-    // Send confirmation email non-blocking
-    sendTicketConfirmationEmail({
-      userId: recipient.id,
-      eventTitle: event.title,
-      eventDate: event.startsAt,
-      eventSlug: event.slug,
-      ticketCount: 1,
-      reservationId: ticket.id,
-      tickets: [
-        {
-          ticketNumber,
-          qrCode,
-          ticketTypeName: ticketType.name,
-          seatLabel: null,
-        },
-      ],
-    }).catch(console.error)
+    // Send confirmation email (awaited for reliable delivery)
+    try {
+      await sendTicketConfirmationEmail({
+        userId: recipient.id,
+        eventTitle: event.title,
+        eventDate: event.startsAt,
+        eventSlug: event.slug,
+        eventVenue: event.venue
+          ? `${event.venue.name}, ${event.venue.city}`
+          : event.venueName
+          ? [event.venueName, event.venueCity].filter(Boolean).join(', ')
+          : undefined,
+        ticketCount: 1,
+        reservationId: ticket.id,
+        tickets: [
+          {
+            ticketNumber,
+            qrCode,
+            ticketTypeName: ticketType.name,
+            seatLabel: null,
+          },
+        ],
+      })
+    } catch (err) {
+      console.error('[issueComplimentaryTicket] email error:', err)
+      // Don't throw — ticket is already issued; email failure shouldn't fail the operation
+    }
 
     revalidatePath(`/dashboard/events/${input.eventId}/reservations`)
     return { success: true, ticketId: ticket.id }
@@ -1069,6 +1111,9 @@ export async function resendConfirmationEmail(input: {
           slug: true,
           startsAt: true,
           organizerId: true,
+          venue: { select: { name: true, city: true } },
+          venueName: true,
+          venueCity: true,
         },
       },
     },
@@ -1085,6 +1130,11 @@ export async function resendConfirmationEmail(input: {
       eventTitle: ticket.event.title,
       eventDate: ticket.event.startsAt,
       eventSlug: ticket.event.slug,
+      eventVenue: ticket.event.venue
+        ? `${ticket.event.venue.name}, ${ticket.event.venue.city}`
+        : ticket.event.venueName
+        ? [ticket.event.venueName, ticket.event.venueCity].filter(Boolean).join(', ')
+        : undefined,
       ticketCount: 1,
       reservationId: ticket.eventId,
       tickets: [

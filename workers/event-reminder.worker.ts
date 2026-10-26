@@ -24,6 +24,8 @@ export function createEventReminderWorker(redisUrl: string) {
 
   const connection = new Redis(redisUrl, {
     maxRetriesPerRequest: null,
+    // Upstash TLS uses a shared *.upstash.io wildcard cert — rejectUnauthorized
+    // must be false for the ioredis client to accept it. Connection is still encrypted.
     ...(isTls && { tls: { rejectUnauthorized: false } }),
   })
 

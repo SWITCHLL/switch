@@ -5,6 +5,8 @@ import { DashboardSidebar } from '@/components/layout/dashboard-sidebar'
 import { DashboardHeader } from '@/components/layout/dashboard-header'
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav'
 
+// All dashboard routes read cookies (session) — mark the whole subtree as
+// dynamic so Next.js doesn't attempt to statically prerender any of them.
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {

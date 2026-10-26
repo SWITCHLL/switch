@@ -15,15 +15,15 @@ export function FeaturedEvent({ event }: FeaturedEventProps) {
   const free = hasFreeTickets(event)
 
   return (
-    <section aria-label="Featured event" className="mx-auto max-w-[1120px] px-5 pb-16 sm:px-8">
-      <p className="text-muted-foreground mb-5 text-[11px] font-semibold tracking-[0.18em] uppercase">
+    <section aria-label="Featured event" className="mx-auto max-w-[1120px] px-5 pb-10 sm:pb-16 sm:px-8">
+      <p className="text-muted-foreground mb-4 text-[11px] font-semibold tracking-[0.18em] uppercase sm:mb-5">
         Featured
       </p>
 
       <Link href={`/events/${event.slug}`} className="group block">
         <article
           className="relative w-full overflow-hidden rounded-2xl"
-          style={{ aspectRatio: '21/9' }}
+          style={{ aspectRatio: '4/3', maxHeight: '420px' }}
           aria-label={event.title}
         >
           {/* Background image */}
@@ -41,29 +41,29 @@ export function FeaturedEvent({ event }: FeaturedEventProps) {
           )}
 
           {/* Gradient overlay — heavier at the bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
           {/* Content */}
-          <div className="absolute right-0 bottom-0 left-0 p-6 sm:p-8">
-            <div className="flex items-end justify-between gap-4">
+          <div className="absolute right-0 bottom-0 left-0 p-5 sm:p-8">
+            <div className="flex items-end justify-between gap-3">
               <div className="min-w-0">
                 {event.category && (
                   <p
-                    className="mb-2 text-[11px] font-semibold tracking-[0.15em] uppercase"
+                    className="mb-1.5 text-[10px] font-semibold tracking-[0.15em] uppercase sm:mb-2 sm:text-[11px]"
                     style={{ color: event.category.color ?? '#6366f1' }}
                   >
                     {event.category.name}
                   </p>
                 )}
-                <h2 className="line-clamp-2 text-[22px] leading-tight font-semibold text-white sm:text-[28px]">
+                <h2 className="line-clamp-2 text-[18px] leading-tight font-semibold text-white sm:text-[28px]">
                   {event.title}
                 </h2>
-                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-                  <p className="text-[13px] text-white/70">
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 sm:mt-2 sm:gap-x-4">
+                  <p className="text-[12px] text-white/70 sm:text-[13px]">
                     {format(event.startsAt, 'EEE, MMM d · h:mm a')}
                   </p>
                   {event.venue && (
-                    <p className="flex items-center gap-1 text-[13px] text-white/70">
+                    <p className="flex items-center gap-1 text-[12px] text-white/70 sm:text-[13px]">
                       <MapPin className="h-3 w-3 shrink-0" aria-hidden />
                       {event.venue.city}
                     </p>
@@ -71,19 +71,19 @@ export function FeaturedEvent({ event }: FeaturedEventProps) {
                 </div>
               </div>
 
-              <div className="flex shrink-0 flex-col items-end gap-3">
+              <div className="flex shrink-0 flex-col items-end gap-2 sm:gap-3">
                 <div className="text-right">
                   {soldOut ? (
-                    <p className="text-[14px] font-semibold text-red-400">Sold out</p>
+                    <p className="text-[13px] font-semibold text-red-400 sm:text-[14px]">Sold out</p>
                   ) : minPrice !== null ? (
-                    <p className="text-[14px] font-semibold text-white">
+                    <p className="text-[13px] font-semibold text-white sm:text-[14px]">
                       {minPrice === 0 ? 'Free' : `From ${formatPrice(minPrice)}`}
                     </p>
                   ) : null}
                 </div>
-                <span className="hidden items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[13px] font-medium text-white backdrop-blur-sm transition-colors group-hover:bg-white/20 sm:flex">
-                  View event
-                  <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+                <span className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors group-hover:bg-white/20 sm:px-4 sm:py-2 sm:text-[13px]">
+                  Get tickets
+                  <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden />
                 </span>
               </div>
             </div>

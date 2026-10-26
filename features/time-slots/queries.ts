@@ -151,28 +151,26 @@ export async function getTimeSlotAvailability(
   timeSlotId: string,
   ticketTypeId: string
 ): Promise<{ capacity: number; booked: number; held: number; available: number } | null> {
-  // Get capacity and eventId via raw SQL
-  const rows: Array<{ capacity: number; eventId: string }> = await db.$queryRaw`
-    SELECT tsc."capacity", ts."eventId"
+  // Combine capacity lookup and booked count in a single query
+  const rows: Array<{ capacity: number; eventId: string; booked: bigint }> = await db.$queryRaw`
+    SELECT
+      tsc."capacity",
+      ts."eventId",
+      COUNT(tst."ticketId")::bigint AS booked
     FROM "time_slot_capacities" tsc
     JOIN "time_slots" ts ON ts."id" = tsc."timeSlotId"
+    LEFT JOIN "time_slot_tickets" tst ON tst."timeSlotId" = tsc."timeSlotId"
+      AND tst."ticketTypeId" = tsc."ticketTypeId"
+    LEFT JOIN "tickets" t ON t."id" = tst."ticketId"
+      AND t."status" IN ('ACTIVE', 'USED')
     WHERE tsc."timeSlotId" = ${timeSlotId}
       AND tsc."ticketTypeId" = ${ticketTypeId}
+    GROUP BY tsc."capacity", ts."eventId"
     LIMIT 1
   `
   if (!rows[0]) return null
-  const { capacity, eventId } = rows[0]
-
-  // Booked count via raw SQL
-  const bookedRows: Array<{ count: bigint }> = await db.$queryRaw`
-    SELECT COUNT(*)::bigint AS count
-    FROM "time_slot_tickets" tst
-    JOIN "tickets" t ON t."id" = tst."ticketId"
-    WHERE tst."timeSlotId" = ${timeSlotId}
-      AND tst."ticketTypeId" = ${ticketTypeId}
-      AND t."status" IN ('ACTIVE', 'USED')
-  `
-  const booked = Number(bookedRows[0]?.count ?? 0)
+  const { capacity, eventId, booked: bookedBigint } = rows[0]
+  const booked = Number(bookedBigint)
 
   // Held count from active reservation gaHolds
   const holdKey = `${timeSlotId}:${ticketTypeId}`

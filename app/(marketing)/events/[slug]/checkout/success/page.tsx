@@ -8,9 +8,6 @@ import { PaymentConfirmationPoller } from '@/features/checkout/components/paymen
 
 export const metadata: Metadata = { title: 'Booking Confirmed' }
 
-// Always render fresh — never serve a cached version of this page
-export const dynamic = 'force-dynamic'
-
 interface PageProps {
   params: Promise<{ slug: string }>
   searchParams: Promise<{ reservation?: string; type?: string }>

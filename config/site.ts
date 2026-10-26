@@ -25,19 +25,12 @@ export const siteConfig = {
       title: 'Product',
       links: [
         { title: 'Events', href: '/events' },
-        { title: 'Bus', href: '/bus' },
-        { title: 'Tourism', href: '/tourism' },
-        { title: 'Parking', href: '/parking' },
-        { title: 'Membership', href: '/membership' },
       ],
     },
     {
       title: 'Company',
       links: [
         { title: 'About', href: '/about' },
-        { title: 'Blog', href: '/blog' },
-        { title: 'Careers', href: '/careers' },
-        { title: 'Press', href: '/press' },
       ],
     },
     {

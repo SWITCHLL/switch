@@ -55,3 +55,6 @@ next-env.d.ts
 
 # Local build artifacts
 build-output.txt
+
+# Sentry Config File
+.env.sentry-build-plugin

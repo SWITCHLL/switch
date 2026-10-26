@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Loader2, Mail, ArrowLeft } from 'lucide-react'
 import { sendOtpAction, verifyOtpAction, type SendOtpState, type VerifyOtpState } from './actions'
 
@@ -87,13 +88,14 @@ function EmailStep({ onSuccess }: { onSuccess: (email: string) => void }) {
 
 // ─── Step 2: OTP Form ─────────────────────────────────────────────────────────
 
-function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
+function OtpStep({ email, redirectTo, onBack }: { email: string; redirectTo: string; onBack: () => void }) {
   const initialState: VerifyOtpState = { status: 'idle' }
   const [state, action, pending] = useActionState(verifyOtpAction, initialState)
 
   return (
     <form action={action} className="space-y-4">
       <input type="hidden" name="email" value={email} />
+      <input type="hidden" name="redirectTo" value={redirectTo} />
 
       {/* Email confirmation row */}
       <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
@@ -176,6 +178,9 @@ function OtpStep({ email, onBack }: { email: string; onBack: () => void }) {
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export function LoginForm() {
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') ?? '/dashboard'
+
   const [step, setStep] = useState<'email' | 'otp'>('email')
   const [email, setEmail] = useState('')
 
@@ -192,6 +197,6 @@ export function LoginForm() {
   return step === 'email' ? (
     <EmailStep onSuccess={handleEmailSuccess} />
   ) : (
-    <OtpStep email={email} onBack={handleBack} />
+    <OtpStep email={email} redirectTo={redirectTo} onBack={handleBack} />
   )
 }

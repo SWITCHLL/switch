@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Route } from 'next'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
@@ -6,16 +7,13 @@ import { cn } from '@/lib/utils'
 // ─── Logo mark (matches header) ───────────────────────────────────────────────
 function LogoMark() {
   return (
-    <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden>
-      <rect width="22" height="22" rx="6" fill="currentColor" className="text-brand-600" />
-      <path
-        d="M6 11.5L10 7l6 8"
-        stroke="white"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <Image
+      src="/android-chrome-192x192.png"
+      alt="SWITCH logo"
+      width={22}
+      height={22}
+      className="rounded-md"
+    />
   )
 }
 

@@ -1,30 +1,54 @@
 import { format } from 'date-fns'
-import { isSameDay } from 'date-fns'
 import type { EventDetail } from '@/features/events/types'
 
 interface EventDetailsSectionProps {
-  event: Pick<EventDetail, 'startsAt' | 'endsAt' | 'category' | 'seatingType' | 'isVirtual' | 'status'>
+  event: Pick<
+    EventDetail,
+    'startsAt' | 'endsAt' | 'category' | 'seatingType' | 'isVirtual' | 'status' | 'timeSlots'
+  >
 }
 
 export function EventDetailsSection({ event }: EventDetailsSectionProps) {
-  const { startsAt, endsAt, category, seatingType, isVirtual, status } = event
+  const { startsAt, endsAt, category, seatingType, isVirtual, status, timeSlots } = event
 
   const start = new Date(startsAt)
   const end = endsAt ? new Date(endsAt) : null
 
-  const dateDisplay = format(start, 'EEEE, MMMM d, yyyy')
+  const rows: { label: string; value: React.ReactNode }[] = []
 
-  let timeDisplay: string
-  if (!end || start.getTime() === end.getTime()) {
-    timeDisplay = format(start, 'h:mm a')
+  // ── Date / Time ───────────────────────────────────────────────────────────
+  if (timeSlots && timeSlots.length > 0) {
+    // Multi-date event: list each slot on its own line
+    rows.push({
+      label: 'Dates',
+      value: (
+        <ul className="space-y-1 text-right">
+          {timeSlots.map((slot) => {
+            const slotStart = new Date(slot.startsAt)
+            const slotEnd = new Date(slot.endsAt)
+            return (
+              <li key={slot.id} className="text-foreground text-[13px] font-medium">
+                {slot.label
+                  ? slot.label
+                  : `${format(slotStart, 'EEE, MMM d, yyyy')} · ${format(slotStart, 'h:mm a')} — ${format(slotEnd, 'h:mm a')}`}
+              </li>
+            )
+          })}
+        </ul>
+      ),
+    })
   } else {
-    timeDisplay = `${format(start, 'h:mm a')} — ${format(end, 'h:mm a')}`
-  }
+    // Single-date event
+    rows.push({ label: 'Date', value: format(start, 'EEEE, MMMM d, yyyy') })
 
-  const rows: { label: string; value: string }[] = [
-    { label: 'Date', value: dateDisplay },
-    { label: 'Time', value: timeDisplay },
-  ]
+    let timeDisplay: string
+    if (!end || start.getTime() === end.getTime()) {
+      timeDisplay = format(start, 'h:mm a')
+    } else {
+      timeDisplay = `${format(start, 'h:mm a')} — ${format(end, 'h:mm a')}`
+    }
+    rows.push({ label: 'Time', value: timeDisplay })
+  }
 
   if (category) rows.push({ label: 'Category', value: category.name })
 

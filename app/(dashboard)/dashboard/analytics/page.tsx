@@ -23,42 +23,29 @@ export default async function AnalyticsPage() {
 
   // ── Aggregate stats ────────────────────────────────────────────────────────
   const [
-    totalEvents,
-    publishedEvents,
     totalTickets,
-    upcomingEvents,
     soldSeatsAgg,
-    recentTickets,
+    dailyRows,
     topEvents,
     ticketTypeRevenue,
     refundStats,
-    draftCount,
-    cancelledCount,
-    completedCount,
+    eventStatusCounts,
   ] = await Promise.all([
-    db.event.count({ where: { organizerId: organizer.id } }),
-    db.event.count({ where: { organizerId: organizer.id, status: 'PUBLISHED' } }),
     db.ticket.count({ where: { event: { organizerId: organizer.id } } }),
-    db.event.count({
-      where: {
-        organizerId: organizer.id,
-        status: 'PUBLISHED',
-        startsAt: { gte: now },
-      },
-    }),
     db.eventSeat.aggregate({
       where: { event: { organizerId: organizer.id }, status: 'SOLD' },
       _sum: { price: true },
     }),
-    // Tickets in last 30 days grouped by day
-    db.ticket.findMany({
-      where: {
-        event: { organizerId: organizer.id },
-        issuedAt: { gte: thirtyDaysAgo },
-      },
-      select: { issuedAt: true },
-      orderBy: { issuedAt: 'asc' },
-    }),
+    // Daily ticket counts via SQL GROUP BY — avoids pulling all rows into memory
+    db.$queryRaw<{ day: Date; count: bigint }[]>`
+      SELECT DATE_TRUNC('day', t."issuedAt") AS day, COUNT(*) AS count
+      FROM tickets t
+      JOIN events e ON e.id = t."eventId"
+      WHERE e."organizerId" = ${organizer.id}
+        AND t."issuedAt" >= ${thirtyDaysAgo}
+      GROUP BY 1
+      ORDER BY 1
+    `,
     // Top 5 events by tickets sold
     db.event.findMany({
       where: { organizerId: organizer.id },
@@ -86,10 +73,26 @@ export default async function AnalyticsPage() {
       where: { event: { organizerId: organizer.id } },
       _count: true,
     }),
-    db.event.count({ where: { organizerId: organizer.id, status: 'DRAFT' } }),
-    db.event.count({ where: { organizerId: organizer.id, status: 'CANCELLED' } }),
-    db.event.count({ where: { organizerId: organizer.id, status: 'COMPLETED' } }),
+    // All event status counts in one groupBy instead of 5 separate count() calls
+    db.event.groupBy({
+      by: ['status'],
+      where: { organizerId: organizer.id },
+      _count: { _all: true },
+    }),
   ])
+
+  // Derive per-status counts from the single groupBy result
+  const countFor = (status: string) =>
+    eventStatusCounts.find((r) => r.status === status)?._count._all ?? 0
+
+  const totalEvents    = eventStatusCounts.reduce((n, r) => n + r._count._all, 0)
+  const publishedEvents = countFor('PUBLISHED')
+  const draftCount     = countFor('DRAFT')
+  const cancelledCount = countFor('CANCELLED')
+  const completedCount = countFor('COMPLETED')
+  const upcomingEvents = topEvents.filter(
+    (e) => e.status === 'PUBLISHED' && new Date(e.startsAt) >= now
+  ).length
 
   const totalRevenue = soldSeatsAgg._sum.price ?? 0
   const averageTicketPrice = totalTickets > 0 ? totalRevenue / totalTickets : 0
@@ -101,12 +104,14 @@ export default async function AnalyticsPage() {
   for (let i = 0; i < 30; i++) {
     dailyMap.set(format(subDays(now, 29 - i), 'yyyy-MM-dd'), 0)
   }
-  for (const t of recentTickets) {
-    const key = format(t.issuedAt, 'yyyy-MM-dd')
-    dailyMap.set(key, (dailyMap.get(key) ?? 0) + 1)
+  // dailyRows comes from the SQL GROUP BY — each row has a Date and a bigint count
+  for (const row of dailyRows) {
+    const key = format(row.day, 'yyyy-MM-dd')
+    dailyMap.set(key, Number(row.count))
   }
   const dailyData = Array.from(dailyMap.entries()).map(([date, count]) => ({ date, count }))
   const maxDaily = Math.max(...dailyData.map((d) => d.count), 1)
+  const totalRecentTickets = dailyData.reduce((sum, d) => sum + d.count, 0)
 
   const stats = [
     { label: 'Total Revenue', value: formatPrice(totalRevenue), icon: TrendingUp, color: 'amber' },
@@ -141,7 +146,7 @@ export default async function AnalyticsPage() {
               <p className="text-muted-foreground mt-0.5 text-[12px]">Last 30 days</p>
             </div>
             <div className="text-right">
-              <p className="text-[22px] font-bold">{recentTickets.length}</p>
+              <p className="text-[22px] font-bold">{totalRecentTickets}</p>
               <p className="text-muted-foreground text-[12px]">tickets sold</p>
             </div>
           </div>

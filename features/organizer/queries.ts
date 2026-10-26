@@ -102,11 +102,15 @@ export async function getOrganizerEvent(eventId: string, organizerId: string) {
 // ─── Dashboard overview stats ─────────────────────────────────────────────────
 
 export async function getOrganizerStats(organizerId: string) {
-  const [totalEvents, publishedEvents, totalTickets, upcomingEvents] = await Promise.all([
+  const [totalEvents, publishedEvents, totalTickets, upcomingEvents, revenueAgg] = await Promise.all([
     db.event.count({ where: { organizerId } }),
     db.event.count({ where: { organizerId, status: EventStatus.PUBLISHED } }),
+    // Exclude cancelled / refunded tickets — they're no longer valid
     db.ticket.count({
-      where: { event: { organizerId } },
+      where: {
+        event: { organizerId },
+        status: { notIn: [TicketStatus.CANCELLED, TicketStatus.REFUNDED] },
+      },
     }),
     db.event.count({
       where: {
@@ -115,23 +119,23 @@ export async function getOrganizerStats(organizerId: string) {
         startsAt: { gte: new Date() },
       },
     }),
+    // Use Payment (actual money collected) rather than EventSeat prices,
+    // which may not reflect discounts or partial refunds.
+    db.payment.aggregate({
+      where: {
+        organizer: { id: organizerId },
+        status: 'SUCCESS',
+      },
+      _sum: { netAmount: true },
+    }),
   ])
-
-  // Revenue: sum of prices for sold event seats
-  const soldSeats = await db.eventSeat.aggregate({
-    where: {
-      event: { organizerId },
-      status: 'SOLD',
-    },
-    _sum: { price: true },
-  })
 
   return {
     totalEvents,
     publishedEvents,
     totalTickets,
     upcomingEvents,
-    totalRevenue: soldSeats._sum.price ?? 0,
+    totalRevenue: revenueAgg._sum.netAmount ?? 0,
   }
 }
 
@@ -178,6 +182,9 @@ export async function getUserTickets(userId: string, filters?: { status?: string
     endsAt: Date | null
     status: string
     venue: { id: string; name: string; city: string } | null
+    venueName: string | null
+    venueCity: string | null
+    venueAddress: string | null
   }
   ticketType: {
     id: string
@@ -189,6 +196,14 @@ export async function getUserTickets(userId: string, filters?: { status?: string
     id: string
     seat: { id: string; label: string; number: number | null }
   } | null
+  timeSlotTickets: Array<{
+    timeSlot: {
+      id: string
+      label: string
+      startsAt: Date
+      endsAt: Date
+    }
+  }>
 }>> {
   // Validate status is a valid TicketStatus if provided
   const validStatuses = ['ACTIVE', 'USED', 'REFUNDED', 'CANCELLED', 'EXPIRED']
@@ -223,6 +238,9 @@ export async function getUserTickets(userId: string, filters?: { status?: string
           endsAt: true,
           status: true,
           venue: { select: { id: true, name: true, city: true } },
+          venueName: true,
+          venueCity: true,
+          venueAddress: true,
         },
       },
       ticketType: { select: { id: true, name: true, price: true, currency: true } },
@@ -231,6 +249,19 @@ export async function getUserTickets(userId: string, filters?: { status?: string
           id: true,
           seat: { select: { id: true, label: true, number: true } },
         },
+      },
+      timeSlotTickets: {
+        select: {
+          timeSlot: {
+            select: {
+              id: true,
+              label: true,
+              startsAt: true,
+              endsAt: true,
+            },
+          },
+        },
+        take: 1,
       },
     },
     orderBy: { issuedAt: 'desc' },
@@ -551,10 +582,9 @@ export async function getEventInventory(
       orderBy: { startsAt: 'asc' },
     }),
 
-    // 6. TimeSlotTicket counts per timeSlotId (only confirmed tickets)
-    // ticketTypeId may not exist in the old generated client yet — group by timeSlotId only
+    // 6. TimeSlotTicket counts per (timeSlotId, ticketTypeId) — broken out properly
     db.timeSlotTicket.groupBy({
-      by: ['timeSlotId'],
+      by: ['timeSlotId', 'ticketTypeId'],
       where: {
         ticket: { eventId, status: { in: [TicketStatus.ACTIVE, TicketStatus.USED] } },
       },
@@ -574,20 +604,16 @@ export async function getEventInventory(
       orderBy: { startsAt: 'asc' },
     }),
 
-    // 8. EventSeat status aggregates by section (for RESERVED/MIXED events)
+    // 8. EventSeat status counts grouped by section (aggregate in DB — no row fetch)
     event.seatingType === 'RESERVED' || event.seatingType === 'MIXED'
-      ? db.eventSeat.findMany({
-          where: { eventId },
-          select: {
-            status: true,
-            seat: {
-              select: {
-                sectionId: true,
-                row: { select: { section: { select: { id: true, name: true } } } },
-              },
-            },
-          },
-        })
+      ? db.$queryRaw<Array<{ sectionId: string; sectionName: string; status: EventSeatStatus; count: bigint }>>`
+          SELECT sec."id" AS "sectionId", sec."name" AS "sectionName", es."status", COUNT(*)::bigint AS count
+          FROM "event_seats" es
+          JOIN "seats" s ON s."id" = es."seatId"
+          JOIN "sections" sec ON sec."id" = s."sectionId"
+          WHERE es."eventId" = ${eventId}
+          GROUP BY sec."id", sec."name", es."status"
+        `
       : Promise.resolve([]),
   ])
 
@@ -625,10 +651,16 @@ export async function getEventInventory(
   const cancelledByTicketType = new Map<string, number>(
     cancelledTickets.map((c) => [c.ticketTypeId, c._count.id])
   )
-  // bookingsBySlot: key = timeSlotId (total across all ticket types)
-  const bookingsBySlot = new Map<string, number>(
-    timeSlotBookings.map((b) => [b.timeSlotId, (b._count as { id: number }).id])
-  )
+  // bookingsBySlotType: key = "timeSlotId:ticketTypeId"
+  const bookingsBySlotType = new Map<string, number>()
+  // bookingsBySlot: key = timeSlotId (total across all ticket types for totalBooked)
+  const bookingsBySlot = new Map<string, number>()
+  for (const b of timeSlotBookings) {
+    const count = (b._count as { id: number }).id
+    const compositeKey = `${b.timeSlotId}:${b.ticketTypeId}`
+    bookingsBySlotType.set(compositeKey, count)
+    bookingsBySlot.set(b.timeSlotId, (bookingsBySlot.get(b.timeSlotId) ?? 0) + count)
+  }
 
   // Fetch time slot capacities separately (new junction table — not in old Prisma client)
   const slotIds = timeSlots.map((s) => s.id)
@@ -676,11 +708,8 @@ export async function getEventInventory(
     const caps = capsBySlot.get(slot.id) ?? []
     const capacities = caps.map((cap) => {
       const holdKey   = `${slot.id}:${cap.ticketTypeId}`
-      const booked    = bookingsBySlot.get(slot.id) ?? 0  // total per slot (until client regen)
+      const booked    = bookingsBySlotType.get(holdKey) ?? 0
       const held      = heldBySlotType.get(holdKey) ?? 0
-      // Note: until Prisma client is regenerated with new schema, booked is the
-      // total for the slot — not broken out by ticketTypeId. This is a temporary
-      // approximation; it becomes exact after `prisma generate` runs.
       const available = Math.max(0, cap.capacity - booked - held)
       return {
         ticketTypeId:   cap.ticketTypeId,
@@ -728,14 +757,15 @@ export async function getEventInventory(
     { sectionName: string; counts: Record<EventSeatStatus, number> }
   >()
 
-  for (const seat of seatSections as Array<{
+  for (const row of seatSections as Array<{
+    sectionId: string
+    sectionName: string
     status: EventSeatStatus
-    seat: { sectionId: string; row: { section: { id: string; name: string } } }
+    count: bigint
   }>) {
-    const section = seat.seat.row.section
-    if (!seatSectionMap.has(section.id)) {
-      seatSectionMap.set(section.id, {
-        sectionName: section.name,
+    if (!seatSectionMap.has(row.sectionId)) {
+      seatSectionMap.set(row.sectionId, {
+        sectionName: row.sectionName,
         counts: {
           AVAILABLE: 0,
           HELD: 0,
@@ -745,8 +775,8 @@ export async function getEventInventory(
         },
       })
     }
-    const entry = seatSectionMap.get(section.id)!
-    entry.counts[seat.status] = (entry.counts[seat.status] ?? 0) + 1
+    const entry = seatSectionMap.get(row.sectionId)!
+    entry.counts[row.status] = (entry.counts[row.status] ?? 0) + Number(row.count)
   }
 
   const seatSectionInventory: SeatSectionInventory[] = Array.from(seatSectionMap.entries()).map(
@@ -772,7 +802,8 @@ export async function getEventPreview(
   eventId: string,
   organizerId: string
 ) {
-  // First fetch to get the id (needed for the nested eventSeats where-clause)
+  // Resolve the id cheaply first so the nested eventSeats where-clause
+  // can filter by PK from the start (avoids double full-scan).
   const stub = await db.event.findUnique({
     where: { id: eventId, organizerId },
     select: { id: true },

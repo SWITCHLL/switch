@@ -50,13 +50,6 @@ export function OrganizerCta() {
             <p className="text-muted-foreground mt-1.5 text-[14px] leading-relaxed">
               Sell tickets and manage your attendees with SWITCH.
             </p>
-
-            {/* Social proof */}
-            <p className="mt-3 text-[12.5px] text-muted-foreground/70">
-              Join{' '}
-              <span className="text-foreground font-semibold">200+ organisers</span>{' '}
-              already using SWITCH to host their events.
-            </p>
           </div>
 
           <Link

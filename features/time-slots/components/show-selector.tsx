@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useMemo } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Plus, Minus, ShoppingCart, Lock, CheckCircle2, X, CalendarDays } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { TimeSlotWithAvailability } from '../types'
@@ -63,11 +63,43 @@ function cartKey(timeSlotId: string, ticketTypeId: string) {
 
 export function ShowSelector({ eventSlug, timeSlots, isLoggedIn }: ShowSelectorProps) {
   const router = useRouter()
-  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(
-    timeSlots.length > 0 ? timeSlots[0]!.id : null
-  )
-  // cart: key = "slotId::ticketTypeId" → CartEntry
-  const [cart, setCart] = useState<Map<string, CartEntry>>(new Map())
+  const searchParams = useSearchParams()
+
+  // Restore cart from ?shows=slotId:ticketTypeId:qty,... when returning after login
+  const initialCart = useMemo(() => {
+    const raw = searchParams.get('shows')
+    if (!raw) return new Map<string, CartEntry>()
+    const map = new Map<string, CartEntry>()
+    for (const triple of raw.split(',')) {
+      const [slotId, ticketTypeId, qtyStr] = triple.split(':')
+      const qty = parseInt(qtyStr ?? '', 10)
+      if (!slotId || !ticketTypeId || !(qty > 0)) continue
+      const slot = timeSlots.find((s) => s.id === slotId)
+      const cap = slot?.capacities.find((c) => c.ticketTypeId === ticketTypeId)
+      if (!slot || !cap) continue
+      const key = cartKey(slotId, ticketTypeId)
+      map.set(key, {
+        timeSlotId: slotId,
+        ticketTypeId,
+        quantity: Math.min(qty, cap.available),
+        price: cap.price,
+        currency: cap.currency,
+        showLabel: slot.label,
+        tierName: cap.ticketTypeName,
+      })
+    }
+    return map
+  }, [searchParams, timeSlots])
+
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(() => {
+    // If restoring from URL, open the first slot that has items in the cart
+    if (initialCart.size > 0) {
+      const firstEntry = initialCart.values().next().value
+      return firstEntry?.timeSlotId ?? (timeSlots.length > 0 ? timeSlots[0]!.id : null)
+    }
+    return timeSlots.length > 0 ? timeSlots[0]!.id : null
+  })
+  const [cart, setCart] = useState<Map<string, CartEntry>>(initialCart)
 
   const selectedSlot = timeSlots.find((s) => s.id === selectedSlotId) ?? null
 
@@ -321,7 +353,15 @@ export function ShowSelector({ eventSlug, timeSlots, isLoggedIn }: ShowSelectorP
       <div>
         {!isLoggedIn ? (
           <a
-            href={`/login?redirect=/events/${eventSlug}`}
+            href={(() => {
+              const showsParam = cartEntries
+                .map((e) => `${e.timeSlotId}:${e.ticketTypeId}:${e.quantity}`)
+                .join(',')
+              const redirect = showsParam
+                ? `/events/${eventSlug}?shows=${encodeURIComponent(showsParam)}&_scroll=tickets`
+                : `/events/${eventSlug}?_scroll=tickets`
+              return `/login?redirect=${encodeURIComponent(redirect)}`
+            })()}
             className={cn(
               'flex w-full items-center justify-center gap-2 rounded-xl py-3',
               'text-[14px] font-semibold text-white transition-opacity hover:opacity-90',
@@ -329,7 +369,7 @@ export function ShowSelector({ eventSlug, timeSlots, isLoggedIn }: ShowSelectorP
             )}
           >
             <Lock className="h-4 w-4" />
-            Sign in to buy tickets
+            Buy Tickets
           </a>
         ) : (
           <button

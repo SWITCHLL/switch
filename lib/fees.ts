@@ -18,7 +18,7 @@ export function resolveFeePercent(organizerFeePercent: number | null): number {
     return organizerFeePercent
   }
   const envRate = process.env.PLATFORM_FEE_PERCENT
-  return envRate ? parseFloat(envRate) : 4
+  return envRate ? parseFloat(envRate) : 3
 }
 
 /**

@@ -14,27 +14,43 @@ interface CalendarProps {
 interface EventMetaProps {
   event: Pick<
     EventDetail,
-    'title' | 'startsAt' | 'endsAt' | 'venue' | 'speakers' | '_count' | 'slug'
+    'title' | 'startsAt' | 'endsAt' | 'venue' | 'speakers' | '_count' | 'slug' | 'timeSlots'
   >
   calendarProps?: CalendarProps
 }
 
 export function EventMeta({ event, calendarProps }: EventMetaProps) {
-  const { startsAt, endsAt, venue, speakers, _count } = event
+  const { startsAt, endsAt, venue, speakers, _count, timeSlots } = event
 
-  // Build date/time display
-  const dateStr = format(new Date(startsAt), 'EEEE, MMMM d, yyyy')
-
+  // ── Date / time strings ───────────────────────────────────────────────────
+  let dateStr: string
   let timeStr: string
-  const start = new Date(startsAt)
-  const end = endsAt ? new Date(endsAt) : null
 
-  if (!end || (isSameDay(start, end) && start.getTime() === end.getTime())) {
-    timeStr = format(start, 'h:mm a')
-  } else if (isSameDay(start, end)) {
-    timeStr = `${format(start, 'h:mm a')} — ${format(end, 'h:mm a')}`
+  if (timeSlots && timeSlots.length > 1) {
+    // Multi-date: show the span from first slot to last slot
+    const first = new Date(timeSlots[0].startsAt)
+    const last = new Date(timeSlots[timeSlots.length - 1].startsAt)
+    dateStr = `${format(first, 'MMM d')} — ${format(last, 'MMM d, yyyy')} · ${timeSlots.length} dates`
+    timeStr = `${timeSlots.length} shows — see dates below`
+  } else if (timeSlots && timeSlots.length === 1) {
+    const slotStart = new Date(timeSlots[0].startsAt)
+    const slotEnd = new Date(timeSlots[0].endsAt)
+    dateStr = format(slotStart, 'EEEE, MMMM d, yyyy')
+    timeStr = `${format(slotStart, 'h:mm a')} — ${format(slotEnd, 'h:mm a')}`
   } else {
-    timeStr = `${format(start, 'h:mm a')} — ${format(end, 'EEE, MMM d · h:mm a')}`
+    // Single-date event
+    dateStr = format(new Date(startsAt), 'EEEE, MMMM d, yyyy')
+
+    const start = new Date(startsAt)
+    const end = endsAt ? new Date(endsAt) : null
+
+    if (!end || (isSameDay(start, end) && start.getTime() === end.getTime())) {
+      timeStr = format(start, 'h:mm a')
+    } else if (isSameDay(start, end)) {
+      timeStr = `${format(start, 'h:mm a')} — ${format(end, 'h:mm a')}`
+    } else {
+      timeStr = `${format(start, 'h:mm a')} — ${format(end, 'EEE, MMM d · h:mm a')}`
+    }
   }
 
   // Primary host from speakers (first speaker with role Host, or first speaker)

@@ -10,6 +10,9 @@ import { EventsGridSkeleton } from '@/features/events/components/events-grid-ske
 import { EventsHero } from '@/features/events/components/events-hero'
 import { siteConfig } from '@/config/site'
 
+// Revalidate every 60 seconds — matches the getEvents cache TTL.
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Discover Events — SWITCH',
   description:
@@ -40,7 +43,11 @@ interface PageProps {
 }
 
 export default async function EventsPage({ searchParams }: PageProps) {
-  const [rawParams, categories] = await Promise.all([searchParams, getCategories()])
+  const [rawParams, categories, allEvents] = await Promise.all([
+    searchParams,
+    getCategories(),
+    getEvents({}),
+  ])
   const filters = eventFiltersSchema.parse(rawParams)
 
   return (
@@ -54,14 +61,14 @@ export default async function EventsPage({ searchParams }: PageProps) {
         <EventsHero />
 
         {/* ── Filters ── */}
-        <div className="border-border/40 border-b pb-6">
+        <div className="border-border/40 border-b pb-4 sm:pb-6">
           <div className="mx-auto max-w-[1120px] px-5 pt-2 sm:px-8">
-            <EventFiltersBar categories={categories} activeFilters={filters} />
+            <EventFiltersBar categories={categories} activeFilters={filters} totalEvents={allEvents.total} />
           </div>
         </div>
 
         {/* ── Content ── */}
-        <div className="py-14">
+        <div className="py-8 sm:py-14">
           <Suspense fallback={<EventsGridSkeleton />}>
             <EventsGridLoader filters={filters} />
           </Suspense>

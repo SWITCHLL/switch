@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const rl = await rateLimit(`pay-init:user:${session.userId}`, { limit: 10, windowMs: 60_000 })
+  const rl = await rateLimit(`pay-init:user:${session.userId}`, { limit: 10, windowMs: 60_000, failClosed: true })
   if (!rl.success) {
     return NextResponse.json(
       { error: 'Too many requests. Please wait before trying again.' },

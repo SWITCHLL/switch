@@ -9,6 +9,7 @@ import type {
   EventSpeaker,
   EventImage,
   EventScheduleItem,
+  TimeSlot,
 } from '@/app/generated/prisma/client'
 
 // ─── Rich event type used in listings and detail pages ────────────────────────
@@ -87,6 +88,7 @@ export type EventDetail = EventWithRelations & {
   speakers: Pick<EventSpeaker, 'id' | 'name' | 'role' | 'avatarUrl' | 'position'>[]
   images: Pick<EventImage, 'id' | 'url' | 'position'>[]
   scheduleItems: Pick<EventScheduleItem, 'id' | 'title' | 'description' | 'hostName' | 'speakerId' | 'startsAt' | 'endsAt' | 'position'>[]
+  timeSlots: Pick<TimeSlot, 'id' | 'label' | 'startsAt' | 'endsAt' | 'status'>[]
 }
 
 // ─── Seat selection state (used across seat map UI) ───────────────────────────

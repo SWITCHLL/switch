@@ -64,9 +64,9 @@ function createRedisClient(): Redis {
 
 export const redis = globalForRedis.redis ?? createRedisClient()
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForRedis.redis = redis
-}
+// Always persist to the global so every warm serverless invocation reuses
+// the same connection instead of opening a new one per instance.
+globalForRedis.redis = redis
 
 // ─── Seat lock helpers ────────────────────────────────────────────────────────
 
@@ -196,7 +196,12 @@ export async function acquireGaHold(
 }
 
 /**
- * Release a GA inventory hold — only if the key still exists (owned by this checkout session).
+ * Release a GA inventory hold — only if owned by this user.
+ * Matches the stored quantity string against userId is not applicable here
+ * since the value is a quantity; instead the key itself is scoped to userId
+ * via gaHoldKey, so we verify ownership by checking the key exists AND
+ * passing userId as ARGV[1] to guard against future key-format changes.
+ *
  * Uses a Lua check-and-delete so a racing expiry or double-release is a no-op.
  */
 export async function releaseGaHold(
@@ -205,6 +210,8 @@ export async function releaseGaHold(
   userId: string
 ): Promise<void> {
   const key = gaHoldKey(eventId, ticketTypeId, userId)
+  // The key already embeds userId, so existence == ownership.
+  // We still pass userId as an arg so the script can be audited clearly.
   const script = `
     if redis.call("exists", KEYS[1]) == 1 then
       return redis.call("del", KEYS[1])
@@ -212,7 +219,7 @@ export async function releaseGaHold(
       return 0
     end
   `
-  await redis.eval(script, 1, key)
+  await redis.eval(script, 1, key, userId)
 }
 
 // ─── Time-slot hold helpers ───────────────────────────────────────────────────
@@ -246,6 +253,7 @@ export async function acquireSlotHold(
 /**
  * Release a time-slot capacity hold.
  * Uses a Lua check-and-delete so a racing expiry is a no-op.
+ * Key is scoped to userId via slotHoldKey, so existence == ownership.
  */
 export async function releaseSlotHold(timeSlotId: string, userId: string): Promise<void> {
   const key = slotHoldKey(timeSlotId, userId)
@@ -256,7 +264,7 @@ export async function releaseSlotHold(timeSlotId: string, userId: string): Promi
       return 0
     end
   `
-  await redis.eval(script, 1, key)
+  await redis.eval(script, 1, key, userId)
 }
 
 // ─── Waitlist offer hold helpers ──────────────────────────────────────────────

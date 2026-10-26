@@ -34,7 +34,7 @@ const GRACE_PERIOD_MS = 60 * 60 * 1000 // 1 hour grace period
 export async function POST(req: NextRequest) {
   // Rate limit: 60 checkin attempts per minute per IP to prevent QR brute-forcing
   const ip = getClientIp(req.headers)
-  const rl = await rateLimit(`checkin:ip:${ip}`, { limit: 60, windowMs: 60_000 })
+  const rl = await rateLimit(`checkin:ip:${ip}`, { limit: 60, windowMs: 60_000, failClosed: true })
   if (!rl.success) {
     return NextResponse.json(
       { error: 'Too many requests. Please slow down.' },
@@ -161,7 +161,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: false,
         reason: 'WRONG_TIMESLOT',
-        detail: `Doors for "${slot.label}" open at ${doorsOpen.toLocaleTimeString()}`,
+        detail: `Doors for "${slot.label}" open at ${doorsOpen.toLocaleTimeString('en-NG', { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', hour12: true })}`,
       })
     }
 

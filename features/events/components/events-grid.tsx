@@ -44,8 +44,8 @@ export function EventsGrid({ data, filters }: EventsGridProps) {
       {/* Section header */}
       {gridEvents.length > 0 && (
         <div className="mx-auto max-w-[1120px] px-5 sm:px-8">
-          <div className="mb-8 flex items-baseline gap-3">
-            <h2 className="text-foreground text-[20px] font-semibold tracking-tight sm:text-[24px]">
+          <div className="mb-6 flex items-baseline gap-3 sm:mb-8">
+            <h2 className="text-foreground text-[18px] font-semibold tracking-tight sm:text-[24px]">
               Upcoming events
             </h2>
             <span className="text-muted-foreground text-[13px]">
@@ -54,7 +54,7 @@ export function EventsGrid({ data, filters }: EventsGridProps) {
           </div>
 
           {/* Grid */}
-          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3">
             {gridEvents.map((event, i) => (
               <EventCard key={event.id} event={event} index={i} />
             ))}

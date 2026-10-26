@@ -1,18 +1,13 @@
 /**
- * Raw SQL helpers for creating Order and Payment records.
+ * Prisma helpers for creating Order, Payment, and Ticket records.
  *
- * These bypass the Prisma generated client because the Order model and the
- * new Payment.orderId field were added to the schema but `prisma generate`
- * has not yet been run against the updated schema.
- *
- * Once `prisma generate` runs (after applying the migrations), these can be
- * replaced with standard Prisma client calls:
- *   tx.order.create(...)
- *   tx.payment.create({ data: { orderId: ... } })
+ * These use the standard Prisma client (type-safe, schema-validated).
+ * All inserts happen inside the caller's transaction so they participate in
+ * the same atomic unit as the surrounding checkout/webhook logic.
  */
 
 import type { Prisma } from '@/app/generated/prisma/client'
-import { randomBytes } from 'crypto'
+import { PaymentStatus, TicketStatus } from '@/app/generated/prisma/client'
 
 // ─── Transaction client type ─────────────────────────────────────────────────
 
@@ -20,13 +15,6 @@ export type Tx = Omit<
   Prisma.TransactionClient,
   '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
 >
-
-// ─── ID generation ────────────────────────────────────────────────────────────
-
-function newId(): string {
-  // cuid-compatible opaque id — safe for all Prisma @id fields
-  return `c${randomBytes(16).toString('hex')}`
-}
 
 // ─── Create Order ─────────────────────────────────────────────────────────────
 
@@ -41,31 +29,22 @@ export interface CreateOrderInput {
 }
 
 export async function createOrder(tx: Tx, input: CreateOrderInput): Promise<{ id: string }> {
-  const id  = newId()
-  const now = new Date()
-
-  await tx.$executeRaw`
-    INSERT INTO "orders"
-      ("id", "userId", "eventId", "reservationId", "totalAmount", "currency",
-       "discountAmount", "promoCodeId", "createdAt", "updatedAt")
-    VALUES (
-      ${id},
-      ${input.userId},
-      ${input.eventId},
-      ${input.reservationId ?? null},
-      ${input.totalAmount},
-      ${input.currency},
-      ${input.discountAmount},
-      ${input.promoCodeId ?? null},
-      ${now},
-      ${now}
-    )
-  `
-
-  return { id }
+  const order = await tx.order.create({
+    data: {
+      userId:         input.userId,
+      eventId:        input.eventId,
+      reservationId:  input.reservationId ?? null,
+      totalAmount:    input.totalAmount,
+      currency:       input.currency,
+      discountAmount: input.discountAmount,
+      promoCodeId:    input.promoCodeId ?? null,
+    },
+    select: { id: true },
+  })
+  return order
 }
 
-// ─── Create Payment (orderId-based) ──────────────────────────────────────────
+// ─── Create Payment ───────────────────────────────────────────────────────────
 
 export interface CreatePaymentInput {
   orderId:                 string
@@ -82,39 +61,27 @@ export interface CreatePaymentInput {
 }
 
 export async function createPayment(tx: Tx, input: CreatePaymentInput): Promise<{ id: string }> {
-  const id  = newId()
-  const now = new Date()
-
-  await tx.$executeRaw`
-    INSERT INTO "payments"
-      ("id", "orderId", "organizerId", "userId", "eventId",
-       "amount", "currency",
-       "platformFeePercent", "platformFeeAmount", "netAmount",
-       "status", "paystackReference", "paystackTransactionId",
-       "createdAt", "updatedAt")
-    VALUES (
-      ${id},
-      ${input.orderId},
-      ${input.organizerId},
-      ${input.userId},
-      ${input.eventId},
-      ${input.amount},
-      ${input.currency},
-      ${input.platformFeePercent},
-      ${input.platformFeeAmount},
-      ${input.netAmount},
-      'SUCCESS',
-      ${input.paystackReference},
-      ${input.paystackTransactionId ?? null},
-      ${now},
-      ${now}
-    )
-  `
-
-  return { id }
+  const payment = await tx.payment.create({
+    data: {
+      orderId:               input.orderId,
+      organizerId:           input.organizerId,
+      userId:                input.userId,
+      eventId:               input.eventId,
+      amount:                input.amount,
+      currency:              input.currency,
+      platformFeePercent:    input.platformFeePercent,
+      platformFeeAmount:     input.platformFeeAmount,
+      netAmount:             input.netAmount,
+      status:                PaymentStatus.SUCCESS,
+      paystackReference:     input.paystackReference,
+      paystackTransactionId: input.paystackTransactionId ?? null,
+    },
+    select: { id: true },
+  })
+  return payment
 }
 
-// ─── Create Ticket with orderId ───────────────────────────────────────────────
+// ─── Create Ticket ────────────────────────────────────────────────────────────
 
 export interface CreateTicketInput {
   eventId:       string
@@ -127,41 +94,23 @@ export interface CreateTicketInput {
 }
 
 export async function createTicket(tx: Tx, input: CreateTicketInput): Promise<{ id: string }> {
-  const id  = newId()
-  const now = new Date()
-
-  await tx.$executeRaw`
-    INSERT INTO "tickets"
-      ("id", "eventId", "userId", "orderId", "ticketTypeId",
-       "ticketNumber", "qrCode", "status", "isComplimentary",
-       "issuedAt", "createdAt", "updatedAt")
-    VALUES (
-      ${id},
-      ${input.eventId},
-      ${input.userId},
-      ${input.orderId},
-      ${input.ticketTypeId},
-      ${input.ticketNumber},
-      ${input.qrCode},
-      'ACTIVE',
-      false,
-      ${now},
-      ${now},
-      ${now}
-    )
-  `
-
-  // eventSeatId is a unique nullable column — set it separately to avoid
-  // a constraint violation on the "null" default inserted above
-  if (input.eventSeatId) {
-    await tx.$executeRaw`
-      UPDATE "tickets"
-      SET "eventSeatId" = ${input.eventSeatId}
-      WHERE "id" = ${id}
-    `
-  }
-
-  return { id }
+  const ticket = await tx.ticket.create({
+    data: {
+      eventId:      input.eventId,
+      userId:       input.userId,
+      orderId:      input.orderId,
+      ticketTypeId: input.ticketTypeId,
+      ticketNumber: input.ticketNumber,
+      qrCode:       input.qrCode,
+      status:       TicketStatus.ACTIVE,
+      isComplimentary: false,
+      issuedAt:     new Date(),
+      // eventSeatId is included atomically in the same INSERT — no split UPDATE
+      ...(input.eventSeatId ? { eventSeatId: input.eventSeatId } : {}),
+    },
+    select: { id: true },
+  })
+  return ticket
 }
 
 // ─── Set orderId on an existing ticket ───────────────────────────────────────
@@ -171,9 +120,8 @@ export async function setTicketOrder(
   ticketId: string,
   orderId:  string
 ): Promise<void> {
-  await tx.$executeRaw`
-    UPDATE "tickets"
-    SET "orderId" = ${orderId}
-    WHERE "id" = ${ticketId}
-  `
+  await tx.ticket.update({
+    where: { id: ticketId },
+    data:  { orderId },
+  })
 }

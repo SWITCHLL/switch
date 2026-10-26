@@ -66,6 +66,8 @@ export function TicketCard({ ticket, className }: TicketCardProps) {
   const isValid = ticket.status === 'ACTIVE' && !eventEnded
   const location = ticket.event.venue
     ? `${ticket.event.venue.name}, ${ticket.event.venue.city}`
+    : ticket.event.venueName
+    ? [ticket.event.venueName, ticket.event.venueCity].filter(Boolean).join(', ')
     : null
 
   const modalData: TicketModalData = {
@@ -84,7 +86,9 @@ export function TicketCard({ ticket, className }: TicketCardProps) {
       imageUrl: ticket.event.imageUrl,
       startsAt: ticket.event.startsAt,
       venue: ticket.event.venue,
+      resolvedVenue: location,
     },
+    timeSlot: ticket.timeSlotTickets.length > 0 ? ticket.timeSlotTickets[0].timeSlot : undefined,
     eventSeat: ticket.eventSeat,
   }
 
@@ -148,11 +152,18 @@ export function TicketCard({ ticket, className }: TicketCardProps) {
 
         {/* ── Details ── */}
         <div className="space-y-1.5 px-3 py-3">
+          {/* Show title if available from time slot */}
+          {ticket.timeSlotTickets.length > 0 && (
+            <div className="mb-2 line-clamp-1 text-xs font-semibold text-zinc-200">
+              {ticket.timeSlotTickets[0].timeSlot.label}
+            </div>
+          )}
+          
           <div className="flex items-center gap-2 text-xs text-zinc-400">
             <Calendar className="h-3 w-3 shrink-0 text-zinc-500" />
-            <span>{format(ticket.event.startsAt, 'MMM d, yyyy')}</span>
+            <span>{format(ticket.timeSlotTickets.length > 0 ? ticket.timeSlotTickets[0].timeSlot.startsAt : ticket.event.startsAt, 'MMM d, yyyy')}</span>
             <span className="text-zinc-700">·</span>
-            <span>{format(ticket.event.startsAt, 'h:mm a')}</span>
+            <span>{format(ticket.timeSlotTickets.length > 0 ? ticket.timeSlotTickets[0].timeSlot.startsAt : ticket.event.startsAt, 'h:mm a')}</span>
           </div>
 
           {location && (

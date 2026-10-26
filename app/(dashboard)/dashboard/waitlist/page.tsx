@@ -6,7 +6,6 @@ import { getMyWaitlistEntries } from '@/features/waitlist/queries'
 import { WaitlistStatusBadge } from '@/features/waitlist/components/waitlist-status-badge'
 import { LeaveWaitlistButton } from '@/features/waitlist/components/leave-waitlist-button'
 
-export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'My Waitlists',
   description: 'Track your waitlist positions and offers',

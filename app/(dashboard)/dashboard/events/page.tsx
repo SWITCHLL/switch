@@ -8,7 +8,6 @@ import { EventStatusFilter } from '@/features/events/components/event-status-fil
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 
-export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'My Events' }
 
 const STATUS_STYLES: Record<string, string> = {

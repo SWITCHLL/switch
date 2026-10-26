@@ -176,6 +176,7 @@ export async function getConfirmedOrderDetails(
           venueCity: true,
         },
       },
+      // Reserved seats + their tickets
       eventSeats: {
         select: {
           tickets: {
@@ -191,6 +192,21 @@ export async function getConfirmedOrderDetails(
           ticketType: { select: { currency: true } },
         },
       },
+      // GA tickets come through the Order — avoids a second query
+      order: {
+        select: {
+          tickets: {
+            where: { eventSeatId: null, status: { in: ['ACTIVE', 'USED'] } },
+            select: {
+              id: true,
+              ticketNumber: true,
+              qrCode: true,
+              ticketType: { select: { name: true, price: true, currency: true } },
+            },
+            orderBy: { issuedAt: 'asc' },
+          },
+        },
+      },
     },
   })
 
@@ -198,11 +214,11 @@ export async function getConfirmedOrderDetails(
   if (reservation.userId !== userId) return null
   if (reservation.status !== 'COMPLETED') return null
 
-  // Collect tickets from reserved seats
   const tickets: ConfirmedOrderDetails['tickets'] = []
   let totalPaid = 0
   let currency = 'NGN'
 
+  // Reserved-seat tickets
   for (const seat of reservation.eventSeats) {
     for (const ticket of seat.tickets) {
       tickets.push({
@@ -217,25 +233,9 @@ export async function getConfirmedOrderDetails(
     currency = seat.ticketType?.currency ?? currency
   }
 
-  // If no seat tickets (GA reservation), load tickets issued to the user for this event
-  if (tickets.length === 0) {
-    const gaTickets = await db.ticket.findMany({
-      where: {
-        eventId: reservation.eventId,
-        userId,
-        status: { in: ['ACTIVE', 'USED'] },
-        eventSeatId: null,
-      },
-      select: {
-        id: true,
-        ticketNumber: true,
-        qrCode: true,
-        ticketType: { select: { name: true, price: true, currency: true } },
-      },
-      orderBy: { issuedAt: 'asc' },
-    })
-
-    for (const t of gaTickets) {
+  // GA tickets (loaded inline — no second round-trip)
+  if (tickets.length === 0 && reservation.order) {
+    for (const t of reservation.order.tickets) {
       tickets.push({
         id: t.id,
         ticketNumber: t.ticketNumber,

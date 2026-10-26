@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import { siteConfig } from '@/config/site'
 import { ThemeProvider } from '@/components/shared/theme-provider'
 import './globals.css'
@@ -11,10 +12,15 @@ const inter = Inter({
   display: 'swap',
 })
 
+// JetBrains Mono is used only in dashboard/ticket/checkout pages.
+// preload: false stops Next.js from emitting a <link rel="preload"> for it
+// in every page's <head>, removing it from the critical font path on the
+// homepage while still making it available when those routes load.
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
   display: 'swap',
+  preload: false,
 })
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -86,6 +92,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to image CDN origins so poster/event images don't wait on DNS+TLS */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://utfs.io" />
+      </head>
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         <ThemeProvider
           attribute="class"
@@ -95,6 +108,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         >
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

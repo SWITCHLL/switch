@@ -68,8 +68,16 @@ function validateEnv() {
       console.error('❌ Invalid environment variables:')
       console.error(parsed.error.flatten().fieldErrors)
 
-      // In development, throw to surface the error immediately
-      if (process.env.NODE_ENV !== 'production') {
+      // During `next build`, Next.js pre-renders pages in a build worker that
+      // may not have all runtime env vars present (e.g. on Vercel the build
+      // step runs before secrets are injected). Throwing here would break the
+      // build even for correctly configured deployments.
+      //
+      // NEXT_PHASE is set to 'phase-production-build' during `next build`.
+      // At actual server startup (runtime) it is unset or 'phase-production-server'.
+      // We only throw at runtime so misconfigured servers are caught on boot.
+      const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
+      if (!isBuildPhase) {
         throw new Error('Invalid environment variables. Check the console for details.')
       }
     }
@@ -81,6 +89,7 @@ function validateEnv() {
   const parsed = clientSchema.safeParse({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+    NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
   })
 
   return parsed.data ?? {}
